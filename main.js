@@ -3043,7 +3043,7 @@ __webpack_require__.r(__webpack_exports__);
 
 const desc1 = "Create ToDo Class description";
 
-const myProjects = new _modules_projects__WEBPACK_IMPORTED_MODULE_0__.default();
+const myProjects = new _modules_projects__WEBPACK_IMPORTED_MODULE_0__.default("dueDateEarliestFirst", "dueDateEarliestFirst");
 
 myProjects.addProject("My Project", "lol", 4, new Date(2020,11,6))
 
@@ -3065,61 +3065,61 @@ console.log(myProjects);
 console.log(myProjects.getList());
 console.log(myProjects.getToDoList());
 
-function compareDueDate(first, second){
-    if (first.dueDate === second.dueDate) return 0;
-    if (first.dueDate === "") return 1;
-    if (second.dueDate === "") return -1;
-    if (first.dueDate < second.dueDate) return -1;
-    else return 1;
-}
+// function compareDueDate(first, second){
+//     if (first.dueDate === second.dueDate) return 0;
+//     if (first.dueDate === "") return 1;
+//     if (second.dueDate === "") return -1;
+//     if (first.dueDate < second.dueDate) return -1;
+//     else return 1;
+// }
 
-function comparePriority(first, second){
-    if (first.priority === second.priority) return 0;
-    if (first.priority < second.priority) return -1;
-    else return 1;
-}
+// function comparePriority(first, second){
+//     if (first.priority === second.priority) return 0;
+//     if (first.priority < second.priority) return -1;
+//     else return 1;
+// }
 
-function compareCreationDate(first, second){
-    if (first.creationDatetime === second.creationDatetime) return 0;
-    if (first.creationDatetime < second.creationDatetime) return -1;
-    else return 1;
-}
+// function compareCreationDate(first, second){
+//     if (first.creationDatetime === second.creationDatetime) return 0;
+//     if (first.creationDatetime < second.creationDatetime) return -1;
+//     else return 1;
+// }
 
-myProjects._list.sort(compareDueDate) // earliest first
+// myProjects._list.sort(compareDueDate) // earliest first
 
-console.log(myProjects);
-console.log(myProjects.getList());
-console.log(myProjects.getToDoList());
+// console.log(myProjects);
+// console.log(myProjects.getList());
+// console.log(myProjects.getToDoList());
 
-myProjects._list.sort(compareDueDate).reverse() // oldest first
+// myProjects._list.sort(compareDueDate).reverse() // oldest first
 
-console.log(myProjects);
-console.log(myProjects.getList());
-console.log(myProjects.getToDoList());
+// console.log(myProjects);
+// console.log(myProjects.getList());
+// console.log(myProjects.getToDoList());
 
-myProjects._list.sort(comparePriority)  // lower priority number first (ie highest priority)
+// myProjects._list.sort(comparePriority)  // lower priority number first (ie highest priority)
 
-console.log(myProjects);
-console.log(myProjects.getList());
-console.log(myProjects.getToDoList());
+// console.log(myProjects);
+// console.log(myProjects.getList());
+// console.log(myProjects.getToDoList());
 
-myProjects._list.sort(comparePriority).reverse()   // higher priority number first (ie lowest priority)
+// myProjects._list.sort(comparePriority).reverse()   // higher priority number first (ie lowest priority)
 
-console.log(myProjects);
-console.log(myProjects.getList());
-console.log(myProjects.getToDoList());
+// console.log(myProjects);
+// console.log(myProjects.getList());
+// console.log(myProjects.getToDoList());
 
-myProjects._list.sort(compareCreationDate) // oldest first
+// myProjects._list.sort(compareCreationDate) // oldest first
 
-console.log(myProjects);
-console.log(myProjects.getList());
-console.log(myProjects.getToDoList());
+// console.log(myProjects);
+// console.log(myProjects.getList());
+// console.log(myProjects.getToDoList());
 
-myProjects._list.sort(compareCreationDate).reverse() // newest first
+// myProjects._list.sort(compareCreationDate).reverse() // newest first
 
-console.log(myProjects);
-console.log(myProjects.getList());
-console.log(myProjects.getToDoList());
+// console.log(myProjects);
+// console.log(myProjects.getList());
+// console.log(myProjects.getToDoList());
 
 /***/ }),
 
@@ -3169,12 +3169,8 @@ class ToDo{
     }
 
     get dueDate (){
-        if (dateTime === ""){
-            this._dueDate = "";
-            return;
-        }
-        if (!this._isValidDate(dateTime)) throw new Error("Please Enter a valid date");
-        this._dueDate = dateTime;
+        if (this._dueDate === "") return "";
+        return (0,date_fns__WEBPACK_IMPORTED_MODULE_0__.default)(this._dueDate, 'P');
     }
 
 
@@ -3284,7 +3280,7 @@ class Project{
         this.description = description;
         this.priority = priority;
         this.dueDate = dueDate;
-        this.list = [];
+        this._list = [];
 
         this.creationDatetime = new Date();
 
@@ -3292,7 +3288,22 @@ class Project{
     }
 
     getToDoNumber(){
-        return this.list.length;
+        return this._list.length;
+    }
+
+    _getToDoIndex(id){
+        const index = this._list.findIndex(todo => todo.id === id);
+        if (index === -1) throw new Error(`To Do ID ${id} does not exist`);
+        return index;
+    }
+
+    _getToDo(id){
+        const index = this._getToDoIndex(id);
+        return this._list[index];
+    }
+
+    getList(){
+        return this._list;
     }
 
     set maxPriority(newMax){
@@ -3388,44 +3399,62 @@ class Project{
     }
 
     addToDo(title, description, priority, dueDate){
-        this.list.push(new ToDo(this._toDoIDCounter, this.id, title, description, priority, dueDate));
+        this._list.push(new ToDo(this._toDoIDCounter, this.id, title, description, priority, dueDate));
         this._toDoIDCounter++;
     }
 
     removeToDo(toDoId){
-        const toDoIndex = this.list.findIndex(toDo => toDo.id === toDoId);
+        const toDoIndex = this._list.findIndex(toDo => toDo.id === toDoId);
         if (toDoIndex === -1) throw new Error("To Do ID does not exist");
-        return this.list.splice(toDoIndex, 1);
+        return this._list.splice(toDoIndex, 1);
     }
 }
 
 class Projects{
-    constructor(){
+    constructor(listSort, toDoListSort){
         this._list = [];
         this._toDoIDCounter = 1;
-        this._toDoArray = [];
+        this._toDoList = [];
 
-        this._listSort = "dueDate"
-        this._toDoListSort = "dueDate"
+        this._listSort = listSort;
+        this._toDoListSort = toDoListSort;
 
         this._addMiscProject();
     }
 
-    _update(){
-        this._updateToDoArray();
+    _sortList(){
+        switch(this._listSort){
+            case "dueDateEarliestFirst":
+                this._list.sort(compareDueDate)
+                break;
+        }
     }
 
-    _updateToDoArray(){
+    _sortToDoList(){
+        switch(this._toDoListSort){
+            case "dueDateEarliestFirst":
+                this._toDoList.sort(compareDueDate)
+                break;
+        }
+    }
+
+    _update(){
+        this._updateToDoList();
+        this._sortList();
+        this/this._sortToDoList();
+    }
+
+    _updateToDoList(){
         const arr = [];
         for (let projectIndex = 0; projectIndex < this._list.length; projectIndex++)
-            for (let toDoIndex = 0; toDoIndex < this._list[projectIndex].list.length; toDoIndex++)
-                arr.push(this._list[projectIndex].list[toDoIndex]);
-        this._toDoArray = arr;
+            for (let toDoIndex = 0; toDoIndex < this._list[projectIndex]._list.length; toDoIndex++)
+                arr.push(this._list[projectIndex]._list[toDoIndex]);
+        this._toDoList = arr;
     }
 
     _getProjectIndex(projectId){
         const projectIndex = this._list.findIndex(project => project.id === projectId);
-        if (projectIndex === -1) throw new Error("To Do ID does not exist");
+        if (projectIndex === -1) throw new Error(`Project ID ${projectID} does not exist`);
         return projectIndex;
     }
 
@@ -3439,7 +3468,7 @@ class Projects{
     }
 
     getToDoList(){
-        return this._toDoArray;
+        return this._toDoList;
     }
 
     addProject(title, description, priority, dueDate){
@@ -3480,6 +3509,26 @@ class Projects{
         this._list[projectIndex].removeToDo(toDoId);
         this._update();
     }
+}
+
+function compareDueDate(first, second){
+    if (first.dueDate === second.dueDate) return 0;
+    if (first.dueDate === "") return 1;
+    if (second.dueDate === "") return -1;
+    if (first.dueDate < second.dueDate) return -1;
+    else return 1;
+}
+
+function comparePriority(first, second){
+    if (first.priority === second.priority) return 0;
+    if (first.priority < second.priority) return -1;
+    else return 1;
+}
+
+function compareCreationDate(first, second){
+    if (first.creationDatetime === second.creationDatetime) return 0;
+    if (first.creationDatetime < second.creationDatetime) return -1;
+    else return 1;
 }
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (Projects);
