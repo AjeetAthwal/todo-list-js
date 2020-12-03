@@ -1,4 +1,7 @@
 import { format } from 'date-fns'
+import compareAsc from 'date-fns/compareAsc'
+import parse from 'date-fns/parse'
+import compareDesc from 'date-fns/compareDesc'
 
 class ToDo{
     constructor(id, projectId, title, description, priority, dueDate){
@@ -23,9 +26,13 @@ class ToDo{
     }
 
     set dueDate(dateTime){
+        if (dateTime === ""){
+            this._dueDate = "";
+            return;
+        }
         if (!this._isValidDate(dateTime)) throw new Error("Please Enter a valid date");
+        if (dateTime < new Date(2020, 0, 1)) throw new Error("Please enter a date from 2020 onwards")
         this._dueDate = dateTime;
-        
     }
 
     get dueDate (){
@@ -184,6 +191,7 @@ class Project{
             return;
         }
         if (!this._isValidDate(dateTime)) throw new Error("Please Enter a valid date");
+        if (dateTime < new Date(2020, 0, 1)) throw new Error("Please enter a date from 2020 onwards")
         this._dueDate = dateTime;
     }
 
@@ -285,7 +293,10 @@ class Projects{
     _sortList(){
         switch(this._listSort){
             case "dueDateEarliestFirst":
-                this._list.sort(compareDueDate)
+                this._list.sort(compareDueDate);
+                break;
+            case "dueDateOldestFirst":
+                this._list.sort(compareDueDate).reverse();
                 break;
         }
     }
@@ -293,7 +304,10 @@ class Projects{
     _sortToDoList(){
         switch(this._toDoListSort){
             case "dueDateEarliestFirst":
-                this._toDoList.sort(compareDueDate)
+                this._toDoList.sort(compareDueDate);
+                break;
+            case "dueDateOldestFirst":
+                this._toDoList.sort(compareDueDate).reverse();
                 break;
         }
     }
@@ -301,7 +315,7 @@ class Projects{
     _update(){
         this._updateToDoList();
         this._sortList();
-        this/this._sortToDoList();
+        this._sortToDoList();
     }
 
     _updateToDoList(){
@@ -372,11 +386,12 @@ class Projects{
 }
 
 function compareDueDate(first, second){
-    if (first.dueDate === second.dueDate) return 0;
-    if (first.dueDate === "") return 1;
-    if (second.dueDate === "") return -1;
-    if (first.dueDate < second.dueDate) return -1;
-    else return 1;
+    const firstDueDate = first.dueDate;
+    const secondDueDate = second.dueDate;
+    if (firstDueDate === secondDueDate) return 0;
+    if (firstDueDate === "") return 1;
+    if (secondDueDate === "") return -1;
+    return compareAsc(parse(firstDueDate,'P',new Date()), parse(secondDueDate,'P',new Date()));
 }
 
 function comparePriority(first, second){
