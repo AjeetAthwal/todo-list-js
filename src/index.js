@@ -1,5 +1,7 @@
+import { formatDistance, subDays } from 'date-fns'
 class ToDo{
-    constructor(title, description/*, dueDate*/, priority/*, projectCreationDatetime*/){
+    constructor(id, title, description/*, dueDate*/, priority/*, projectCreationDatetime*/){
+        this.id = id;
         this.maxPriority = 10;  // dummy number see setter
         this.minPriority = 1;   // dummy number see setter
 
@@ -12,6 +14,15 @@ class ToDo{
         //this.projectCreationDatetime = projectCreationDatetime;
         //this.creationDatetime = ???;
 
+    }
+
+    set id(id){
+        if (this._id === undefined) this._id = id;
+        
+    }
+
+    get id (){
+        return this._id;
     }
 
     toggleCompleteStatus(){
@@ -71,14 +82,20 @@ class ToDo{
 }
 
 const desc1 = "Create ToDo Class description";
-const todo1 = new ToDo("Create ToDo Class", desc1, 5);
-const todo2 = new ToDo("Create ToDo Class", "", 5);
+const todo1 = new ToDo(1, "Create ToDo Class", desc1, 5);
+const todo2 = new ToDo(2, "Create ToDo Class", "", 5);
 window.testTodo = todo1;
 console.log(todo1);
 console.log(todo2);
-const todo3 = new ToDo("Create ToDo Class", "", 1);
+const todo3 = new ToDo(3, "Create ToDo Class", "", 1);
 console.log(todo3);
-const todo4 = new ToDo("Hi", "", "");
+const todo4 = new ToDo(4, "Hi", "", "");
 console.log(todo4);
 
-window.a = todo4;
+
+const b = todo1;
+const a = formatDistance(subDays(new Date(), 3), new Date());
+window.a = a;
+console.log(a)
+console.log(new Date())
+window.b = b;
