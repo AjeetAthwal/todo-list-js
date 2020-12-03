@@ -5465,6 +5465,54 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
+class Sorter{
+    constructor(listSort){
+        this._list = [];
+        this.listSort = listSort;
+    }
+
+
+    get listSort(){
+        return this._listSort;
+    }
+
+    set listSort(newListSort){
+        if (
+            newListSort !== "dueDateEarliestFirst" && newListSort !== "dueDateOldestFirst" &&
+            newListSort !== "highestPriorityFirst" && newListSort !== "lowestPriorityFirst" &&
+            newListSort !== "oldestFirst" && newListSort !== "newestFirst"
+        ) throw new Error("Pick a valid sort mode (listSort)");
+        this._listSort = newListSort;
+    }
+
+    _sortList(){
+        switch(this._listSort){
+            case "dueDateEarliestFirst":
+                this._list.sort(compareDueDate);
+                break;
+            case "dueDateOldestFirst":
+                this._list.sort(compareDueDate).reverse();
+                break;
+            case "highestPriorityFirst":
+                this._list.sort(comparePriority);
+                break;
+            case "lowestPriorityFirst":
+                this._list.sort(comparePriority).reverse();
+                break;
+            case "oldestFirst":
+                this._list.sort(compareCreationDate);
+                break;
+            case "newestFirst":
+                this._list.sort(compareCreationDate).reverse();
+                break;                
+        }
+    }
+
+    _update(){
+        this._sortList();
+    }
+}
+
 class ToDo{
     constructor(id, projectId, title, description, priority, dueDate){
         this.maxPriority = 10;  // dummy number see setter
@@ -5597,8 +5645,9 @@ class ToDo{
 // To add to Project Class
 // automatically assigns id to ToDo
 // changes dueDate to larger value if toDO DueDate is larger
-class Project{
+class Project extends Sorter{
     constructor(id, title, description, priority, dueDate, listSort){
+        super(listSort);
         this.maxPriority = 10;  // dummy number see setter
         this.minPriority = 1;   // dummy number see setter
 
@@ -5609,53 +5658,10 @@ class Project{
         this.description = description;
         this.priority = priority;
         this.dueDate = dueDate;
-        this._list = [];
-
-        this.listSort = listSort;
 
         this.creationDatetime = new Date();
 
         this._toDoIDCounter = 1;
-    }
-
-    get listSort(){
-        return this._listSort;
-    }
-
-    set listSort(newListSort){
-        if (
-            newListSort !== "dueDateEarliestFirst" && newListSort !== "dueDateOldestFirst" &&
-            newListSort !== "highestPriorityFirst" && newListSort !== "lowestPriorityFirst" &&
-            newListSort !== "oldestFirst" && newListSort !== "newestFirst"
-        ) throw new Error("Pick a valid sort mode (listSort)");
-        this._listSort = newListSort;
-    }
-
-    _sortList(){
-        switch(this._listSort){
-            case "dueDateEarliestFirst":
-                this._list.sort(compareDueDate);
-                break;
-            case "dueDateOldestFirst":
-                this._list.sort(compareDueDate).reverse();
-                break;
-            case "highestPriorityFirst":
-                this._list.sort(comparePriority);
-                break;
-            case "lowestPriorityFirst":
-                this._list.sort(comparePriority).reverse();
-                break;
-            case "oldestFirst":
-                this._list.sort(compareCreationDate);
-                break;
-            case "newestFirst":
-                this._list.sort(compareCreationDate).reverse();
-                break;                
-        }
-    }
-
-    _update(){
-        this._sortList();
     }
 
     getToDoNumber(){
@@ -5785,29 +5791,15 @@ class Project{
     }
 }
 
-class Projects{
+class Projects extends Sorter{
     constructor(listSort, toDoListSort){
-        this._list = [];
+        super(listSort);
         this._toDoIDCounter = 1;
         this._toDoList = [];
 
-        this.listSort = listSort;
         this.toDoListSort = toDoListSort;
 
         this._addMiscProject();
-    }
-
-    get listSort(){
-        return this._listSort;
-    }
-
-    set listSort(newListSort){
-        if (
-            newListSort !== "dueDateEarliestFirst" && newListSort !== "dueDateOldestFirst" &&
-            newListSort !== "highestPriorityFirst" && newListSort !== "lowestPriorityFirst" &&
-            newListSort !== "oldestFirst" && newListSort !== "newestFirst"
-        ) throw new Error("Pick a valid sort mode (listSort)");
-        this._listSort = newListSort;
     }
 
     get toDoListSort(){
@@ -5821,29 +5813,6 @@ class Projects{
             newListSort !== "oldestFirst" && newListSort !== "newestFirst"
         ) throw new Error("Pick a valid sort mode (toDoListSort)");
         this._toDoListSort = newListSort;
-    }
-
-    _sortList(){
-        switch(this._listSort){
-            case "dueDateEarliestFirst":
-                this._list.sort(compareDueDate);
-                break;
-            case "dueDateOldestFirst":
-                this._list.sort(compareDueDate).reverse();
-                break;
-            case "highestPriorityFirst":
-                this._list.sort(comparePriority);
-                break;
-            case "lowestPriorityFirst":
-                this._list.sort(comparePriority).reverse();
-                break;
-            case "oldestFirst":
-                this._list.sort(compareCreationDate);
-                break;
-            case "newestFirst":
-                this._list.sort(compareCreationDate).reverse();
-                break;                
-        }
     }
 
     _sortToDoList(){
