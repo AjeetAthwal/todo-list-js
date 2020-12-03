@@ -3294,17 +3294,60 @@ class Project{
     }
 }
 
+class Projects{
+    constructor(){
+        this.list = [];
+        this._toDoIDCounter = 1;
+        this.toDoArray = [];
+    }
+
+    _updateToDoArray(){
+        const arr = [];
+        for (let projectIndex = 0; projectIndex < this.list.length; projectIndex++)
+            for (let toDoIndex = 0; toDoIndex < this.list[projectIndex].list.length; toDoIndex++)
+                arr.push(this.list[projectIndex].list[toDoIndex]);
+        this.toDoArray = arr;
+        return arr;
+    }
+
+    addProject(title, description, priority, dueDate){
+        this.list.push(new Project(this._toDoIDCounter, title, description, priority, dueDate));
+        this._toDoIDCounter++;
+        this._updateToDoArray();
+    }
+
+    removeProject(projectId){
+        const projectIndex = this.list.findIndex(project => project.id === projectId);
+        if (projectIndex === -1) throw new Error("To Do ID does not exist");
+        return this.list.splice(projectIndex, 1);
+        this._updateToDoArray();
+    }
+
+    addToDoToLatestProject(title, description, priority, dueDate){
+        const projectIndex = this.list.findIndex(project => project.id === this._toDoIDCounter - 1);
+        this.list[projectIndex].addToDo(title, description, priority, dueDate);
+        this._updateToDoArray();
+    }
+}
+
 const desc1 = "Create ToDo Class description";
 
-const myProject = new Project(1, "My Project", "lol", 4, new Date(2020,11,6));
+const myProjects = new Projects();
 
-myProject.addToDo("Create ToDo Class", desc1, 5, new Date(2020,11,6))
-myProject.addToDo("Create ToDo Class", "", 5, new Date(2021,0));
-myProject.addToDo("Create ToDo Class", "", 1, new Date(2021));
-myProject.addToDo("Hi", "", "", new Date());
+myProjects.addProject("My Project", "lol", 4, new Date(2020,11,6))
 
-window.b = myProject;
-console.log(myProject);
+myProjects.addToDoToLatestProject("Create ToDo Class", desc1, 5, new Date(2020,11,6))
+myProjects.addToDoToLatestProject("Create ToDo Class", "", 5, new Date(2021,0));
+myProjects.addToDoToLatestProject("Create ToDo Class", "", 1, new Date(2021));
+myProjects.addToDoToLatestProject("Hi", "", "", new Date());
+
+myProjects.addProject("My Project2", "lasdol", 2, new Date(2020,11,9))
+myProjects.addToDoToLatestProject("Hsadi", "ss", 2, new Date(2021));
+
+window.b = myProjects;
+console.log(myProjects);
+console.log(myProjects.list);
+console.log(myProjects.toDoArray);
 
 /***/ })
 
