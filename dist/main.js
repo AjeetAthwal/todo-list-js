@@ -3055,10 +3055,36 @@ myProjects.addToDoToLatestProject("Hi", "", "", new Date());
 myProjects.addProject("My Project2", "lasdol", 2, new Date(2020,11,9))
 myProjects.addToDoToLatestProject("Hsadi", "ss", 2, new Date(2021));
 
+
+
 window.b = myProjects;
 console.log(myProjects);
-console.log(myProjects.list);
-console.log(myProjects.toDoArray);
+console.log(myProjects.getList());
+console.log(myProjects.getToDoList());
+
+myProjects.addToDoToProject("","Hsadi", "ss", 2, new Date(2021));
+
+console.log(myProjects);
+console.log(myProjects.getList());
+console.log(myProjects.getToDoList());
+
+myProjects.removeToDoFromProject(0,1);
+
+console.log(myProjects);
+console.log(myProjects.getList());
+console.log(myProjects.getToDoList());
+
+myProjects.removeProject(1);
+
+console.log(myProjects);
+console.log(myProjects.getList());
+console.log(myProjects.getToDoList());
+
+myProjects.removeProject(2);
+
+console.log(myProjects);
+console.log(myProjects.getList());
+console.log(myProjects.getToDoList());
 
 /***/ }),
 
@@ -3141,9 +3167,9 @@ class ToDo{
             this._projectId = 0;
             return;
         }
-        if (typeof projectId !== "number") throw new Error("Project ID must be a positive Integer");
-        if (!Number.isInteger(projectId)) throw new Error("Project ID must be a positive Integer");
-        if (projectId <= 0) throw new Error("Project ID must be a positive Integer");
+        if (typeof projectId !== "number") throw new Error("Project ID must be a non-negative Integer");
+        if (!Number.isInteger(projectId)) throw new Error("Project ID must be a non-negative Integer");
+        if (projectId < 0) throw new Error("Project ID must be a non-negative Integer");
         if (this._projectId === undefined) this._projectId = projectId;
         
     }
@@ -3228,6 +3254,10 @@ class Project{
         this.creationDatetime = new Date();
 
         this._toDoIDCounter = 1;
+    }
+
+    getToDoNumber(){
+        return this.list.length;
     }
 
     set maxPriority(newMax){
@@ -3336,9 +3366,14 @@ class Project{
 
 class Projects{
     constructor(){
-        this.list = [];
+        this._list = [];
         this._toDoIDCounter = 1;
-        this.toDoArray = [];
+        this._toDoArray = [];
+
+        this._listSort = "dueDate"
+        this._toDoListSort = "dueDate"
+
+        this._addMiscProject();
     }
 
     _update(){
@@ -3347,29 +3382,67 @@ class Projects{
 
     _updateToDoArray(){
         const arr = [];
-        for (let projectIndex = 0; projectIndex < this.list.length; projectIndex++)
-            for (let toDoIndex = 0; toDoIndex < this.list[projectIndex].list.length; toDoIndex++)
-                arr.push(this.list[projectIndex].list[toDoIndex]);
-        this.toDoArray = arr;
-        return arr;
+        for (let projectIndex = 0; projectIndex < this._list.length; projectIndex++)
+            for (let toDoIndex = 0; toDoIndex < this._list[projectIndex].list.length; toDoIndex++)
+                arr.push(this._list[projectIndex].list[toDoIndex]);
+        this._toDoArray = arr;
+    }
+
+    _getProjectIndex(projectId){
+        const projectIndex = this._list.findIndex(project => project.id === projectId);
+        if (projectIndex === -1) throw new Error("To Do ID does not exist");
+        return projectIndex;
+    }
+
+    _getProject(projectId){
+        const projectIndex = this._getProjectIndex(projectId);
+        return this._list[projectIndex];
+    }
+
+    getList(){
+        return this._list.filter(project => project.id !== 0 || project.getToDoNumber() !== 0);
+    }
+
+    getToDoList(){
+        return this._toDoArray;
     }
 
     addProject(title, description, priority, dueDate){
-        this.list.push(new Project(this._toDoIDCounter, title, description, priority, dueDate));
+        this._list.push(new Project(this._toDoIDCounter, title, description, priority, dueDate));
         this._toDoIDCounter++;
         this._update();
     }
 
-    removeProject(projectId){
-        const projectIndex = this.list.findIndex(project => project.id === projectId);
-        if (projectIndex === -1) throw new Error("To Do ID does not exist");
+    _addMiscProject(){
+        this._list.push(new Project(0, "Other", "", "", ""));
         this._update();
-        return this.list.splice(projectIndex, 1);
+    }
+
+    removeProject(projectId){
+        if (projectId === 0) throw new Error("Cannot Remove Misc Project");
+        const projectIndex = this._getProjectIndex(projectId);
+        const removedProject = this._list.splice(projectIndex, 1);
+        this._update();
+        return removedProject;
     }
 
     addToDoToLatestProject(title, description, priority, dueDate){
-        const projectIndex = this.list.findIndex(project => project.id === this._toDoIDCounter - 1);
-        this.list[projectIndex].addToDo(title, description, priority, dueDate);
+        const projectIndex = this._getProjectIndex(this._toDoIDCounter - 1);
+        this._list[projectIndex].addToDo(title, description, priority, dueDate);
+        this._update();
+    }
+
+    addToDoToProject(projectId, title, description, priority, dueDate){
+        if (projectId === "") projectId = 0;
+        const projectIndex = this._getProjectIndex(projectId)
+        this._list[projectIndex].addToDo(title, description, priority, dueDate);
+        this._update();
+    }
+
+    removeToDoFromProject(projectId, toDoId){
+        if (projectId === "") projectId = 0;
+        const projectIndex = this._getProjectIndex(projectId)
+        this._list[projectIndex].removeToDo(toDoId);
         this._update();
     }
 }

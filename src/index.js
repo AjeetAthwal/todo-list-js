@@ -15,7 +15,33 @@ myProjects.addToDoToLatestProject("Hi", "", "", new Date());
 myProjects.addProject("My Project2", "lasdol", 2, new Date(2020,11,9))
 myProjects.addToDoToLatestProject("Hsadi", "ss", 2, new Date(2021));
 
+
+
 window.b = myProjects;
 console.log(myProjects);
-console.log(myProjects.list);
-console.log(myProjects.toDoArray);
+console.log(myProjects.getList());
+console.log(myProjects.getToDoList());
+
+myProjects.addToDoToProject("","Hsadi", "ss", 2, new Date(2021));
+
+console.log(myProjects);
+console.log(myProjects.getList());
+console.log(myProjects.getToDoList());
+
+myProjects.removeToDoFromProject(0,1);
+
+console.log(myProjects);
+console.log(myProjects.getList());
+console.log(myProjects.getToDoList());
+
+myProjects.removeProject(1);
+
+console.log(myProjects);
+console.log(myProjects.getList());
+console.log(myProjects.getToDoList());
+
+myProjects.removeProject(2);
+
+console.log(myProjects);
+console.log(myProjects.getList());
+console.log(myProjects.getToDoList());
