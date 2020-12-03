@@ -261,6 +261,10 @@ class Projects{
         this.toDoArray = [];
     }
 
+    _update(){
+        this._updateToDoArray();
+    }
+
     _updateToDoArray(){
         const arr = [];
         for (let projectIndex = 0; projectIndex < this.list.length; projectIndex++)
@@ -273,20 +277,20 @@ class Projects{
     addProject(title, description, priority, dueDate){
         this.list.push(new Project(this._toDoIDCounter, title, description, priority, dueDate));
         this._toDoIDCounter++;
-        this._updateToDoArray();
+        this._update();
     }
 
     removeProject(projectId){
         const projectIndex = this.list.findIndex(project => project.id === projectId);
         if (projectIndex === -1) throw new Error("To Do ID does not exist");
-        this._updateToDoArray();
+        this._update();
         return this.list.splice(projectIndex, 1);
     }
 
     addToDoToLatestProject(title, description, priority, dueDate){
         const projectIndex = this.list.findIndex(project => project.id === this._toDoIDCounter - 1);
         this.list[projectIndex].addToDo(title, description, priority, dueDate);
-        this._updateToDoArray();
+        this._update();
     }
 }
 
