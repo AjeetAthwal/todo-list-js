@@ -7,7 +7,26 @@ class Sorter{
         this._list = [];
         this.listSort = listSort;
     }
-
+    _compareDueDate(first, second){
+        const firstDueDate = first.dueDate;
+        const secondDueDate = second.dueDate;
+        if (firstDueDate === secondDueDate) return 0;
+        if (firstDueDate === "") return 1;
+        if (secondDueDate === "") return -1;
+        return compareAsc(parse(firstDueDate,'P',new Date()), parse(secondDueDate,'P',new Date()));
+    }
+    
+    _comparePriority(first, second){
+        if (first.priority === second.priority) return 0;
+        if (first.priority < second.priority) return -1;
+        else return 1;
+    }
+    
+    _compareCreationDate(first, second){
+        if (first.creationDatetime === second.creationDatetime) return 0;
+        if (first.creationDatetime < second.creationDatetime) return -1;
+        else return 1;
+    }
 
     get listSort(){
         return this._listSort;
@@ -22,25 +41,29 @@ class Sorter{
         this._listSort = newListSort;
     }
 
+    getList(){
+        return this._list;
+    }
+
     _sortList(){
         switch(this._listSort){
             case "dueDateEarliestFirst":
-                this._list.sort(compareDueDate);
+                this._list.sort(this._compareDueDate);
                 break;
             case "dueDateOldestFirst":
-                this._list.sort(compareDueDate).reverse();
+                this._list.sort(this._compareDueDate).reverse();
                 break;
             case "highestPriorityFirst":
-                this._list.sort(comparePriority);
+                this._list.sort(this._comparePriority);
                 break;
             case "lowestPriorityFirst":
-                this._list.sort(comparePriority).reverse();
+                this._list.sort(this._comparePriority).reverse();
                 break;
             case "oldestFirst":
-                this._list.sort(compareCreationDate);
+                this._list.sort(this._compareCreationDate);
                 break;
             case "newestFirst":
-                this._list.sort(compareCreationDate).reverse();
+                this._list.sort(this._compareCreationDate).reverse();
                 break;                
         }
     }
@@ -216,10 +239,6 @@ class Project extends Sorter{
         return this._list[index];
     }
 
-    getList(){
-        return this._list;
-    }
-
     set maxPriority(newMax){
         this._maxPriority = 10;
     }
@@ -334,51 +353,14 @@ class Projects extends Sorter{
         this._toDoIDCounter = 1;
         this._toDoList = [];
 
-        this.toDoListSort = toDoListSort;
-
+        this._toDosListener = "";
         this._addMiscProject();
-    }
-
-    get toDoListSort(){
-        return this._toDoListSort;
-    }
-
-    set toDoListSort(newListSort){
-        if (
-            newListSort !== "dueDateEarliestFirst" && newListSort !== "dueDateOldestFirst" &&
-            newListSort !== "highestPriorityFirst" && newListSort !== "lowestPriorityFirst" &&
-            newListSort !== "oldestFirst" && newListSort !== "newestFirst"
-        ) throw new Error("Pick a valid sort mode (toDoListSort)");
-        this._toDoListSort = newListSort;
-    }
-
-    _sortToDoList(){
-        switch(this._toDoListSort){
-            case "dueDateEarliestFirst":
-                this._toDoList.sort(compareDueDate);
-                break;
-            case "dueDateOldestFirst":
-                this._toDoList.sort(compareDueDate).reverse();
-                break;
-            case "highestPriorityFirst":
-                this._toDoList.sort(comparePriority);
-                break;
-            case "lowestPriorityFirst":
-                this._toDoList.sort(comparePriority).reverse();
-                break;
-            case "oldestFirst":
-                this._toDoList.sort(compareCreationDate);
-                break;
-            case "newestFirst":
-                this._toDoList.sort(compareCreationDate).reverse();
-                break;   
-        }
     }
 
     _update(){
         this._updateToDoList();
         this._sortList();
-        this._sortToDoList();
+        if (this._toDosListener !== "") this._toDosListener._update();
     }
 
     _updateToDoList(){
@@ -448,25 +430,18 @@ class Projects extends Sorter{
     }
 }
 
-function compareDueDate(first, second){
-    const firstDueDate = first.dueDate;
-    const secondDueDate = second.dueDate;
-    if (firstDueDate === secondDueDate) return 0;
-    if (firstDueDate === "") return 1;
-    if (secondDueDate === "") return -1;
-    return compareAsc(parse(firstDueDate,'P',new Date()), parse(secondDueDate,'P',new Date()));
+class ToDos extends Sorter{
+    constructor(listSort, projects){
+        super(listSort);
+        this._list = projects.getToDoList();
+        this.projects = projects;
+        projects._toDosListener = this;
+    }
+
+    _update(){
+        this._list = this.projects.getToDoList();
+        this._sortList();
+    }
 }
 
-function comparePriority(first, second){
-    if (first.priority === second.priority) return 0;
-    if (first.priority < second.priority) return -1;
-    else return 1;
-}
-
-function compareCreationDate(first, second){
-    if (first.creationDatetime === second.creationDatetime) return 0;
-    if (first.creationDatetime < second.creationDatetime) return -1;
-    else return 1;
-}
-
-export default Projects;
+export {Projects, ToDos};

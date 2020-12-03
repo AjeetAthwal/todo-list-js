@@ -1,8 +1,9 @@
-import Projects from './modules/projects';
+import {Projects, ToDos} from './modules/projects';
 
 const desc1 = "Create ToDo Class description";
 const listSort = "dueDateEarliestFirst";
 const myProjects = new Projects(listSort, listSort);
+const myToDos = new ToDos(listSort, myProjects)
 
 myProjects.addProject("My Project", "lol", 4, new Date(2020,11,6), listSort)
 
@@ -28,10 +29,10 @@ myProjects.addProject("My Project2", "lasdol4", 2, new Date(2021,0,1), listSort)
 
 console.log(myProjects);
 console.log(myProjects.getList());
-console.log(myProjects.getToDoList());
+console.log(myToDos.getList());
 
 myProjects._list.forEach(project => console.log(project.dueDate))
 console.log("gap")
-myProjects._toDoList.forEach(project => console.log(project.dueDate))
+myToDos._list.forEach(project => console.log(project.dueDate))
 console.log("gap")
 myProjects._getProject(1)._list.forEach(todo => console.log(todo.dueDate));
