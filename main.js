@@ -5407,17 +5407,17 @@ __webpack_require__.r(__webpack_exports__);
 
 
 const desc1 = "Create ToDo Class description";
+const listSort = "dueDateEarliestFirst";
+const myProjects = new _modules_projects__WEBPACK_IMPORTED_MODULE_0__.default(listSort, listSort);
 
-const myProjects = new _modules_projects__WEBPACK_IMPORTED_MODULE_0__.default("dueDateEarliestFirst", "dueDateEarliestFirst");
-
-myProjects.addProject("My Project", "lol", 4, new Date(2020,11,6))
+myProjects.addProject("My Project", "lol", 4, new Date(2020,11,6), listSort)
 
 myProjects.addToDoToLatestProject("Create ToDo Class1", desc1, 5, new Date(2020,11,6))
 myProjects.addToDoToLatestProject("Create ToDo Class2", "sss", 5, new Date(2021,0));
 myProjects.addToDoToLatestProject("Create ToDo Class3", "", 1, new Date(2021,11,2));
 myProjects.addToDoToLatestProject("Hi", "", "", new Date());
 
-myProjects.addProject("My Project2", "lasdol", 2, new Date(2020,11,9))
+myProjects.addProject("My Project2", "lasdol", 2, new Date(2020,11,9), listSort);
 myProjects.addToDoToLatestProject("Hsadi", "ss1", 2, new Date(2021,11,2));
 
 
@@ -5426,11 +5426,11 @@ window.b = myProjects;
 
 myProjects.addToDoToProject("","Hsadi", "ss", 2, "");
 
-myProjects.addProject("My Project2", "lasdol1", 2, new Date(2020,11,13))
+myProjects.addProject("My Project2", "lasdol1", 2, new Date(2020,11,13), listSort)
 
-myProjects.addProject("My Project2", "lasdol2", 2, new Date(2020,11,3))
-myProjects.addProject("My Project2", "lasdol3", 2, new Date(2021,11,3))
-myProjects.addProject("My Project2", "lasdol4", 2, new Date(2021,0,1))
+myProjects.addProject("My Project2", "lasdol2", 2, new Date(2020,11,3), listSort)
+myProjects.addProject("My Project2", "lasdol3", 2, new Date(2021,11,3), listSort)
+myProjects.addProject("My Project2", "lasdol4", 2, new Date(2021,0,1), listSort)
 
 console.log(myProjects);
 console.log(myProjects.getList());
@@ -5439,30 +5439,8 @@ console.log(myProjects.getToDoList());
 myProjects._list.forEach(project => console.log(project.dueDate))
 console.log("gap")
 myProjects._toDoList.forEach(project => console.log(project.dueDate))
-
-// myProjects._list.sort(comparePriority)  // lower priority number first (ie highest priority)
-
-// console.log(myProjects);
-// console.log(myProjects.getList());
-// console.log(myProjects.getToDoList());
-
-// myProjects._list.sort(comparePriority).reverse()   // higher priority number first (ie lowest priority)
-
-// console.log(myProjects);
-// console.log(myProjects.getList());
-// console.log(myProjects.getToDoList());
-
-// myProjects._list.sort(compareCreationDate) // oldest first
-
-// console.log(myProjects);
-// console.log(myProjects.getList());
-// console.log(myProjects.getToDoList());
-
-// myProjects._list.sort(compareCreationDate).reverse() // newest first
-
-// console.log(myProjects);
-// console.log(myProjects.getList());
-// console.log(myProjects.getToDoList());
+console.log("gap")
+myProjects._getProject(1)._list.forEach(todo => console.log(todo.dueDate));
 
 /***/ }),
 
@@ -5483,7 +5461,6 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var date_fns__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! date-fns */ "./node_modules/date-fns/esm/format/index.js");
 /* harmony import */ var date_fns_compareAsc__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! date-fns/compareAsc */ "./node_modules/date-fns/esm/compareAsc/index.js");
 /* harmony import */ var date_fns_parse__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! date-fns/parse */ "./node_modules/date-fns/esm/parse/index.js");
-
 
 
 
@@ -5621,7 +5598,7 @@ class ToDo{
 // automatically assigns id to ToDo
 // changes dueDate to larger value if toDO DueDate is larger
 class Project{
-    constructor(id, title, description, priority, dueDate){
+    constructor(id, title, description, priority, dueDate, listSort){
         this.maxPriority = 10;  // dummy number see setter
         this.minPriority = 1;   // dummy number see setter
 
@@ -5634,9 +5611,51 @@ class Project{
         this.dueDate = dueDate;
         this._list = [];
 
+        this.listSort = listSort;
+
         this.creationDatetime = new Date();
 
         this._toDoIDCounter = 1;
+    }
+
+    get listSort(){
+        return this._listSort;
+    }
+
+    set listSort(newListSort){
+        if (
+            newListSort !== "dueDateEarliestFirst" && newListSort !== "dueDateOldestFirst" &&
+            newListSort !== "highestPriorityFirst" && newListSort !== "lowestPriorityFirst" &&
+            newListSort !== "oldestFirst" && newListSort !== "newestFirst"
+        ) throw new Error("Pick a valid sort mode (listSort)");
+        this._listSort = newListSort;
+    }
+
+    _sortList(){
+        switch(this._listSort){
+            case "dueDateEarliestFirst":
+                this._list.sort(compareDueDate);
+                break;
+            case "dueDateOldestFirst":
+                this._list.sort(compareDueDate).reverse();
+                break;
+            case "highestPriorityFirst":
+                this._list.sort(comparePriority);
+                break;
+            case "lowestPriorityFirst":
+                this._list.sort(comparePriority).reverse();
+                break;
+            case "oldestFirst":
+                this._list.sort(compareCreationDate);
+                break;
+            case "newestFirst":
+                this._list.sort(compareCreationDate).reverse();
+                break;                
+        }
+    }
+
+    _update(){
+        this._sortList();
     }
 
     getToDoNumber(){
@@ -5754,12 +5773,15 @@ class Project{
     addToDo(title, description, priority, dueDate){
         this._list.push(new ToDo(this._toDoIDCounter, this.id, title, description, priority, dueDate));
         this._toDoIDCounter++;
+        this._update();
     }
 
     removeToDo(toDoId){
         const toDoIndex = this._list.findIndex(toDo => toDo.id === toDoId);
         if (toDoIndex === -1) throw new Error("To Do ID does not exist");
-        return this._list.splice(toDoIndex, 1);
+        const removedToDo = this._list.splice(toDoIndex, 1);
+        this._update();
+        return removedToDo;
     }
 }
 
@@ -5769,10 +5791,36 @@ class Projects{
         this._toDoIDCounter = 1;
         this._toDoList = [];
 
-        this._listSort = listSort;
-        this._toDoListSort = toDoListSort;
+        this.listSort = listSort;
+        this.toDoListSort = toDoListSort;
 
         this._addMiscProject();
+    }
+
+    get listSort(){
+        return this._listSort;
+    }
+
+    set listSort(newListSort){
+        if (
+            newListSort !== "dueDateEarliestFirst" && newListSort !== "dueDateOldestFirst" &&
+            newListSort !== "highestPriorityFirst" && newListSort !== "lowestPriorityFirst" &&
+            newListSort !== "oldestFirst" && newListSort !== "newestFirst"
+        ) throw new Error("Pick a valid sort mode (listSort)");
+        this._listSort = newListSort;
+    }
+
+    get toDoListSort(){
+        return this._toDoListSort;
+    }
+
+    set toDoListSort(newListSort){
+        if (
+            newListSort !== "dueDateEarliestFirst" && newListSort !== "dueDateOldestFirst" &&
+            newListSort !== "highestPriorityFirst" && newListSort !== "lowestPriorityFirst" &&
+            newListSort !== "oldestFirst" && newListSort !== "newestFirst"
+        ) throw new Error("Pick a valid sort mode (toDoListSort)");
+        this._toDoListSort = newListSort;
     }
 
     _sortList(){
@@ -5783,6 +5831,18 @@ class Projects{
             case "dueDateOldestFirst":
                 this._list.sort(compareDueDate).reverse();
                 break;
+            case "highestPriorityFirst":
+                this._list.sort(comparePriority);
+                break;
+            case "lowestPriorityFirst":
+                this._list.sort(comparePriority).reverse();
+                break;
+            case "oldestFirst":
+                this._list.sort(compareCreationDate);
+                break;
+            case "newestFirst":
+                this._list.sort(compareCreationDate).reverse();
+                break;                
         }
     }
 
@@ -5794,6 +5854,18 @@ class Projects{
             case "dueDateOldestFirst":
                 this._toDoList.sort(compareDueDate).reverse();
                 break;
+            case "highestPriorityFirst":
+                this._toDoList.sort(comparePriority);
+                break;
+            case "lowestPriorityFirst":
+                this._toDoList.sort(comparePriority).reverse();
+                break;
+            case "oldestFirst":
+                this._toDoList.sort(compareCreationDate);
+                break;
+            case "newestFirst":
+                this._toDoList.sort(compareCreationDate).reverse();
+                break;   
         }
     }
 
@@ -5830,14 +5902,14 @@ class Projects{
         return this._toDoList;
     }
 
-    addProject(title, description, priority, dueDate){
-        this._list.push(new Project(this._toDoIDCounter, title, description, priority, dueDate));
+    addProject(title, description, priority, dueDate, listSort){
+        this._list.push(new Project(this._toDoIDCounter, title, description, priority, dueDate, listSort));
         this._toDoIDCounter++;
         this._update();
     }
 
     _addMiscProject(){
-        this._list.push(new Project(0, "Other", "", "", ""));
+        this._list.push(new Project(0, "Other", "", "", "", "dueDateEarliestFirst"));
         this._update();
     }
 
