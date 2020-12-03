@@ -279,8 +279,8 @@ class Projects{
     removeProject(projectId){
         const projectIndex = this.list.findIndex(project => project.id === projectId);
         if (projectIndex === -1) throw new Error("To Do ID does not exist");
-        return this.list.splice(projectIndex, 1);
         this._updateToDoArray();
+        return this.list.splice(projectIndex, 1);
     }
 
     addToDoToLatestProject(title, description, priority, dueDate){
