@@ -3037,7 +3037,47 @@ function toDate(argument) {
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 __webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _modules_projects__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./modules/projects */ "./src/modules/projects.js");
+
+
+
+const desc1 = "Create ToDo Class description";
+
+const myProjects = new _modules_projects__WEBPACK_IMPORTED_MODULE_0__.default();
+
+myProjects.addProject("My Project", "lol", 4, new Date(2020,11,6))
+
+myProjects.addToDoToLatestProject("Create ToDo Class", desc1, 5, new Date(2020,11,6))
+myProjects.addToDoToLatestProject("Create ToDo Class", "", 5, new Date(2021,0));
+myProjects.addToDoToLatestProject("Create ToDo Class", "", 1, new Date(2021));
+myProjects.addToDoToLatestProject("Hi", "", "", new Date());
+
+myProjects.addProject("My Project2", "lasdol", 2, new Date(2020,11,9))
+myProjects.addToDoToLatestProject("Hsadi", "ss", 2, new Date(2021));
+
+window.b = myProjects;
+console.log(myProjects);
+console.log(myProjects.list);
+console.log(myProjects.toDoArray);
+
+/***/ }),
+
+/***/ "./src/modules/projects.js":
+/*!*********************************!*\
+  !*** ./src/modules/projects.js ***!
+  \*********************************/
+/*! namespace exports */
+/*! export default [provided] [no usage info] [missing usage info prevents renaming] */
+/*! other exports [not provided] [no usage info] */
+/*! runtime requirements: __webpack_require__, __webpack_exports__, __webpack_require__.r, __webpack_require__.d, __webpack_require__.* */
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => __WEBPACK_DEFAULT_EXPORT__
+/* harmony export */ });
 /* harmony import */ var date_fns__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! date-fns */ "./node_modules/date-fns/esm/format/index.js");
+
 
 class ToDo{
     constructor(id, projectId, title, description, priority, dueDate){
@@ -3334,24 +3374,7 @@ class Projects{
     }
 }
 
-const desc1 = "Create ToDo Class description";
-
-const myProjects = new Projects();
-
-myProjects.addProject("My Project", "lol", 4, new Date(2020,11,6))
-
-myProjects.addToDoToLatestProject("Create ToDo Class", desc1, 5, new Date(2020,11,6))
-myProjects.addToDoToLatestProject("Create ToDo Class", "", 5, new Date(2021,0));
-myProjects.addToDoToLatestProject("Create ToDo Class", "", 1, new Date(2021));
-myProjects.addToDoToLatestProject("Hi", "", "", new Date());
-
-myProjects.addProject("My Project2", "lasdol", 2, new Date(2020,11,9))
-myProjects.addToDoToLatestProject("Hsadi", "ss", 2, new Date(2021));
-
-window.b = myProjects;
-console.log(myProjects);
-console.log(myProjects.list);
-console.log(myProjects.toDoArray);
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (Projects);
 
 /***/ })
 
