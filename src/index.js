@@ -1,19 +1,44 @@
-import { formatDistance, subDays } from 'date-fns'
+import { format } from 'date-fns'
 class ToDo{
-    constructor(id, title, description/*, dueDate*/, priority/*, projectCreationDatetime*/){
-        this.id = id;
+    constructor(id, projectId, title, description, priority, dueDate){
         this.maxPriority = 10;  // dummy number see setter
         this.minPriority = 1;   // dummy number see setter
+        
+        this.id = id;
+        this.projectId = projectId;
 
         this.isComplete = false;
         this.title = title;
         this.description = description;
-        //this.dueDate = dueDate;
         this.priority = priority;
-        
-        //this.projectCreationDatetime = projectCreationDatetime;
-        //this.creationDatetime = ???;
+        this.dueDate = dueDate;
 
+        this.creationDatetime = new Date();
+
+    }
+
+    _isValidDate(date) {
+        return date && Object.prototype.toString.call(date) === "[object Date]" && !isNaN(date);
+    }
+
+    set dueDate(dateTime){
+        if (!this._isValidDate(dateTime)) throw new Error("Please Enter a valid date");
+        this._dueDate = dateTime;
+        
+    }
+
+    get dueDate (){
+        return format(this._dueDate, 'P');
+    }
+
+
+    set creationDatetime(dateTime){
+        if (this._creationDatetime === undefined) this._creationDatetime = dateTime;
+        
+    }
+
+    get creationDatetime (){
+        return format(this._creationDatetime, 'P');
     }
 
     set id(id){
@@ -23,6 +48,23 @@ class ToDo{
 
     get id (){
         return this._id;
+    }
+
+    set projectId(projectId){
+        if (projectId === ""){
+            // projectId = 0 reserved for "Other"
+            this._projectId = 0;
+            return;
+        }
+        if (typeof projectId !== "number") throw new Error("Project ID must be a positive Integer");
+        if (!Number.isInteger(projectId)) throw new Error("Project ID must be a positive Integer");
+        if (projectId <= 0) throw new Error("Project ID must be a positive Integer");
+        if (this._projectId === undefined) this._projectId = projectId;
+        
+    }
+
+    get projectId (){
+        return this._projectId;
     }
 
     toggleCompleteStatus(){
@@ -82,20 +124,19 @@ class ToDo{
 }
 
 const desc1 = "Create ToDo Class description";
-const todo1 = new ToDo(1, "Create ToDo Class", desc1, 5);
-const todo2 = new ToDo(2, "Create ToDo Class", "", 5);
+const todo1 = new ToDo(1, "", "Create ToDo Class", desc1, 5, new Date(2020,11,6));
+const todo2 = new ToDo(2, 1, "Create ToDo Class", "", 5, new Date(2021,0));
 window.testTodo = todo1;
 console.log(todo1);
 console.log(todo2);
-const todo3 = new ToDo(3, "Create ToDo Class", "", 1);
+const todo3 = new ToDo(3, 2, "Create ToDo Class", "", 1, new Date(2021));
 console.log(todo3);
-const todo4 = new ToDo(4, "Hi", "", "");
+const todo4 = new ToDo(4, 1, "Hi", "", "", new Date());
 console.log(todo4);
 
 
 const b = todo1;
-const a = formatDistance(subDays(new Date(), 3), new Date());
-window.a = a;
-console.log(a)
+
 console.log(new Date())
+console.log(format(new Date(), 'P'))
 window.b = b;
