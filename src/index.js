@@ -3,19 +3,28 @@ class ToDo{
         this.maxPriority = 10;  // dummy number see setter
         this.minPriority = 1;   // dummy number see setter
 
-        this.complete = false;
+        this.isComplete = false;
         this.title = title;
         this.description = description;
-        //this._dueDate = dueDate;
+        //this.dueDate = dueDate;
         this.priority = priority;
         
-        //this._projectCreationDatetime = projectCreationDatetime;
-        //this._creationDatetime = ???;
+        //this.projectCreationDatetime = projectCreationDatetime;
+        //this.creationDatetime = ???;
 
     }
 
     toggleCompleteStatus(){
-        this.complete = !this.complete;
+        this.isComplete = !this.isComplete;
+    }
+
+    set isComplete(newComplete){
+        if (typeof newComplete !== "boolean") throw new Error("ToDo isComplete must be a boolean");
+        this._isComplete = newComplete;
+    }
+
+    get isComplete(){
+        return this._isComplete;
     }
 
     set maxPriority(newMax){
