@@ -28,16 +28,18 @@ class Sorter{
         else return 1;
     }
 
+    _isNotSortValue(listSort){
+        return listSort !== "dueDateEarliestFirst" && listSort !== "dueDateOldestFirst" &&
+        listSort !== "highestPriorityFirst" && listSort !== "lowestPriorityFirst" &&
+        listSort !== "oldestFirst" && listSort !== "newestFirst";
+    }
+
     get listSort(){
         return this._listSort;
     }
 
     set listSort(newListSort){
-        if (
-            newListSort !== "dueDateEarliestFirst" && newListSort !== "dueDateOldestFirst" &&
-            newListSort !== "highestPriorityFirst" && newListSort !== "lowestPriorityFirst" &&
-            newListSort !== "oldestFirst" && newListSort !== "newestFirst"
-        ) throw new Error("Pick a valid sort mode (listSort)");
+        if (this._isNotSortValue(newListSort)) throw new Error("Pick a valid sort mode (listSort)");
         this._listSort = newListSort;
     }
 
@@ -348,7 +350,7 @@ class Project extends Sorter{
 }
 
 class Projects extends Sorter{
-    constructor(listSort, toDoListSort){
+    constructor(listSort){
         super(listSort);
         this._toDoIDCounter = 1;
         this._toDoList = [];

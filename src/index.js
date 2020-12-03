@@ -1,9 +1,14 @@
 import {Projects, ToDos} from './modules/projects';
+import Settings from './modules/settings';
+import Storage from './modules/storage';
 
 const desc1 = "Create ToDo Class description";
 const listSort = "dueDateEarliestFirst";
-const myProjects = new Projects(listSort, listSort);
-const myToDos = new ToDos(listSort, myProjects)
+
+
+const mySettings = new Settings("", "", "", "");
+const myProjects = new Projects(mySettings.projectViewProjectSortPref, listSort);
+const myToDos = new ToDos(mySettings.projectViewToDoSortPref, myProjects)
 
 myProjects.addProject("My Project", "lol", 4, new Date(2020,11,6), listSort)
 
