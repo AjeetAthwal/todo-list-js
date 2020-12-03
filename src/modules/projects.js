@@ -1,7 +1,6 @@
 import { format } from 'date-fns'
 import compareAsc from 'date-fns/compareAsc'
 import parse from 'date-fns/parse'
-import compareDesc from 'date-fns/compareDesc'
 
 class ToDo{
     constructor(id, projectId, title, description, priority, dueDate){
@@ -136,7 +135,7 @@ class ToDo{
 // automatically assigns id to ToDo
 // changes dueDate to larger value if toDO DueDate is larger
 class Project{
-    constructor(id, title, description, priority, dueDate){
+    constructor(id, title, description, priority, dueDate, listSort){
         this.maxPriority = 10;  // dummy number see setter
         this.minPriority = 1;   // dummy number see setter
 
@@ -149,9 +148,51 @@ class Project{
         this.dueDate = dueDate;
         this._list = [];
 
+        this.listSort = listSort;
+
         this.creationDatetime = new Date();
 
         this._toDoIDCounter = 1;
+    }
+
+    get listSort(){
+        return this._listSort;
+    }
+
+    set listSort(newListSort){
+        if (
+            newListSort !== "dueDateEarliestFirst" && newListSort !== "dueDateOldestFirst" &&
+            newListSort !== "highestPriorityFirst" && newListSort !== "lowestPriorityFirst" &&
+            newListSort !== "oldestFirst" && newListSort !== "newestFirst"
+        ) throw new Error("Pick a valid sort mode (listSort)");
+        this._listSort = newListSort;
+    }
+
+    _sortList(){
+        switch(this._listSort){
+            case "dueDateEarliestFirst":
+                this._list.sort(compareDueDate);
+                break;
+            case "dueDateOldestFirst":
+                this._list.sort(compareDueDate).reverse();
+                break;
+            case "highestPriorityFirst":
+                this._list.sort(comparePriority);
+                break;
+            case "lowestPriorityFirst":
+                this._list.sort(comparePriority).reverse();
+                break;
+            case "oldestFirst":
+                this._list.sort(compareCreationDate);
+                break;
+            case "newestFirst":
+                this._list.sort(compareCreationDate).reverse();
+                break;                
+        }
+    }
+
+    _update(){
+        this._sortList();
     }
 
     getToDoNumber(){
@@ -269,12 +310,15 @@ class Project{
     addToDo(title, description, priority, dueDate){
         this._list.push(new ToDo(this._toDoIDCounter, this.id, title, description, priority, dueDate));
         this._toDoIDCounter++;
+        this._update();
     }
 
     removeToDo(toDoId){
         const toDoIndex = this._list.findIndex(toDo => toDo.id === toDoId);
         if (toDoIndex === -1) throw new Error("To Do ID does not exist");
-        return this._list.splice(toDoIndex, 1);
+        const removedToDo = this._list.splice(toDoIndex, 1);
+        this._update();
+        return removedToDo;
     }
 }
 
@@ -284,10 +328,36 @@ class Projects{
         this._toDoIDCounter = 1;
         this._toDoList = [];
 
-        this._listSort = listSort;
-        this._toDoListSort = toDoListSort;
+        this.listSort = listSort;
+        this.toDoListSort = toDoListSort;
 
         this._addMiscProject();
+    }
+
+    get listSort(){
+        return this._listSort;
+    }
+
+    set listSort(newListSort){
+        if (
+            newListSort !== "dueDateEarliestFirst" && newListSort !== "dueDateOldestFirst" &&
+            newListSort !== "highestPriorityFirst" && newListSort !== "lowestPriorityFirst" &&
+            newListSort !== "oldestFirst" && newListSort !== "newestFirst"
+        ) throw new Error("Pick a valid sort mode (listSort)");
+        this._listSort = newListSort;
+    }
+
+    get toDoListSort(){
+        return this._toDoListSort;
+    }
+
+    set toDoListSort(newListSort){
+        if (
+            newListSort !== "dueDateEarliestFirst" && newListSort !== "dueDateOldestFirst" &&
+            newListSort !== "highestPriorityFirst" && newListSort !== "lowestPriorityFirst" &&
+            newListSort !== "oldestFirst" && newListSort !== "newestFirst"
+        ) throw new Error("Pick a valid sort mode (toDoListSort)");
+        this._toDoListSort = newListSort;
     }
 
     _sortList(){
@@ -298,6 +368,18 @@ class Projects{
             case "dueDateOldestFirst":
                 this._list.sort(compareDueDate).reverse();
                 break;
+            case "highestPriorityFirst":
+                this._list.sort(comparePriority);
+                break;
+            case "lowestPriorityFirst":
+                this._list.sort(comparePriority).reverse();
+                break;
+            case "oldestFirst":
+                this._list.sort(compareCreationDate);
+                break;
+            case "newestFirst":
+                this._list.sort(compareCreationDate).reverse();
+                break;                
         }
     }
 
@@ -309,6 +391,18 @@ class Projects{
             case "dueDateOldestFirst":
                 this._toDoList.sort(compareDueDate).reverse();
                 break;
+            case "highestPriorityFirst":
+                this._toDoList.sort(comparePriority);
+                break;
+            case "lowestPriorityFirst":
+                this._toDoList.sort(comparePriority).reverse();
+                break;
+            case "oldestFirst":
+                this._toDoList.sort(compareCreationDate);
+                break;
+            case "newestFirst":
+                this._toDoList.sort(compareCreationDate).reverse();
+                break;   
         }
     }
 
@@ -345,14 +439,14 @@ class Projects{
         return this._toDoList;
     }
 
-    addProject(title, description, priority, dueDate){
-        this._list.push(new Project(this._toDoIDCounter, title, description, priority, dueDate));
+    addProject(title, description, priority, dueDate, listSort){
+        this._list.push(new Project(this._toDoIDCounter, title, description, priority, dueDate, listSort));
         this._toDoIDCounter++;
         this._update();
     }
 
     _addMiscProject(){
-        this._list.push(new Project(0, "Other", "", "", ""));
+        this._list.push(new Project(0, "Other", "", "", "", "dueDateEarliestFirst"));
         this._update();
     }
 
