@@ -1,0 +1,81 @@
+:root{
+    --main-bg-color: #1F2833;
+    --second-bg-color: #0B0C10;
+    --main-text-color: #C5C6C7;
+    --other-text-color: #66FCF1;
+    --other-color: #45A29E;
+}
+
+body{
+    background-color: var(--main-bg-color);
+    font-family: 'Open Sans', sans-serif;
+}
+
+header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100px;
+    width: 100%;
+    background-color: var(--second-bg-color);
+    display: flex;
+    justify-content: center;
+}
+
+#container{
+    padding-top: 100px;
+    width: 100%;
+    background-color: antiquewhite;
+
+}
+
+#nav {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    background-color: paleturquoise;
+}
+
+#nav > li{
+    padding: 20px;
+    background-color:var(--second-bg-color);
+    display: inline;
+    margin: auto;
+    
+}
+
+#nav a {
+    font-size: 2em;
+    color: var(--main-text-color);
+    text-decoration: none;
+    line-height: 60px;
+}
+
+a {
+    cursor: default;
+}
+
+#nav li:hover {
+    cursor: pointer;
+    text-decoration: underline;
+}
+
+#nav a:hover {
+    cursor: pointer;
+}
+
+#nav .active {
+    background-color: var(--main-bg-color);
+    color: var(--main-color);
+}
+
+#nav .active:hover {
+    background-color: var(--main-bg-color);
+    cursor: default;
+    text-decoration: none;
+}
+
+#nav .active a:hover {
+    cursor: default;
+}
