@@ -5412,8 +5412,9 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
+const mySettingsStorage = ""
 const myProjectsStorage = new _modules_storage__WEBPACK_IMPORTED_MODULE_2__.default(false, true, _modules_defaultEntry__WEBPACK_IMPORTED_MODULE_3__.default);
-const mySettings = new _modules_settings__WEBPACK_IMPORTED_MODULE_1__.default("", "", "", "");
+const mySettings = new _modules_settings__WEBPACK_IMPORTED_MODULE_1__.default(mySettingsStorage, "", "", "", "");
 const myProjects = new _modules_projects__WEBPACK_IMPORTED_MODULE_0__.Projects(myProjectsStorage, mySettings);
 const myToDos = new _modules_projects__WEBPACK_IMPORTED_MODULE_0__.ToDos(mySettings, myProjects)
 
