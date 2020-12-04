@@ -5406,6 +5406,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _modules_projects__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./modules/projects */ "./src/modules/projects.js");
 /* harmony import */ var _modules_settings__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./modules/settings */ "./src/modules/settings.js");
 /* harmony import */ var _modules_storage__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./modules/storage */ "./src/modules/storage.js");
+/* harmony import */ var _modules_defaultEntry__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./modules/defaultEntry */ "./src/modules/defaultEntry.js");
+
 
 
 
@@ -5413,43 +5415,234 @@ __webpack_require__.r(__webpack_exports__);
 const desc1 = "Create ToDo Class description";
 const listSort = "dueDateEarliestFirst";
 
-const myProjectsStorage = new _modules_storage__WEBPACK_IMPORTED_MODULE_2__.default(false, true);
+const myProjectsStorage = new _modules_storage__WEBPACK_IMPORTED_MODULE_2__.default(false, true, _modules_defaultEntry__WEBPACK_IMPORTED_MODULE_3__.default);
 const list = myProjectsStorage.getStorage();
 
 const mySettings = new _modules_settings__WEBPACK_IMPORTED_MODULE_1__.default("", "", "", "");
 const myProjects = new _modules_projects__WEBPACK_IMPORTED_MODULE_0__.Projects(myProjectsStorage, mySettings.projectViewProjectSortPref);
 const myToDos = new _modules_projects__WEBPACK_IMPORTED_MODULE_0__.ToDos(mySettings.projectViewToDoSortPref, myProjects)
 
-if (list.length === 0){
+// if (list.length === 0){
 
-myProjects.addProject("My Project", "lol", 4, new Date(2020,11,6), listSort)
+// myProjects.addProject("My Project", "lol", 4, new Date(2020,11,6), listSort)
 
-myProjects.addToDoToLatestProject("Create ToDo Class1", desc1, 5, new Date(2020,11,6))
-myProjects.addToDoToLatestProject("Create ToDo Class2", "sss", 5, new Date(2021,0));
-myProjects.addToDoToLatestProject("Create ToDo Class3", "", 1, new Date(2021,11,2));
-myProjects.addToDoToLatestProject("Hi", "", "", new Date());
+// myProjects.addToDoToProject(1, "Create ToDo Class1", desc1, 5, new Date(2020,11,6))
+// myProjects.addToDoToProject(1, "Create ToDo Class2", "sss", 5, new Date(2021,0));
+// myProjects.addToDoToProject(1, "Create ToDo Class3", "", 1, new Date(2021,11,2));
+// myProjects.addToDoToProject(1, "Hi", "", "", new Date());
 
-myProjects.addProject("My Project2", "lasdol", 2, new Date(2020,11,9), listSort);
-myProjects.addToDoToLatestProject("Hsadi", "ss1", 2, new Date(2021,11,2));
+// myProjects.addProject("My Project2", "lasdol", 2, new Date(2020,11,9), listSort);
+// myProjects.addToDoToProject(2, "Hsadi", "ss1", 2, new Date(2021,11,2));
 
-myProjects.addToDoToProject("","Hsadi", "ss", 2, "");
+// myProjects.addToDoToProject("","Hsadi", "ss", 2, "");
 
-myProjects.addProject("My Project2", "lasdol1", 2, new Date(2020,11,13), listSort)
+// myProjects.addProject("My Project2", "lasdol1", 2, new Date(2020,11,13), listSort)
 
-myProjects.addProject("My Project2", "lasdol2", 2, new Date(2020,11,3), listSort)
-myProjects.addProject("My Project2", "lasdol3", 2, new Date(2021,11,3), listSort)
-myProjects.addProject("My Project2", "lasdol4", 2, new Date(2021,0,1), listSort)
-}
-
-window.b = myProjects;
+// myProjects.addProject("My Project2", "lasdol2", 2, new Date(2020,11,3), listSort)
+// myProjects.addProject("My Project2", "lasdol3", 2, new Date(2021,11,3), listSort)
+// myProjects.addProject("My Project2", "lasdol4", 2, new Date(2021,0,1), listSort)
+// }
 
 console.log(myProjects);
 console.log(myProjects.getList());
 console.log(myToDos.getList());
 
-myProjects._list.forEach(project => console.log(project.dueDate))
-console.log("gap")
-myToDos._list.forEach(project => console.log(project.dueDate))
+/***/ }),
+
+/***/ "./src/modules/defaultEntry.js":
+/*!*************************************!*\
+  !*** ./src/modules/defaultEntry.js ***!
+  \*************************************/
+/*! namespace exports */
+/*! export default [provided] [no usage info] [missing usage info prevents renaming] */
+/*! other exports [not provided] [no usage info] */
+/*! runtime requirements: __webpack_exports__, __webpack_require__.r, __webpack_require__.d, __webpack_require__.* */
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => __WEBPACK_DEFAULT_EXPORT__
+/* harmony export */ });
+const defaultEntry = {
+    "list": [
+      {
+        "_list": [],
+        "_listSort": "dueDateEarliestFirst",
+        "_maxPriority": 10,
+        "_minPriority": 1,
+        "_id": 4,
+        "_title": "My Project2",
+        "_isComplete": false,
+        "_description": "lasdol2",
+        "_priority": 2,
+        "_dueDate": "2020-12-03T00:00:00.000Z",
+        "_creationDatetime": "2020-12-04T17:07:59.298Z",
+        "_toDoIDCounter": 1
+      },
+      {
+        "_list": [
+          {
+            "_maxPriority": 10,
+            "_minPriority": 1,
+            "_id": 4,
+            "_projectId": 1,
+            "_isComplete": false,
+            "_title": "Hi",
+            "_description": "",
+            "_priority": 10,
+            "_dueDate": "2020-12-04T17:07:59.294Z",
+            "_creationDatetime": "2020-12-04T17:07:59.294Z"
+          },
+          {
+            "_maxPriority": 10,
+            "_minPriority": 1,
+            "_id": 1,
+            "_projectId": 1,
+            "_isComplete": false,
+            "_title": "Create ToDo Class1",
+            "_description": "Create ToDo Class description",
+            "_priority": 5,
+            "_dueDate": "2020-12-06T00:00:00.000Z",
+            "_creationDatetime": "2020-12-04T17:07:59.292Z"
+          },
+          {
+            "_maxPriority": 10,
+            "_minPriority": 1,
+            "_id": 2,
+            "_projectId": 1,
+            "_isComplete": false,
+            "_title": "Create ToDo Class2",
+            "_description": "sss",
+            "_priority": 5,
+            "_dueDate": "2021-01-01T00:00:00.000Z",
+            "_creationDatetime": "2020-12-04T17:07:59.293Z"
+          },
+          {
+            "_maxPriority": 10,
+            "_minPriority": 1,
+            "_id": 3,
+            "_projectId": 1,
+            "_isComplete": false,
+            "_title": "Create ToDo Class3",
+            "_description": "",
+            "_priority": 1,
+            "_dueDate": "2021-12-02T00:00:00.000Z",
+            "_creationDatetime": "2020-12-04T17:07:59.293Z"
+          }
+        ],
+        "_listSort": "dueDateEarliestFirst",
+        "_maxPriority": 10,
+        "_minPriority": 1,
+        "_id": 1,
+        "_title": "My Project",
+        "_isComplete": false,
+        "_description": "lol",
+        "_priority": 4,
+        "_dueDate": "2020-12-06T00:00:00.000Z",
+        "_creationDatetime": "2020-12-04T17:07:59.292Z",
+        "_toDoIDCounter": 5
+      },
+      {
+        "_list": [
+          {
+            "_maxPriority": 10,
+            "_minPriority": 1,
+            "_id": 1,
+            "_projectId": 2,
+            "_isComplete": false,
+            "_title": "Hsadi",
+            "_description": "ss1",
+            "_priority": 2,
+            "_dueDate": "2021-12-02T00:00:00.000Z",
+            "_creationDatetime": "2020-12-04T17:07:59.296Z"
+          }
+        ],
+        "_listSort": "dueDateEarliestFirst",
+        "_maxPriority": 10,
+        "_minPriority": 1,
+        "_id": 2,
+        "_title": "My Project2",
+        "_isComplete": false,
+        "_description": "lasdol",
+        "_priority": 2,
+        "_dueDate": "2020-12-09T00:00:00.000Z",
+        "_creationDatetime": "2020-12-04T17:07:59.296Z",
+        "_toDoIDCounter": 2
+      },
+      {
+        "_list": [],
+        "_listSort": "dueDateEarliestFirst",
+        "_maxPriority": 10,
+        "_minPriority": 1,
+        "_id": 3,
+        "_title": "My Project2",
+        "_isComplete": false,
+        "_description": "lasdol1",
+        "_priority": 2,
+        "_dueDate": "2020-12-13T00:00:00.000Z",
+        "_creationDatetime": "2020-12-04T17:07:59.297Z",
+        "_toDoIDCounter": 1
+      },
+      {
+        "_list": [],
+        "_listSort": "dueDateEarliestFirst",
+        "_maxPriority": 10,
+        "_minPriority": 1,
+        "_id": 6,
+        "_title": "My Project2",
+        "_isComplete": false,
+        "_description": "lasdol4",
+        "_priority": 2,
+        "_dueDate": "2021-01-01T00:00:00.000Z",
+        "_creationDatetime": "2020-12-04T17:07:59.300Z",
+        "_toDoIDCounter": 1
+      },
+      {
+        "_list": [],
+        "_listSort": "dueDateEarliestFirst",
+        "_maxPriority": 10,
+        "_minPriority": 1,
+        "_id": 5,
+        "_title": "My Project2",
+        "_isComplete": false,
+        "_description": "lasdol3",
+        "_priority": 2,
+        "_dueDate": "2021-12-03T00:00:00.000Z",
+        "_creationDatetime": "2020-12-04T17:07:59.299Z",
+        "_toDoIDCounter": 1
+      },
+      {
+        "_list": [
+          {
+            "_maxPriority": 10,
+            "_minPriority": 1,
+            "_id": 1,
+            "_projectId": 0,
+            "_isComplete": false,
+            "_title": "Hsadi",
+            "_description": "ss",
+            "_priority": 2,
+            "_dueDate": "",
+            "_creationDatetime": "2020-12-04T17:07:59.297Z"
+          }
+        ],
+        "_listSort": "dueDateEarliestFirst",
+        "_maxPriority": 10,
+        "_minPriority": 1,
+        "_id": 0,
+        "_title": "Other",
+        "_isComplete": false,
+        "_description": "",
+        "_priority": 10,
+        "_dueDate": "",
+        "_creationDatetime": "2020-12-04T17:07:59.291Z",
+        "_toDoIDCounter": 2
+      }
+    ],
+    "toDoIDCounter": 1
+  }
+
+  /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (defaultEntry);
 
 /***/ }),
 
@@ -5550,10 +5743,16 @@ class Sorter{
 }
 
 class ToDo{
-    constructor(id, projectId, title, description, priority, dueDate){
+    constructor(todo, id, projectId, title, description, priority, dueDate){
         this.maxPriority = 10;  // dummy number see setter
         this.minPriority = 1;   // dummy number see setter
 
+        if (todo === "") this._initFromScratch(id, projectId, title, description, priority, dueDate);
+        else this._initFromStorage(todo);
+
+    }
+
+    _initFromScratch(id, projectId, title, description, priority, dueDate){
         this.id = id;
         this.projectId = projectId;
 
@@ -5564,7 +5763,19 @@ class ToDo{
         this.dueDate = dueDate;
 
         this.creationDatetime = new Date();
+    }
 
+    _initFromStorage(todo){
+        this.id = todo._id;
+        this.projectId = todo._projectId;
+
+        this.isComplete = todo._isComplete;
+        this.title = todo._title;
+        this.description = todo._description;
+        this.priority = todo._priority;
+        this.dueDate = todo._dueDate === "" ? "" : new Date(todo._dueDate);
+
+        this.creationDatetime = todo._creationDatetime;
     }
 
     _isValidDate(date) {
@@ -5682,22 +5893,40 @@ class ToDo{
 // automatically assigns id to ToDo
 // changes dueDate to larger value if toDO DueDate is larger
 class Project extends Sorter{
-    constructor(id, title, description, priority, dueDate, listSort){
-        super(listSort);
+    constructor(project, id, title, description, priority, dueDate, listSort){
+        super(listSort === undefined ? project._listSort : listSort);
+
         this.maxPriority = 10;  // dummy number see setter
         this.minPriority = 1;   // dummy number see setter
 
-        this.id = id;
+        if (project === "") this._initFromScratch(id, title, description, priority, dueDate);
+        else this._initFromStorage(project);
 
+
+    }
+
+    _initFromScratch(id, title, description, priority, dueDate){
+        this.id = id;
         this.title = title;
         this.isComplete = false;        
         this.description = description;
         this.priority = priority;
         this.dueDate = dueDate;
-
         this.creationDatetime = new Date();
-
         this._toDoIDCounter = 1;
+    }
+
+    _initFromStorage(project){
+        this.id = project._id;
+        this.title = project._title;
+        this.isComplete = project._isComplete;        
+        this.description = project._description;
+        this.priority = project._priority;
+        this.dueDate = project._dueDate === "" ? "" : new Date(project._dueDate);
+        this.creationDatetime = new Date(project._creationDatetime);
+        this._toDoIDCounter = project._toDoIDCounter;
+
+        project._list.forEach(todo => this._addToDoFromStorage(todo));
     }
 
     getToDoNumber(){
@@ -5808,12 +6037,12 @@ class Project extends Sorter{
         this._priority = newPriority;
     }
 
-    _addToDo(id, title, description, priority, dueDate){
-        this._list.push(new ToDo(id, this.id, title, description, priority, dueDate));
+    _addToDoFromStorage(todo){
+        this._list.push(new ToDo(todo));
     }
 
     addToDo(title, description, priority, dueDate){
-        this._list.push(new ToDo(this._toDoIDCounter, this.id, title, description, priority, dueDate));
+        this._list.push(new ToDo("", this._toDoIDCounter, this.id, title, description, priority, dueDate));
         this._toDoIDCounter++;
         this._update();
     }
@@ -5830,36 +6059,26 @@ class Project extends Sorter{
 class Projects extends Sorter{
     constructor(projectsStorage, listSort){
         super(listSort);
+
         this.projectsStorage = projectsStorage;
+
         const myProjects = projectsStorage.getStorage();
-        console.log("123")
-        console.log(myProjects)
-        if (myProjects.length === 0){
-            this._toDoIDCounter = 1;
-            this._toDoList = [];
+        if (myProjects === "") this._initFromScratch();
+        else this._initFromStorage(myProjects);
 
-            this._toDosListener = "";
-            this._addMiscProject();
-        } else {
-            this._init(myProjects);
-            this._toDoList = [];
-
-            this._toDosListener = "";
-            this._update();
-        }
-
+        this._toDoList = [];
+        this._toDosListener = "";
+        this._update();
     }
 
-    _init(myProjects){
-        myProjects.list.forEach(project => {
-            this._addProject(project._id, project._title, project._description, project._priority, 
-            project._dueDate === "" ? "" : new Date(project._dueDate), 
-            project._listSort);
-            project._list.forEach(todo => this._addToDoToProject(todo._id, todo._projectId, todo._title, todo._description, todo._priority, 
-                todo._dueDate === "" ? "" : new Date(todo._dueDate)));
-        })
+    _initFromScratch(){
+        this._toDoIDCounter = 1;
+        this._addMiscProject();
+    }
 
-        this._toDoIDCounter = myProjects.toDoIDCounter
+    _initFromStorage(myProjects){
+        myProjects.list.forEach(project => this._addProjectFromStorage(project))
+        this._toDoIDCounter = myProjects.toDoIDCounter;          
     }
 
     _update(){
@@ -5896,8 +6115,8 @@ class Projects extends Sorter{
         return this._toDoList;
     }
 
-    _addProject(id, title, description, priority, dueDate, listSort){
-        this._list.push(new Project(id, title, description, priority, dueDate, listSort));
+    _addProjectFromStorage(project){
+        this._list.push(new Project(project));
     }
 
     _addToDoToProject(id, projectId, title, description, priority, dueDate){
@@ -5908,13 +6127,13 @@ class Projects extends Sorter{
     }
 
     addProject(title, description, priority, dueDate, listSort){
-        this._list.push(new Project(this._toDoIDCounter, title, description, priority, dueDate, listSort));
+        this._list.push(new Project("", this._toDoIDCounter, title, description, priority, dueDate, listSort));
         this._toDoIDCounter++;
         this._update();
     }
 
     _addMiscProject(){
-        this._list.push(new Project(0, "Other", "", "", "", "dueDateEarliestFirst"));
+        this._list.push(new Project("", 0, "Other", "", "", "", "dueDateEarliestFirst"));
         this._update();
     }
 
@@ -5924,12 +6143,6 @@ class Projects extends Sorter{
         const removedProject = this._list.splice(projectIndex, 1);
         this._update();
         return removedProject;
-    }
-
-    addToDoToLatestProject(title, description, priority, dueDate){
-        const projectIndex = this._getProjectIndex(this._toDoIDCounter - 1);
-        this._list[projectIndex].addToDo(title, description, priority, dueDate);
-        this._update();
     }
 
     addToDoToProject(projectId, title, description, priority, dueDate){
@@ -6066,10 +6279,11 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "default": () => __WEBPACK_DEFAULT_EXPORT__
 /* harmony export */ });
 class Storage{
-    constructor(serverStorage, localStorage){
+    constructor(serverStorage, localStorage, defaultEntry){
         this._serverStorageWanted =  serverStorage;
         this._localStorageWanted = localStorage;
         this.storageName = "";
+        this.defaultEntry = defaultEntry;
     }
 
     set storageName(name){
@@ -6145,7 +6359,7 @@ class ProjectsStorage extends Storage{
     _getLocalStorage(){
         if (this._storageAvailable("localStorage")){
             const newProjects = JSON.parse(localStorage.getItem(this._storageName));
-            if (newProjects === null) return [];
+            if (newProjects === null) return this.defaultEntry;
             return newProjects;
         }
         return [];
