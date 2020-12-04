@@ -334,6 +334,10 @@ class Project extends Sorter{
         this._priority = newPriority;
     }
 
+    _addToDo(id, title, description, priority, dueDate){
+        this._list.push(new ToDo(id, this.id, title, description, priority, dueDate));
+    }
+
     addToDo(title, description, priority, dueDate){
         this._list.push(new ToDo(this._toDoIDCounter, this.id, title, description, priority, dueDate));
         this._toDoIDCounter++;
@@ -350,19 +354,45 @@ class Project extends Sorter{
 }
 
 class Projects extends Sorter{
-    constructor(listSort){
+    constructor(projectsStorage, listSort){
         super(listSort);
-        this._toDoIDCounter = 1;
-        this._toDoList = [];
+        this.projectsStorage = projectsStorage;
+        const myProjects = projectsStorage.getStorage();
+        console.log("123")
+        console.log(myProjects)
+        if (myProjects.length === 0){
+            this._toDoIDCounter = 1;
+            this._toDoList = [];
 
-        this._toDosListener = "";
-        this._addMiscProject();
+            this._toDosListener = "";
+            this._addMiscProject();
+        } else {
+            this._init(myProjects);
+            this._toDoList = [];
+
+            this._toDosListener = "";
+            this._update();
+        }
+
+    }
+
+    _init(myProjects){
+        myProjects.list.forEach(project => {
+            this._addProject(project._id, project._title, project._description, project._priority, 
+            project._dueDate === "" ? "" : new Date(project._dueDate), 
+            project._listSort);
+            project._list.forEach(todo => this._addToDoToProject(todo._id, todo._projectId, todo._title, todo._description, todo._priority, 
+                todo._dueDate === "" ? "" : new Date(todo._dueDate)));
+        })
+
+        this._toDoIDCounter = myProjects.toDoIDCounter
     }
 
     _update(){
         this._updateToDoList();
         this._sortList();
-        if (this._toDosListener !== "") this._toDosListener._update();
+        if (this._toDosListener !== "" && this._toDosListener !== undefined) this._toDosListener._update();
+        this.projectsStorage.updateStorage(this);
     }
 
     _updateToDoList(){
@@ -375,7 +405,7 @@ class Projects extends Sorter{
 
     _getProjectIndex(projectId){
         const projectIndex = this._list.findIndex(project => project.id === projectId);
-        if (projectIndex === -1) throw new Error(`Project ID ${projectID} does not exist`);
+        if (projectIndex === -1) throw new Error(`Project ID ${projectId} does not exist`);
         return projectIndex;
     }
 
@@ -390,6 +420,17 @@ class Projects extends Sorter{
 
     getToDoList(){
         return this._toDoList;
+    }
+
+    _addProject(id, title, description, priority, dueDate, listSort){
+        this._list.push(new Project(id, title, description, priority, dueDate, listSort));
+    }
+
+    _addToDoToProject(id, projectId, title, description, priority, dueDate){
+        if (projectId === "") projectId = 0;
+        const projectIndex = this._getProjectIndex(projectId)
+        this._list[projectIndex]._addToDo(id, title, description, priority, dueDate);
+        this._update();
     }
 
     addProject(title, description, priority, dueDate, listSort){
@@ -429,6 +470,13 @@ class Projects extends Sorter{
         const projectIndex = this._getProjectIndex(projectId)
         this._list[projectIndex].removeToDo(toDoId);
         this._update();
+    }
+
+    toJSON(){
+        return{
+            list: this.getList(),
+            toDoIDCounter: this._toDoIDCounter
+        }
     }
 }
 
