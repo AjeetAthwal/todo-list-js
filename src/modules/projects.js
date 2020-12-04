@@ -226,8 +226,8 @@ class ToDo{
 // automatically assigns id to ToDo
 // changes dueDate to larger value if toDO DueDate is larger
 class Project extends Sorter{
-    constructor(project, id, title, description, priority, dueDate, listSort){
-        super(listSort === undefined ? project._listSort : listSort);
+    constructor(project, settings, id, title, description, priority, dueDate, listSort){
+        super(settings.projectViewToDoSortPref);
 
         this.maxPriority = 10;  // dummy number see setter
         this.minPriority = 1;   // dummy number see setter
@@ -236,6 +236,11 @@ class Project extends Sorter{
         else this._initFromStorage(project);
 
 
+    }
+
+    updateSettings(settings){
+        this.listSort = settings.projectViewToDoSortPref;
+        this._sortList();
     }
 
     _initFromScratch(id, title, description, priority, dueDate){
@@ -390,10 +395,13 @@ class Project extends Sorter{
 }
 
 class Projects extends Sorter{
-    constructor(projectsStorage, listSort){
-        super(listSort);
+    constructor(projectsStorage, settings){
+        super(settings.projectViewProjectSortPref);
 
+        this.settings = settings;
+        settings.listener = this;
         this.projectsStorage = projectsStorage;
+        this.view = settings.view;
 
         const myProjects = projectsStorage.getStorage();
         if (myProjects === "") this._initFromScratch();
@@ -412,6 +420,14 @@ class Projects extends Sorter{
     _initFromStorage(myProjects){
         myProjects.list.forEach(project => this._addProjectFromStorage(project))
         this._toDoIDCounter = myProjects.toDoIDCounter;          
+    }
+
+    updateSettings(settings){
+        this.view = settings.view
+        this.listSort = settings.projectViewProjectSortPref;
+        if (this._toDosListener !== "" && this._toDosListener !== undefined) this._toDosListener.updateSettings(settings);
+        this.getList().forEach(project => project.updateSettings(settings))
+        this._sortList()
     }
 
     _update(){
@@ -449,7 +465,7 @@ class Projects extends Sorter{
     }
 
     _addProjectFromStorage(project){
-        this._list.push(new Project(project));
+        this._list.push(new Project(project, this.settings));
     }
 
     _addToDoToProject(id, projectId, title, description, priority, dueDate){
@@ -459,14 +475,14 @@ class Projects extends Sorter{
         this._update();
     }
 
-    addProject(title, description, priority, dueDate, listSort){
-        this._list.push(new Project("", this._toDoIDCounter, title, description, priority, dueDate, listSort));
+    addProject(title, description, priority, dueDate){
+        this._list.push(new Project("", this.settings, this._toDoIDCounter, title, description, priority, dueDate));
         this._toDoIDCounter++;
         this._update();
     }
 
     _addMiscProject(){
-        this._list.push(new Project("", 0, "Other", "", "", "", "dueDateEarliestFirst"));
+        this._list.push(new Project("", this.settings, 0, "Other", "", "", ""));
         this._update();
     }
 
@@ -501,11 +517,16 @@ class Projects extends Sorter{
 }
 
 class ToDos extends Sorter{
-    constructor(listSort, projects){
-        super(listSort);
+    constructor(settings, projects){
+        super(settings.toDoViewSortPref);
         this._list = projects.getToDoList();
         this.projects = projects;
         projects._toDosListener = this;
+    }
+
+    updateSettings(settings){
+        this.listSort = settings.toDoViewSortPref;
+        this._sortList();
     }
 
     _update(){

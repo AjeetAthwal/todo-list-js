@@ -6,6 +6,8 @@ class Settings{
         this.toDoViewSortPref = toDoViewSortPref;
         this.projectViewProjectSortPref = projectViewProjectSortPref;
         this.projectViewToDoSortPref = projectViewToDoSortPref;
+
+        this.listener = "";
     }
 
     set defaultListSort(listSort){
@@ -56,6 +58,14 @@ class Settings{
     set projectViewToDoSortPref(newListSort){
         if (this._isNotSortValue(newListSort)) this._projectViewToDoSortPref = this._defaultListSort;
         else this._projectViewToDoSortPref = newListSort;
+    }
+
+    updateSettings(view, toDoViewSortPref, projectViewProjectSortPref, projectViewToDoSortPref){
+        this.view = view;
+        this.toDoViewSortPref = toDoViewSortPref;
+        this.projectViewProjectSortPref = projectViewProjectSortPref;
+        this.projectViewToDoSortPref = projectViewToDoSortPref;
+        if (this.listener !== "") this.listener.updateSettings(this);
     }
 }
 
