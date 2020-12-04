@@ -1,4 +1,4 @@
-const defaultEntry = {
+const defaultProjectsEntry = {
     "list": [
       {
         "_list": [],
@@ -177,4 +177,11 @@ const defaultEntry = {
     "toDoIDCounter": 1
   }
 
-  export default defaultEntry;
+const defaultSettingsEntry = {
+    "view": "project",
+    "toDoViewSortPref": "dueDateEarliestFirst",
+    "projectViewProjectSortPref": "dueDateEarliestFirst",
+    "projectViewToDoSortPref": "dueDateEarliestFirst",
+  }
+
+  export {defaultProjectsEntry, defaultSettingsEntry};

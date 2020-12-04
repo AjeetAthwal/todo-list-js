@@ -1,10 +1,13 @@
 class Settings{
-    constructor(settings, view, toDoViewSortPref, projectViewProjectSortPref, projectViewToDoSortPref){
+    constructor(settingsStorage, view, toDoViewSortPref, projectViewProjectSortPref, projectViewToDoSortPref){
         this.defaultListSort = "dueDateEarliestFirst";  // dummy value see setter
         this.defaultSortView = "project";
 
-        if (settings === "") this._initFromScratch(view, toDoViewSortPref, projectViewProjectSortPref, projectViewToDoSortPref)
-        else this._initFromStorage(settings)
+        this.settingsStorage = settingsStorage;
+        const mySettings = settingsStorage.getStorage();
+
+        if (mySettings === "") this._initFromScratch(view, toDoViewSortPref, projectViewProjectSortPref, projectViewToDoSortPref)
+        else this._initFromStorage(mySettings)
         this.listener = "";
     }
 
@@ -15,8 +18,12 @@ class Settings{
         this.projectViewToDoSortPref = projectViewToDoSortPref;
     }
 
-    _initFromStorage(settings){
-        
+    _initFromStorage(mySettings){
+        console.log(mySettings);
+        this.view = mySettings.view;
+        this.toDoViewSortPref = mySettings.toDoViewSortPref;
+        this.projectViewProjectSortPref = mySettings.projectViewProjectSortPref;
+        this.projectViewToDoSortPref = mySettings.projectViewToDoSortPref;
     }
 
     set defaultListSort(listSort){
@@ -75,6 +82,16 @@ class Settings{
         this.projectViewProjectSortPref = projectViewProjectSortPref;
         this.projectViewToDoSortPref = projectViewToDoSortPref;
         if (this.listener !== "") this.listener.updateSettings(this);
+        this.settingsStorage.updateStorage(this);
+    }
+
+    toJSON(){
+        return{
+            view: this.view,
+            toDoViewSortPref: this.toDoViewSortPref,
+            projectViewProjectSortPref: this.projectViewProjectSortPref,
+            projectViewToDoSortPref: this.projectViewToDoSortPref,
+        }
     }
 }
 

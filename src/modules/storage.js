@@ -86,4 +86,24 @@ class ProjectsStorage extends Storage{
     }
 }
 
-export default ProjectsStorage;
+class SettingsStorage extends Storage{
+    constructor(serverStorage, localStorage, projects){
+        super(serverStorage, localStorage, projects);
+        this.storageName = "";
+    }
+
+    set storageName(name){
+        this._storageName = "mySettings"
+    }
+
+    _getLocalStorage(){
+        if (this._storageAvailable("localStorage")){
+            const newSettings = JSON.parse(localStorage.getItem(this._storageName));
+            if (newSettings === null) return this.defaultEntry;
+            return newSettings;
+        }
+        return [];
+    }
+}
+
+export {ProjectsStorage, SettingsStorage };
