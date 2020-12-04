@@ -6199,15 +6199,24 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "default": () => __WEBPACK_DEFAULT_EXPORT__
 /* harmony export */ });
 class Settings{
-    constructor(view, toDoViewSortPref, projectViewProjectSortPref, projectViewToDoSortPref){
+    constructor(settings, view, toDoViewSortPref, projectViewProjectSortPref, projectViewToDoSortPref){
         this.defaultListSort = "dueDateEarliestFirst";  // dummy value see setter
         this.defaultSortView = "project";
+
+        if (settings === "") this._initFromScratch(view, toDoViewSortPref, projectViewProjectSortPref, projectViewToDoSortPref)
+        else this._initFromStorage(settings)
+        this.listener = "";
+    }
+
+    _initFromScratch(view, toDoViewSortPref, projectViewProjectSortPref, projectViewToDoSortPref){
         this.view = view;
         this.toDoViewSortPref = toDoViewSortPref;
         this.projectViewProjectSortPref = projectViewProjectSortPref;
         this.projectViewToDoSortPref = projectViewToDoSortPref;
+    }
 
-        this.listener = "";
+    _initFromStorage(settings){
+        
     }
 
     set defaultListSort(listSort){
