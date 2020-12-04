@@ -5412,8 +5412,8 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
-const mySettingsStorage = ""
-const myProjectsStorage = new _modules_storage__WEBPACK_IMPORTED_MODULE_2__.default(false, true, _modules_defaultEntry__WEBPACK_IMPORTED_MODULE_3__.default);
+const mySettingsStorage = new _modules_storage__WEBPACK_IMPORTED_MODULE_2__.SettingsStorage(false, true, _modules_defaultEntry__WEBPACK_IMPORTED_MODULE_3__.defaultSettingsEntry);
+const myProjectsStorage = new _modules_storage__WEBPACK_IMPORTED_MODULE_2__.ProjectsStorage(false, true, _modules_defaultEntry__WEBPACK_IMPORTED_MODULE_3__.defaultProjectsEntry);
 const mySettings = new _modules_settings__WEBPACK_IMPORTED_MODULE_1__.default(mySettingsStorage, "", "", "", "");
 const myProjects = new _modules_projects__WEBPACK_IMPORTED_MODULE_0__.Projects(myProjectsStorage, mySettings);
 const myToDos = new _modules_projects__WEBPACK_IMPORTED_MODULE_0__.ToDos(mySettings, myProjects)
@@ -5426,6 +5426,9 @@ window.mySettings = mySettings;
 window.myProjects = myProjects;
 window.myToDos = myToDos;
 
+const mySettingsStorage2 = new _modules_storage__WEBPACK_IMPORTED_MODULE_2__.SettingsStorage(false, true, "");
+window.a = mySettingsStorage2;
+
 /***/ }),
 
 /***/ "./src/modules/defaultEntry.js":
@@ -5433,16 +5436,18 @@ window.myToDos = myToDos;
   !*** ./src/modules/defaultEntry.js ***!
   \*************************************/
 /*! namespace exports */
-/*! export default [provided] [no usage info] [missing usage info prevents renaming] */
+/*! export defaultProjectsEntry [provided] [no usage info] [missing usage info prevents renaming] */
+/*! export defaultSettingsEntry [provided] [no usage info] [missing usage info prevents renaming] */
 /*! other exports [not provided] [no usage info] */
-/*! runtime requirements: __webpack_exports__, __webpack_require__.r, __webpack_require__.d, __webpack_require__.* */
+/*! runtime requirements: __webpack_require__.r, __webpack_exports__, __webpack_require__.d, __webpack_require__.* */
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "default": () => __WEBPACK_DEFAULT_EXPORT__
+/* harmony export */   "defaultProjectsEntry": () => /* binding */ defaultProjectsEntry,
+/* harmony export */   "defaultSettingsEntry": () => /* binding */ defaultSettingsEntry
 /* harmony export */ });
-const defaultEntry = {
+const defaultProjectsEntry = {
     "list": [
       {
         "_list": [],
@@ -5621,7 +5626,14 @@ const defaultEntry = {
     "toDoIDCounter": 1
   }
 
-  /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (defaultEntry);
+const defaultSettingsEntry = {
+    "view": "project",
+    "toDoViewSortPref": "dueDateEarliestFirst",
+    "projectViewProjectSortPref": "dueDateEarliestFirst",
+    "projectViewToDoSortPref": "dueDateEarliestFirst",
+  }
+
+  
 
 /***/ }),
 
@@ -6200,12 +6212,15 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "default": () => __WEBPACK_DEFAULT_EXPORT__
 /* harmony export */ });
 class Settings{
-    constructor(settings, view, toDoViewSortPref, projectViewProjectSortPref, projectViewToDoSortPref){
+    constructor(settingsStorage, view, toDoViewSortPref, projectViewProjectSortPref, projectViewToDoSortPref){
         this.defaultListSort = "dueDateEarliestFirst";  // dummy value see setter
         this.defaultSortView = "project";
 
-        if (settings === "") this._initFromScratch(view, toDoViewSortPref, projectViewProjectSortPref, projectViewToDoSortPref)
-        else this._initFromStorage(settings)
+        this.settingsStorage = settingsStorage;
+        const mySettings = settingsStorage.getStorage();
+
+        if (mySettings === "") this._initFromScratch(view, toDoViewSortPref, projectViewProjectSortPref, projectViewToDoSortPref)
+        else this._initFromStorage(mySettings)
         this.listener = "";
     }
 
@@ -6216,8 +6231,12 @@ class Settings{
         this.projectViewToDoSortPref = projectViewToDoSortPref;
     }
 
-    _initFromStorage(settings){
-        
+    _initFromStorage(mySettings){
+        console.log(mySettings);
+        this.view = mySettings.view;
+        this.toDoViewSortPref = mySettings.toDoViewSortPref;
+        this.projectViewProjectSortPref = mySettings.projectViewProjectSortPref;
+        this.projectViewToDoSortPref = mySettings.projectViewToDoSortPref;
     }
 
     set defaultListSort(listSort){
@@ -6276,6 +6295,16 @@ class Settings{
         this.projectViewProjectSortPref = projectViewProjectSortPref;
         this.projectViewToDoSortPref = projectViewToDoSortPref;
         if (this.listener !== "") this.listener.updateSettings(this);
+        this.settingsStorage.updateStorage(this);
+    }
+
+    toJSON(){
+        return{
+            view: this.view,
+            toDoViewSortPref: this.toDoViewSortPref,
+            projectViewProjectSortPref: this.projectViewProjectSortPref,
+            projectViewToDoSortPref: this.projectViewToDoSortPref,
+        }
     }
 }
 
@@ -6288,14 +6317,16 @@ class Settings{
   !*** ./src/modules/storage.js ***!
   \********************************/
 /*! namespace exports */
-/*! export default [provided] [no usage info] [missing usage info prevents renaming] */
+/*! export ProjectsStorage [provided] [no usage info] [missing usage info prevents renaming] */
+/*! export SettingsStorage [provided] [no usage info] [missing usage info prevents renaming] */
 /*! other exports [not provided] [no usage info] */
-/*! runtime requirements: __webpack_exports__, __webpack_require__.r, __webpack_require__.d, __webpack_require__.* */
+/*! runtime requirements: __webpack_require__.r, __webpack_exports__, __webpack_require__.d, __webpack_require__.* */
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "default": () => __WEBPACK_DEFAULT_EXPORT__
+/* harmony export */   "ProjectsStorage": () => /* binding */ ProjectsStorage,
+/* harmony export */   "SettingsStorage": () => /* binding */ SettingsStorage
 /* harmony export */ });
 class Storage{
     constructor(serverStorage, localStorage, defaultEntry){
@@ -6385,7 +6416,27 @@ class ProjectsStorage extends Storage{
     }
 }
 
-/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (ProjectsStorage);
+class SettingsStorage extends Storage{
+    constructor(serverStorage, localStorage, projects){
+        super(serverStorage, localStorage, projects);
+        this.storageName = "";
+    }
+
+    set storageName(name){
+        this._storageName = "mySettings"
+    }
+
+    _getLocalStorage(){
+        if (this._storageAvailable("localStorage")){
+            const newSettings = JSON.parse(localStorage.getItem(this._storageName));
+            if (newSettings === null) return this.defaultEntry;
+            return newSettings;
+        }
+        return [];
+    }
+}
+
+
 
 /***/ })
 
