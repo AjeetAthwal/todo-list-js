@@ -1,8 +1,9 @@
 class Storage{
-    constructor(serverStorage, localStorage){
+    constructor(serverStorage, localStorage, defaultEntry){
         this._serverStorageWanted =  serverStorage;
         this._localStorageWanted = localStorage;
         this.storageName = "";
+        this.defaultEntry = defaultEntry;
     }
 
     set storageName(name){
@@ -78,7 +79,7 @@ class ProjectsStorage extends Storage{
     _getLocalStorage(){
         if (this._storageAvailable("localStorage")){
             const newProjects = JSON.parse(localStorage.getItem(this._storageName));
-            if (newProjects === null) return [];
+            if (newProjects === null) return this.defaultEntry;
             return newProjects;
         }
         return [];
