@@ -5484,6 +5484,8 @@ function addProjectSubDivs(project, projectDiv){
     const projectTodosDiv = document.createElement("div");
     projectTodosDiv.classList.add("todos");
 
+    project.getList().forEach(todo => addToDoDiv(todo, projectTodosDiv))
+
     const projectExpandDiv = document.createElement("div");
     projectExpandDiv.classList.add("expand");
 
@@ -5496,6 +5498,18 @@ function addProjectSubDivs(project, projectDiv){
     projectDiv.appendChild(projectDetailsDiv);
     projectDiv.appendChild(projectTodosDiv);
     projectDiv.appendChild(projectExpandDiv);
+}
+
+function addToDoDiv(todo, todosDiv){
+    const todoDiv = document.createElement("div");
+    todoDiv.classList.add("todo");
+
+    const projectToDoH3TitleTag = document.createElement("h3");
+    projectToDoH3TitleTag.innerText = todo.title;
+
+    todoDiv.appendChild(projectToDoH3TitleTag);
+
+    todosDiv.appendChild(todoDiv)
 }
 
 buildProjectCards(myProjects)
@@ -5520,20 +5534,6 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 const defaultProjectsEntry = {
     "list": [
-      {
-        "_list": [],
-        "_listSort": "dueDateEarliestFirst",
-        "_maxPriority": 10,
-        "_minPriority": 1,
-        "_id": 4,
-        "_title": "My Project23",
-        "_isComplete": false,
-        "_description": "lasdol2",
-        "_priority": 2,
-        "_dueDate": "2020-12-03T00:00:00.000Z",
-        "_creationDatetime": "2020-12-04T17:07:59.298Z",
-        "_toDoIDCounter": 1
-      },
       {
         "_list": [
           {
@@ -5623,48 +5623,6 @@ const defaultProjectsEntry = {
         "_dueDate": "2020-12-09T00:00:00.000Z",
         "_creationDatetime": "2020-12-04T17:07:59.296Z",
         "_toDoIDCounter": 2
-      },
-      {
-        "_list": [],
-        "_listSort": "dueDateEarliestFirst",
-        "_maxPriority": 10,
-        "_minPriority": 1,
-        "_id": 3,
-        "_title": "My Project233",
-        "_isComplete": false,
-        "_description": "lasdol1",
-        "_priority": 2,
-        "_dueDate": "2020-12-13T00:00:00.000Z",
-        "_creationDatetime": "2020-12-04T17:07:59.297Z",
-        "_toDoIDCounter": 1
-      },
-      {
-        "_list": [],
-        "_listSort": "dueDateEarliestFirst",
-        "_maxPriority": 10,
-        "_minPriority": 1,
-        "_id": 6,
-        "_title": "Another ONe",
-        "_isComplete": false,
-        "_description": "lasdol4",
-        "_priority": 2,
-        "_dueDate": "2021-01-01T00:00:00.000Z",
-        "_creationDatetime": "2020-12-04T17:07:59.300Z",
-        "_toDoIDCounter": 1
-      },
-      {
-        "_list": [],
-        "_listSort": "dueDateEarliestFirst",
-        "_maxPriority": 10,
-        "_minPriority": 1,
-        "_id": 5,
-        "_title": "LOL",
-        "_isComplete": false,
-        "_description": "lasdol3",
-        "_priority": 2,
-        "_dueDate": "2021-12-03T00:00:00.000Z",
-        "_creationDatetime": "2020-12-04T17:07:59.299Z",
-        "_toDoIDCounter": 1
       },
       {
         "_list": [
