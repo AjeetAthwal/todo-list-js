@@ -28,6 +28,7 @@ function buildProjectCard(project){
     
     addProjectSubDivs(project, projectDiv);
 
+    projectDiv.dataset.projectId = project.id;
     projectsDiv.appendChild(projectDiv);
 }
 
@@ -100,6 +101,7 @@ function addToDoDiv(todo, todosDiv){
 
     todoDiv.appendChild(projectToDoH3TitleTag);
 
+    todoDiv.dataset.todoId = todo.id;
     todosDiv.appendChild(todoDiv)
 }
 
