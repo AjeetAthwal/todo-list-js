@@ -5511,6 +5511,7 @@ function addToDoDiv(todo, todosDiv){
     todoDiv.appendChild(projectToDoH3TitleTag);
 
     todoDiv.dataset.todoId = todo.id;
+    todoDiv.dataset.projectId = todo.projectId;
     todosDiv.appendChild(todoDiv)
 }
 
