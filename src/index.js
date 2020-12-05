@@ -15,14 +15,16 @@ console.log(myToDos.getList());
 
 // build project cards
 
-const projectsDiv = document.querySelector("#projects");
 
-function buildProjectCards(myProjects){
-    console.log(myProjects)
-    myProjects.getList().forEach(project => buildProjectCard(project))
+
+function buildProjectCards(myProjects, mainDiv){
+    const projectsDiv = document.createElement("div");
+    projectsDiv.id = "projects"
+    myProjects.getList().forEach(project => buildProjectCard(project, projectsDiv))
+    mainDiv.appendChild(projectsDiv)
 }
 
-function buildProjectCard(project){
+function buildProjectCard(project, projectsDiv){
     const projectDiv = document.createElement("div");
     projectDiv.classList.add("project");
     
@@ -33,6 +35,41 @@ function buildProjectCard(project){
 }
 
 function addProjectSubDivs(project, projectDiv){
+
+    addProjectDetails(project, projectDiv);
+
+    const projectTodosDiv = document.createElement("div");
+    projectTodosDiv.classList.add("todos");
+
+    project.getList().forEach(todo => addToDoDiv(todo, projectTodosDiv))
+
+    const projectExpandDiv = document.createElement("div");
+    projectExpandDiv.classList.add("expand");
+
+    const projectExpandATag = document.createElement("a");
+    projectExpandATag.innerText = "Expand";
+
+    projectExpandDiv.appendChild(projectExpandATag);
+
+    projectDiv.appendChild(projectTodosDiv);
+    projectDiv.appendChild(projectExpandDiv);
+}
+
+function addToDoDiv(todo, todosDiv){
+    const todoDiv = document.createElement("div");
+    todoDiv.classList.add("todo");
+
+    const projectToDoH3TitleTag = document.createElement("h3");
+    projectToDoH3TitleTag.innerText = todo.title;
+
+    todoDiv.appendChild(projectToDoH3TitleTag);
+
+    todoDiv.dataset.todoId = todo.id;
+    todoDiv.dataset.projectId = todo.projectId;
+    todosDiv.appendChild(todoDiv)
+}
+
+function addProjectDetails(project, projectDiv){
     const projectTitleDiv = document.createElement("div");
     projectTitleDiv.classList.add("project-title");
 
@@ -47,6 +84,9 @@ function addProjectSubDivs(project, projectDiv){
     const projectDueDateDiv = document.createElement("div");
     projectDueDateDiv.classList.add("project-details-sub");
     projectDueDateDiv.classList.add("dueDate");
+
+    projectDiv.appendChild(projectTitleDiv);
+    projectDiv.appendChild(projectDetailsDiv);
 
     const projectDueDateH2TitleTag = document.createElement("h2");
     projectDueDateH2TitleTag.innerText = "Deadline";
@@ -72,38 +112,53 @@ function addProjectSubDivs(project, projectDiv){
 
     projectDetailsDiv.appendChild(projectDueDateDiv);
     projectDetailsDiv.appendChild(projectPriorityDiv);
-
-    const projectTodosDiv = document.createElement("div");
-    projectTodosDiv.classList.add("todos");
-
-    project.getList().forEach(todo => addToDoDiv(todo, projectTodosDiv))
-
-    const projectExpandDiv = document.createElement("div");
-    projectExpandDiv.classList.add("expand");
-
-    const projectExpandATag = document.createElement("a");
-    projectExpandATag.innerText = "Expand";
-
-    projectExpandDiv.appendChild(projectExpandATag);
-
-    projectDiv.appendChild(projectTitleDiv);
-    projectDiv.appendChild(projectDetailsDiv);
-    projectDiv.appendChild(projectTodosDiv);
-    projectDiv.appendChild(projectExpandDiv);
 }
 
-function addToDoDiv(todo, todosDiv){
-    const todoDiv = document.createElement("div");
-    todoDiv.classList.add("todo");
+function addHeaderItems(){
+    const headerTag = document.createElement("header");
+    const ulTag = document.createElement("ul");
+    ulTag.id = "nav"
+    const tasksLiTag = document.createElement("li")
+    tasksLiTag.classList.add("active");
+    const tasksATag = document.createElement("a")
+    tasksATag.innerText = "Tasks";
 
-    const projectToDoH3TitleTag = document.createElement("h3");
-    projectToDoH3TitleTag.innerText = todo.title;
+    tasksLiTag.appendChild(tasksATag);
 
-    todoDiv.appendChild(projectToDoH3TitleTag);
+    const settingsLiTag = document.createElement("li")
+    const settingsATag = document.createElement("a")
+    settingsATag.innerText = "Settings";
 
-    todoDiv.dataset.todoId = todo.id;
-    todoDiv.dataset.projectId = todo.projectId;
-    todosDiv.appendChild(todoDiv)
+    tasksLiTag.appendChild(tasksATag);
+    settingsLiTag.appendChild(settingsATag);
+
+    ulTag.appendChild(tasksLiTag);
+    ulTag.appendChild(settingsLiTag);
+
+    headerTag.appendChild(ulTag);
+
+    document.querySelector("body").appendChild(headerTag)
 }
 
-buildProjectCards(myProjects)
+function addFooterItems(){
+    const footerTag = document.createElement("footer");
+    const aTag = document.createElement("a")
+    aTag.innerText = "Back To Top";
+
+    footerTag.appendChild(aTag);
+
+    document.querySelector("body").appendChild(footerTag)
+}
+
+function createContainer(){
+    const mainDiv = document.createElement("div")
+    mainDiv.id = "container";
+    document.querySelector("body").appendChild(mainDiv)
+    return mainDiv
+}
+
+addHeaderItems();
+const mainDiv = createContainer();
+addFooterItems();
+
+buildProjectCards(myProjects, mainDiv)
