@@ -75,6 +75,8 @@ function addProjectSubDivs(project, projectDiv){
     const projectTodosDiv = document.createElement("div");
     projectTodosDiv.classList.add("todos");
 
+    project.getList().forEach(todo => addToDoDiv(todo, projectTodosDiv))
+
     const projectExpandDiv = document.createElement("div");
     projectExpandDiv.classList.add("expand");
 
@@ -87,6 +89,18 @@ function addProjectSubDivs(project, projectDiv){
     projectDiv.appendChild(projectDetailsDiv);
     projectDiv.appendChild(projectTodosDiv);
     projectDiv.appendChild(projectExpandDiv);
+}
+
+function addToDoDiv(todo, todosDiv){
+    const todoDiv = document.createElement("div");
+    todoDiv.classList.add("todo");
+
+    const projectToDoH3TitleTag = document.createElement("h3");
+    projectToDoH3TitleTag.innerText = todo.title;
+
+    todoDiv.appendChild(projectToDoH3TitleTag);
+
+    todosDiv.appendChild(todoDiv)
 }
 
 buildProjectCards(myProjects)
