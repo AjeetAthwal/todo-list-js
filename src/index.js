@@ -13,9 +13,80 @@ console.log(myProjects);
 console.log(myProjects.getList());
 console.log(myToDos.getList());
 
-window.mySettings = mySettings;
-window.myProjects = myProjects;
-window.myToDos = myToDos;
+// build project cards
 
-const mySettingsStorage2 = new SettingsStorage(false, true, "");
-window.a = mySettingsStorage2;
+const projectsDiv = document.querySelector("#projects");
+
+function buildProjectCards(myProjects){
+    console.log(myProjects)
+    myProjects.getList().forEach(project => buildProjectCard(project))
+}
+
+function buildProjectCard(project){
+    const projectDiv = document.createElement("div");
+    projectDiv.classList.add("project");
+    
+    addProjectSubDivs(project, projectDiv);
+
+    projectsDiv.appendChild(projectDiv);
+}
+
+function addProjectSubDivs(project, projectDiv){
+    const projectTitleDiv = document.createElement("div");
+    projectTitleDiv.classList.add("project-title");
+
+    const projectTitleH1Tag = document.createElement("h1");
+    projectTitleH1Tag.innerText = project.title;
+
+    projectTitleDiv.appendChild(projectTitleH1Tag);
+
+    const projectDetailsDiv = document.createElement("div");
+    projectDetailsDiv.classList.add("project-details");
+
+    const projectDueDateDiv = document.createElement("div");
+    projectDueDateDiv.classList.add("project-details-sub");
+    projectDueDateDiv.classList.add("dueDate");
+
+    const projectDueDateH2TitleTag = document.createElement("h2");
+    projectDueDateH2TitleTag.innerText = "Deadline";
+
+    const projectDueDateH2EntryTag = document.createElement("h2");
+    projectDueDateH2EntryTag.innerText = project.dueDate;
+
+    projectDueDateDiv.appendChild(projectDueDateH2TitleTag)
+    projectDueDateDiv.appendChild(projectDueDateH2EntryTag)
+
+    const projectPriorityDiv = document.createElement("div");
+    projectPriorityDiv.classList.add("project-details-sub");
+    projectPriorityDiv.classList.add("priority");
+
+    const projectPriorityH2TitleTag = document.createElement("h2");
+    projectPriorityH2TitleTag.innerText = "Priority";
+
+    const projectPriorityH2EntryTag = document.createElement("h2");
+    projectPriorityH2EntryTag.innerText = project.priority;
+
+    projectPriorityDiv.appendChild(projectPriorityH2TitleTag)
+    projectPriorityDiv.appendChild(projectPriorityH2EntryTag)
+
+    projectDetailsDiv.appendChild(projectDueDateDiv);
+    projectDetailsDiv.appendChild(projectPriorityDiv);
+
+    const projectTodosDiv = document.createElement("div");
+    projectTodosDiv.classList.add("todos");
+
+    const projectExpandDiv = document.createElement("div");
+    projectExpandDiv.classList.add("expand");
+
+    const projectExpandATag = document.createElement("a");
+    projectExpandATag.innerText = "Expand";
+
+    projectExpandDiv.appendChild(projectExpandATag);
+
+    projectDiv.appendChild(projectTitleDiv);
+    projectDiv.appendChild(projectDetailsDiv);
+    projectDiv.appendChild(projectTodosDiv);
+    projectDiv.appendChild(projectExpandDiv);
+}
+
+buildProjectCards(myProjects)

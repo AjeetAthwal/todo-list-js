@@ -4,18 +4,77 @@
     --main-text-color: #C5C6C7;
     --other-text-color: #66FCF1;
     --other-color: #45A29E;
+    --card-size: 400px;
+    --header-height: 100px;
+    --container-padding: 50px;
+    --grid-gap: 100px;
+}
+
+@media only screen and (max-width: 450px){
+    :root{
+        --card-size: 300px;
+        --container-padding: 50px;
+        --grid-gap: 50px;
+    }
+    body{
+        font-size: 0.85em;
+    }
+}
+
+@media only screen and (max-width: 350px){
+    :root{
+        --card-size: 250px;
+        --container-padding: 25px;
+        --grid-gap: 25px;
+    }
+    body{
+        font-size: 0.75em;
+    }
+}
+
+h1{
+    font-size: 2em;
+    text-align: center;
+
+}
+
+h2 {
+    font-size: 1.2em;
 }
 
 body{
     background-color: var(--main-bg-color);
     font-family: 'Open Sans', sans-serif;
+    color: var(--main-text-color);
+}
+
+footer {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    height: var(--container-padding);
+    width: 100%;
+    display: flex;
+    justify-content: center;
+}
+
+
+footer > a {
+    margin: auto;
+    cursor: pointer;
+    color: var(--main-text-color);
+    text-decoration: none;
+}
+
+footer > a:hover {
+    text-decoration: underline;
 }
 
 header {
     position: fixed;
     top: 0;
     left: 0;
-    height: 100px;
+    height: var(--header-height);
     width: 100%;
     background-color: var(--second-bg-color);
     display: flex;
@@ -23,10 +82,11 @@ header {
 }
 
 #container{
-    padding-top: 100px;
+    padding-top: calc(var(--header-height) + var(--container-padding));
     width: 100%;
-    background-color: antiquewhite;
-
+    display: flex;
+    padding-bottom: var(--container-padding);
+    color: var(--second-bg-color);
 }
 
 #nav {
@@ -78,4 +138,73 @@ a {
 
 #nav .active a:hover {
     cursor: default;
+}
+
+#projects {
+    width: 95%;
+    display: grid;
+    margin: auto;
+    grid-template-columns: repeat(auto-fit, var(--card-size));
+    justify-content: space-evenly;
+    gap: var(--grid-gap);
+}
+
+.project{
+    width: var(--card-size);
+    height: var(--card-size);
+    background-color: var(--other-text-color);
+    display: flex;
+    flex-direction: column;
+}
+
+.project-title{
+    height: 10%;
+    width: 100%;
+    border-bottom: solid 1px var(--other-color);
+}
+
+.project-details{
+    height: 10%;
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    margin: auto;
+    border-bottom: solid 1px var(--other-color);
+}
+
+.dueDate{
+    width: 60%;
+    border-right: solid 1px var(--other-color);
+}
+
+.priority{
+    width: 40%;
+}
+
+.project-details-sub{
+    height: 100%;
+    display: flex;
+    flex-direction: row;
+}
+
+h2{
+    margin: auto;
+}
+
+.todos{
+    height: 70%;
+    width: 100%;
+}
+
+.expand{
+    height: 10%;
+    width: 100%;
+    display: flex;
+}
+
+.expand > a {
+    margin: auto;
+    cursor: pointer;
+    color: var(--main-bg-color);
+    text-decoration: none;
 }

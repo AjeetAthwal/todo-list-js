@@ -5422,12 +5422,83 @@ console.log(myProjects);
 console.log(myProjects.getList());
 console.log(myToDos.getList());
 
-window.mySettings = mySettings;
-window.myProjects = myProjects;
-window.myToDos = myToDos;
+// build project cards
 
-const mySettingsStorage2 = new _modules_storage__WEBPACK_IMPORTED_MODULE_2__.SettingsStorage(false, true, "");
-window.a = mySettingsStorage2;
+const projectsDiv = document.querySelector("#projects");
+
+function buildProjectCards(myProjects){
+    console.log(myProjects)
+    myProjects.getList().forEach(project => buildProjectCard(project))
+}
+
+function buildProjectCard(project){
+    const projectDiv = document.createElement("div");
+    projectDiv.classList.add("project");
+    
+    addProjectSubDivs(project, projectDiv);
+
+    projectsDiv.appendChild(projectDiv);
+}
+
+function addProjectSubDivs(project, projectDiv){
+    const projectTitleDiv = document.createElement("div");
+    projectTitleDiv.classList.add("project-title");
+
+    const projectTitleH1Tag = document.createElement("h1");
+    projectTitleH1Tag.innerText = project.title;
+
+    projectTitleDiv.appendChild(projectTitleH1Tag);
+
+    const projectDetailsDiv = document.createElement("div");
+    projectDetailsDiv.classList.add("project-details");
+
+    const projectDueDateDiv = document.createElement("div");
+    projectDueDateDiv.classList.add("project-details-sub");
+    projectDueDateDiv.classList.add("dueDate");
+
+    const projectDueDateH2TitleTag = document.createElement("h2");
+    projectDueDateH2TitleTag.innerText = "Deadline";
+
+    const projectDueDateH2EntryTag = document.createElement("h2");
+    projectDueDateH2EntryTag.innerText = project.dueDate;
+
+    projectDueDateDiv.appendChild(projectDueDateH2TitleTag)
+    projectDueDateDiv.appendChild(projectDueDateH2EntryTag)
+
+    const projectPriorityDiv = document.createElement("div");
+    projectPriorityDiv.classList.add("project-details-sub");
+    projectPriorityDiv.classList.add("priority");
+
+    const projectPriorityH2TitleTag = document.createElement("h2");
+    projectPriorityH2TitleTag.innerText = "Priority";
+
+    const projectPriorityH2EntryTag = document.createElement("h2");
+    projectPriorityH2EntryTag.innerText = project.priority;
+
+    projectPriorityDiv.appendChild(projectPriorityH2TitleTag)
+    projectPriorityDiv.appendChild(projectPriorityH2EntryTag)
+
+    projectDetailsDiv.appendChild(projectDueDateDiv);
+    projectDetailsDiv.appendChild(projectPriorityDiv);
+
+    const projectTodosDiv = document.createElement("div");
+    projectTodosDiv.classList.add("todos");
+
+    const projectExpandDiv = document.createElement("div");
+    projectExpandDiv.classList.add("expand");
+
+    const projectExpandATag = document.createElement("a");
+    projectExpandATag.innerText = "Expand";
+
+    projectExpandDiv.appendChild(projectExpandATag);
+
+    projectDiv.appendChild(projectTitleDiv);
+    projectDiv.appendChild(projectDetailsDiv);
+    projectDiv.appendChild(projectTodosDiv);
+    projectDiv.appendChild(projectExpandDiv);
+}
+
+buildProjectCards(myProjects)
 
 /***/ }),
 
@@ -5455,7 +5526,7 @@ const defaultProjectsEntry = {
         "_maxPriority": 10,
         "_minPriority": 1,
         "_id": 4,
-        "_title": "My Project2",
+        "_title": "My Project23",
         "_isComplete": false,
         "_description": "lasdol2",
         "_priority": 2,
@@ -5545,7 +5616,7 @@ const defaultProjectsEntry = {
         "_maxPriority": 10,
         "_minPriority": 1,
         "_id": 2,
-        "_title": "My Project2",
+        "_title": "My Project3",
         "_isComplete": false,
         "_description": "lasdol",
         "_priority": 2,
@@ -5559,7 +5630,7 @@ const defaultProjectsEntry = {
         "_maxPriority": 10,
         "_minPriority": 1,
         "_id": 3,
-        "_title": "My Project2",
+        "_title": "My Project233",
         "_isComplete": false,
         "_description": "lasdol1",
         "_priority": 2,
@@ -5573,7 +5644,7 @@ const defaultProjectsEntry = {
         "_maxPriority": 10,
         "_minPriority": 1,
         "_id": 6,
-        "_title": "My Project2",
+        "_title": "Another ONe",
         "_isComplete": false,
         "_description": "lasdol4",
         "_priority": 2,
@@ -5587,7 +5658,7 @@ const defaultProjectsEntry = {
         "_maxPriority": 10,
         "_minPriority": 1,
         "_id": 5,
-        "_title": "My Project2",
+        "_title": "LOL",
         "_isComplete": false,
         "_description": "lasdol3",
         "_priority": 2,
