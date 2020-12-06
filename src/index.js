@@ -125,17 +125,34 @@ class DisplayController{
         this.tasksPage = TasksPageLoader;
         this.settingsPage = SettingsPageLoader;
 
+        this.loadTasksPage = this.loadTasksPage.bind(this);
+        this.loadSettingsPage = this.loadSettingsPage.bind(this);
+        
         this._createHtmlSkeleton();
         this.loadTasksPage();
     }
 
+    deleteContainer(){
+        while (this.mainDiv.firstChild) this.mainDiv.removeChild(this.mainDiv.lastChild);
+    }
+
     loadTasksPage(){
+        console.log("1")
+        this.deleteContainer();
         this.tasksLiTag.classList.add("active");
+        this.settingsLiTag.classList.remove("active");
+        this.settingsLiTag.addEventListener("click", this.loadSettingsPage)
+        this.tasksLiTag.removeEventListener("click", this.loadTasksPage)
         this.tasksPage.buildProjectCards(this.mainDiv)
     }
 
     loadSettingsPage(){
+        console.log("2")
+        this.deleteContainer();
         this.settingsLiTag.classList.add("active");
+        this.tasksLiTag.classList.remove("active");
+        this.settingsLiTag.removeEventListener("click", this.loadSettingsPage)
+        this.tasksLiTag.addEventListener("click", this.loadTasksPage)
     }
 
     _createHtmlSkeleton(){
