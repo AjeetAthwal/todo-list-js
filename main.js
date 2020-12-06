@@ -5695,6 +5695,7 @@ class TasksPageLoader{
         const projectTodosDiv = document.createElement("div");
         projectTodosDiv.classList.add("todos");
     
+        this._addToDoDivHeader(projectTodosDiv)
         project.getList().forEach(todo => this._addToDoDiv(todo, projectTodosDiv))
     
         const projectExpandDiv = document.createElement("div");
@@ -5709,14 +5710,35 @@ class TasksPageLoader{
         projectDiv.appendChild(projectExpandDiv);
     }
     
+    _addToDoDivHeader(todosDiv){
+        const todoDiv = document.createElement("div");
+        todoDiv.classList.add("todo");
+        todoDiv.classList.add("todo-header");
+    
+        const projectToDoH3TitleTag = document.createElement("h3");
+        projectToDoH3TitleTag.innerText = "Title";
+    
+        const projectToDoH3DueDateTag = document.createElement("h3");
+        projectToDoH3DueDateTag.innerText = "Deadline";
+    
+        todoDiv.appendChild(projectToDoH3TitleTag);
+        todoDiv.appendChild(projectToDoH3DueDateTag);
+
+        todosDiv.appendChild(todoDiv)
+    }
+
     _addToDoDiv(todo, todosDiv){
         const todoDiv = document.createElement("div");
         todoDiv.classList.add("todo");
     
-        const projectToDoH3TitleTag = document.createElement("h3");
-        projectToDoH3TitleTag.innerText = todo.title;
+        const projectToDoH4TitleTag = document.createElement("h4");
+        projectToDoH4TitleTag.innerText = todo.title;
+
+        const projectToDoH4DueDateTag = document.createElement("h4");
+        projectToDoH4DueDateTag.innerText = todo.dueDate;
     
-        todoDiv.appendChild(projectToDoH3TitleTag);
+        todoDiv.appendChild(projectToDoH4TitleTag);
+        todoDiv.appendChild(projectToDoH4DueDateTag);
     
         todoDiv.dataset.todoId = todo.id;
         todoDiv.dataset.projectId = todo.projectId;
