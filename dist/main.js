@@ -5407,6 +5407,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _modules_settings__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./modules/settings */ "./src/modules/settings.js");
 /* harmony import */ var _modules_storage__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./modules/storage */ "./src/modules/storage.js");
 /* harmony import */ var _modules_defaultEntry__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./modules/defaultEntry */ "./src/modules/defaultEntry.js");
+/* harmony import */ var _modules_displayController__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./modules/displayController */ "./src/modules/displayController.js");
 
 
 
@@ -5423,7 +5424,177 @@ console.log(myProjects);
 console.log(myProjects.getList());
 console.log(myToDos.getList());
 
-// build project cards
+const tasksPageLoader = new _modules_displayController__WEBPACK_IMPORTED_MODULE_4__.TasksPageLoader(myProjects)
+const displayController = new _modules_displayController__WEBPACK_IMPORTED_MODULE_4__.DisplayController(tasksPageLoader)
+
+/***/ }),
+
+/***/ "./src/modules/defaultEntry.js":
+/*!*************************************!*\
+  !*** ./src/modules/defaultEntry.js ***!
+  \*************************************/
+/*! namespace exports */
+/*! export defaultProjectsEntry [provided] [no usage info] [missing usage info prevents renaming] */
+/*! export defaultSettingsEntry [provided] [no usage info] [missing usage info prevents renaming] */
+/*! other exports [not provided] [no usage info] */
+/*! runtime requirements: __webpack_require__.r, __webpack_exports__, __webpack_require__.d, __webpack_require__.* */
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "defaultProjectsEntry": () => /* binding */ defaultProjectsEntry,
+/* harmony export */   "defaultSettingsEntry": () => /* binding */ defaultSettingsEntry
+/* harmony export */ });
+const defaultProjectsEntry = {
+    "list": [
+      {
+        "_list": [
+          {
+            "_maxPriority": 10,
+            "_minPriority": 1,
+            "_id": 4,
+            "_projectId": 1,
+            "_isComplete": false,
+            "_title": "Hi",
+            "_description": "",
+            "_priority": 10,
+            "_dueDate": "2020-12-04T17:07:59.294Z",
+            "_creationDatetime": "2020-12-04T17:07:59.294Z"
+          },
+          {
+            "_maxPriority": 10,
+            "_minPriority": 1,
+            "_id": 1,
+            "_projectId": 1,
+            "_isComplete": false,
+            "_title": "Create ToDo Class1",
+            "_description": "Create ToDo Class description",
+            "_priority": 5,
+            "_dueDate": "2020-12-06T00:00:00.000Z",
+            "_creationDatetime": "2020-12-04T17:07:59.292Z"
+          },
+          {
+            "_maxPriority": 10,
+            "_minPriority": 1,
+            "_id": 2,
+            "_projectId": 1,
+            "_isComplete": false,
+            "_title": "Create ToDo Class2",
+            "_description": "sss",
+            "_priority": 5,
+            "_dueDate": "2021-01-01T00:00:00.000Z",
+            "_creationDatetime": "2020-12-04T17:07:59.293Z"
+          },
+          {
+            "_maxPriority": 10,
+            "_minPriority": 1,
+            "_id": 3,
+            "_projectId": 1,
+            "_isComplete": false,
+            "_title": "Create ToDo Class3",
+            "_description": "",
+            "_priority": 1,
+            "_dueDate": "2021-12-02T00:00:00.000Z",
+            "_creationDatetime": "2020-12-04T17:07:59.293Z"
+          }
+        ],
+        "_listSort": "dueDateEarliestFirst",
+        "_maxPriority": 10,
+        "_minPriority": 1,
+        "_id": 1,
+        "_title": "My Project",
+        "_isComplete": false,
+        "_description": "lol",
+        "_priority": 4,
+        "_dueDate": "2020-12-06T00:00:00.000Z",
+        "_creationDatetime": "2020-12-04T17:07:59.292Z",
+        "_toDoIDCounter": 5
+      },
+      {
+        "_list": [
+          {
+            "_maxPriority": 10,
+            "_minPriority": 1,
+            "_id": 1,
+            "_projectId": 2,
+            "_isComplete": false,
+            "_title": "Hsadi",
+            "_description": "ss1",
+            "_priority": 2,
+            "_dueDate": "2021-12-02T00:00:00.000Z",
+            "_creationDatetime": "2020-12-04T17:07:59.296Z"
+          }
+        ],
+        "_listSort": "dueDateEarliestFirst",
+        "_maxPriority": 10,
+        "_minPriority": 1,
+        "_id": 2,
+        "_title": "My Project3",
+        "_isComplete": false,
+        "_description": "lasdol",
+        "_priority": 2,
+        "_dueDate": "2020-12-09T00:00:00.000Z",
+        "_creationDatetime": "2020-12-04T17:07:59.296Z",
+        "_toDoIDCounter": 2
+      },
+      {
+        "_list": [
+          {
+            "_maxPriority": 10,
+            "_minPriority": 1,
+            "_id": 1,
+            "_projectId": 0,
+            "_isComplete": false,
+            "_title": "Hsadi",
+            "_description": "ss",
+            "_priority": 2,
+            "_dueDate": "",
+            "_creationDatetime": "2020-12-04T17:07:59.297Z"
+          }
+        ],
+        "_listSort": "dueDateEarliestFirst",
+        "_maxPriority": 10,
+        "_minPriority": 1,
+        "_id": 0,
+        "_title": "Other",
+        "_isComplete": false,
+        "_description": "",
+        "_priority": 10,
+        "_dueDate": "",
+        "_creationDatetime": "2020-12-04T17:07:59.291Z",
+        "_toDoIDCounter": 2
+      }
+    ],
+    "toDoIDCounter": 1
+  }
+
+const defaultSettingsEntry = {
+    "view": "project",
+    "toDoViewSortPref": "dueDateEarliestFirst",
+    "projectViewProjectSortPref": "dueDateEarliestFirst",
+    "projectViewToDoSortPref": "dueDateEarliestFirst",
+  }
+
+  
+
+/***/ }),
+
+/***/ "./src/modules/displayController.js":
+/*!******************************************!*\
+  !*** ./src/modules/displayController.js ***!
+  \******************************************/
+/*! namespace exports */
+/*! export DisplayController [provided] [no usage info] [missing usage info prevents renaming] */
+/*! export TasksPageLoader [provided] [no usage info] [missing usage info prevents renaming] */
+/*! other exports [not provided] [no usage info] */
+/*! runtime requirements: __webpack_require__.r, __webpack_exports__, __webpack_require__.d, __webpack_require__.* */
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "TasksPageLoader": () => /* binding */ TasksPageLoader,
+/* harmony export */   "DisplayController": () => /* binding */ DisplayController
+/* harmony export */ });
 
 class TasksPageLoader{
     constructor(myProjects){
@@ -5684,158 +5855,7 @@ class DisplayController{
     }
 }
 
-const tasksPageLoader = new TasksPageLoader(myProjects)
-const displayController = new DisplayController(tasksPageLoader)
 
-/***/ }),
-
-/***/ "./src/modules/defaultEntry.js":
-/*!*************************************!*\
-  !*** ./src/modules/defaultEntry.js ***!
-  \*************************************/
-/*! namespace exports */
-/*! export defaultProjectsEntry [provided] [no usage info] [missing usage info prevents renaming] */
-/*! export defaultSettingsEntry [provided] [no usage info] [missing usage info prevents renaming] */
-/*! other exports [not provided] [no usage info] */
-/*! runtime requirements: __webpack_require__.r, __webpack_exports__, __webpack_require__.d, __webpack_require__.* */
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "defaultProjectsEntry": () => /* binding */ defaultProjectsEntry,
-/* harmony export */   "defaultSettingsEntry": () => /* binding */ defaultSettingsEntry
-/* harmony export */ });
-const defaultProjectsEntry = {
-    "list": [
-      {
-        "_list": [
-          {
-            "_maxPriority": 10,
-            "_minPriority": 1,
-            "_id": 4,
-            "_projectId": 1,
-            "_isComplete": false,
-            "_title": "Hi",
-            "_description": "",
-            "_priority": 10,
-            "_dueDate": "2020-12-04T17:07:59.294Z",
-            "_creationDatetime": "2020-12-04T17:07:59.294Z"
-          },
-          {
-            "_maxPriority": 10,
-            "_minPriority": 1,
-            "_id": 1,
-            "_projectId": 1,
-            "_isComplete": false,
-            "_title": "Create ToDo Class1",
-            "_description": "Create ToDo Class description",
-            "_priority": 5,
-            "_dueDate": "2020-12-06T00:00:00.000Z",
-            "_creationDatetime": "2020-12-04T17:07:59.292Z"
-          },
-          {
-            "_maxPriority": 10,
-            "_minPriority": 1,
-            "_id": 2,
-            "_projectId": 1,
-            "_isComplete": false,
-            "_title": "Create ToDo Class2",
-            "_description": "sss",
-            "_priority": 5,
-            "_dueDate": "2021-01-01T00:00:00.000Z",
-            "_creationDatetime": "2020-12-04T17:07:59.293Z"
-          },
-          {
-            "_maxPriority": 10,
-            "_minPriority": 1,
-            "_id": 3,
-            "_projectId": 1,
-            "_isComplete": false,
-            "_title": "Create ToDo Class3",
-            "_description": "",
-            "_priority": 1,
-            "_dueDate": "2021-12-02T00:00:00.000Z",
-            "_creationDatetime": "2020-12-04T17:07:59.293Z"
-          }
-        ],
-        "_listSort": "dueDateEarliestFirst",
-        "_maxPriority": 10,
-        "_minPriority": 1,
-        "_id": 1,
-        "_title": "My Project",
-        "_isComplete": false,
-        "_description": "lol",
-        "_priority": 4,
-        "_dueDate": "2020-12-06T00:00:00.000Z",
-        "_creationDatetime": "2020-12-04T17:07:59.292Z",
-        "_toDoIDCounter": 5
-      },
-      {
-        "_list": [
-          {
-            "_maxPriority": 10,
-            "_minPriority": 1,
-            "_id": 1,
-            "_projectId": 2,
-            "_isComplete": false,
-            "_title": "Hsadi",
-            "_description": "ss1",
-            "_priority": 2,
-            "_dueDate": "2021-12-02T00:00:00.000Z",
-            "_creationDatetime": "2020-12-04T17:07:59.296Z"
-          }
-        ],
-        "_listSort": "dueDateEarliestFirst",
-        "_maxPriority": 10,
-        "_minPriority": 1,
-        "_id": 2,
-        "_title": "My Project3",
-        "_isComplete": false,
-        "_description": "lasdol",
-        "_priority": 2,
-        "_dueDate": "2020-12-09T00:00:00.000Z",
-        "_creationDatetime": "2020-12-04T17:07:59.296Z",
-        "_toDoIDCounter": 2
-      },
-      {
-        "_list": [
-          {
-            "_maxPriority": 10,
-            "_minPriority": 1,
-            "_id": 1,
-            "_projectId": 0,
-            "_isComplete": false,
-            "_title": "Hsadi",
-            "_description": "ss",
-            "_priority": 2,
-            "_dueDate": "",
-            "_creationDatetime": "2020-12-04T17:07:59.297Z"
-          }
-        ],
-        "_listSort": "dueDateEarliestFirst",
-        "_maxPriority": 10,
-        "_minPriority": 1,
-        "_id": 0,
-        "_title": "Other",
-        "_isComplete": false,
-        "_description": "",
-        "_priority": 10,
-        "_dueDate": "",
-        "_creationDatetime": "2020-12-04T17:07:59.291Z",
-        "_toDoIDCounter": 2
-      }
-    ],
-    "toDoIDCounter": 1
-  }
-
-const defaultSettingsEntry = {
-    "view": "project",
-    "toDoViewSortPref": "dueDateEarliestFirst",
-    "projectViewProjectSortPref": "dueDateEarliestFirst",
-    "projectViewToDoSortPref": "dueDateEarliestFirst",
-  }
-
-  
 
 /***/ }),
 
