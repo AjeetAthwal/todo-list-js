@@ -267,6 +267,11 @@ class Project extends Sorter{
         project._list.forEach(todo => this._addToDoFromStorage(todo));
     }
 
+    updateSort(newSort){
+        this.listSort = newSort;
+        this._update();
+    }
+
     getToDoNumber(){
         return this._list.length;
     }
@@ -409,6 +414,11 @@ class Projects extends Sorter{
 
         this._toDoList = [];
         this._toDosListener = "";
+        this._update();
+    }
+
+    updateEachProjectSort(newSort){
+        this._list.forEach(project => project.updateSort(newSort));
         this._update();
     }
 

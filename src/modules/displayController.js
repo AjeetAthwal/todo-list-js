@@ -16,7 +16,8 @@ class TasksPageLoader{
     }
     
     update(e){
-        this.myProjects.updateSort(e.target.value)
+        if (e.target.id === "Project-view") this.myProjects.updateSort(e.target.value);
+        else if (e.target.id === "Task-view") this.myProjects.updateEachProjectSort(e.target.value)
         this.deleteProjectsContainer();
         this.buildProjectCards();
     }
@@ -28,20 +29,12 @@ class TasksPageLoader{
     buildPage(mainDiv){
         this.mainDiv = mainDiv
 
-        this._buildSortForm();
+        this._buildSortForm("Project");
+        this._buildSortForm("Task");
         this.buildProjectCards();
     }
 
-    _buildSortForm(){
-        this.sortDiv = document.createElement("div")
-        this.sortDiv.classList = "sort"
-        this.sortForm = document.createElement("form")
-        this.sortFormLabel = document.createElement("label")
-        this.sortFormLabel.htmlFor = "view";
-        this.sortFormLabel.innerText = "Project Sort:  "
-        this.sortFormSelect = document.createElement("select")
-        this.sortFormSelect.id = "view";
-        this.sortFormSelect.name = "view";
+    _createDropdown(){
 
         this.selectDueDateEarliestOption = document.createElement("option")
         this.selectDueDateEarliestOption.value = "dueDateEarliestFirst"
@@ -75,6 +68,20 @@ class TasksPageLoader{
         this.sortFormSelect.appendChild(this.selectNewestCreatedOption)
 
         this.sortFormSelect.addEventListener("change", this.update)
+    }
+
+    _buildSortForm(view){
+        this.sortDiv = document.createElement("div")
+        this.sortDiv.classList = "sort"
+        this.sortForm = document.createElement("form")
+        this.sortFormLabel = document.createElement("label")
+        this.sortFormLabel.htmlFor = view + "-view";
+        this.sortFormLabel.innerText = view + " Sort:  "
+        this.sortFormSelect = document.createElement("select")
+        this.sortFormSelect.id = view + "-view";
+        this.sortFormSelect.name = view + "-view";
+
+        this._createDropdown()
 
         this.sortForm.appendChild(this.sortFormLabel);
         this.sortForm.appendChild(this.sortFormSelect);
