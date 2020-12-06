@@ -224,4 +224,5 @@ h2{
 
 select{
     font-size: 0.9em;
+    outline-style: none;
 }
