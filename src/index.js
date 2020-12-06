@@ -54,21 +54,41 @@ class TasksPageLoader{
         this.sortForm = document.createElement("form")
         this.sortFormLabel = document.createElement("label")
         this.sortFormLabel.htmlFor = "view";
-        this.sortFormLabel.innerText = "Sort by: "
+        this.sortFormLabel.innerText = "Sort: "
         this.sortFormSelect = document.createElement("select")
         this.sortFormSelect.id = "view";
         this.sortFormSelect.name = "view";
 
         this.selectDueDateEarliestOption = document.createElement("option")
         this.selectDueDateEarliestOption.value = "dueDateEarliestFirst"
-        this.selectDueDateEarliestOption.innerText = "Deadline Earliest"
+        this.selectDueDateEarliestOption.innerText = "Most Recent Deadline"
 
         this.selectDueDateLatestOption = document.createElement("option")
         this.selectDueDateLatestOption.value = "dueDateOldestFirst"
-        this.selectDueDateLatestOption.innerText = "Deadline Latest"
+        this.selectDueDateLatestOption.innerText = "Farthest Deadline"
+
+        this.selectHighestPriorityFirstOption = document.createElement("option")
+        this.selectHighestPriorityFirstOption.value = "highestPriorityFirst"
+        this.selectHighestPriorityFirstOption.innerText = "Highest Priority"
+
+        this.selectLowestPriorityFirstOption = document.createElement("option")
+        this.selectLowestPriorityFirstOption.value = "lowestPriorityFirst"
+        this.selectLowestPriorityFirstOption.innerText = "Lowest Priority"
+
+        this.selectOldestCreatedOption = document.createElement("option")
+        this.selectOldestCreatedOption.value = "oldestFirst"
+        this.selectOldestCreatedOption.innerText = "Oldest Created"
+
+        this.selectNewestCreatedOption = document.createElement("option")
+        this.selectNewestCreatedOption.value = "newestFirst"
+        this.selectNewestCreatedOption.innerText = "Most Recent Created"
 
         this.sortFormSelect.appendChild(this.selectDueDateEarliestOption)
         this.sortFormSelect.appendChild(this.selectDueDateLatestOption)
+        this.sortFormSelect.appendChild(this.selectHighestPriorityFirstOption)
+        this.sortFormSelect.appendChild(this.selectLowestPriorityFirstOption)
+        this.sortFormSelect.appendChild(this.selectOldestCreatedOption)
+        this.sortFormSelect.appendChild(this.selectNewestCreatedOption)
 
         this.sortFormSelect.addEventListener("change", this.update)
 

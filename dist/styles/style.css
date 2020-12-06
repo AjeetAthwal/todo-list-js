@@ -219,4 +219,9 @@ h2{
 .sort{
     color: var(--main-text-color);
     margin: auto;
+    font-size: 1.2em;
+}
+
+select{
+    font-size: 0.9em;
 }
