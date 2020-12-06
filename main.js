@@ -5412,6 +5412,7 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
+
 const mySettingsStorage = new _modules_storage__WEBPACK_IMPORTED_MODULE_2__.SettingsStorage(false, true, _modules_defaultEntry__WEBPACK_IMPORTED_MODULE_3__.defaultSettingsEntry);
 const myProjectsStorage = new _modules_storage__WEBPACK_IMPORTED_MODULE_2__.ProjectsStorage(false, true, _modules_defaultEntry__WEBPACK_IMPORTED_MODULE_3__.defaultProjectsEntry);
 const mySettings = new _modules_settings__WEBPACK_IMPORTED_MODULE_1__.default(mySettingsStorage, "", "", "", "");
@@ -5427,15 +5428,65 @@ console.log(myToDos.getList());
 class TasksPageLoader{
     constructor(myProjects){
         this.myProjects = myProjects;
+        this.mainDiv = ""
+        this.update = this.update.bind(this)
     }
 
-    buildProjectCards(mainDiv){
+    buildProjectCards(){
+
         this.projectsDiv = document.createElement("div");
         this.projectsDiv.id = "projects"
         this.myProjects.getList().forEach(project => this._buildProjectCard(project))
-        mainDiv.appendChild(this.projectsDiv)
+        this.mainDiv.appendChild(this.projectsDiv)
     }
     
+    update(e){
+        this.myProjects.updateSort(e.target.value)
+        this.deleteProjectsContainer();
+        this.buildProjectCards();
+    }
+
+    deleteProjectsContainer(){
+        this.mainDiv.removeChild(this.projectsDiv);
+    }
+
+    buildPage(mainDiv){
+        this.mainDiv = mainDiv
+
+        this._buildSortForm();
+        this.buildProjectCards();
+    }
+
+    _buildSortForm(){
+        this.sortDiv = document.createElement("div")
+        this.sortDiv.classList = "sort"
+        this.sortForm = document.createElement("form")
+        this.sortFormLabel = document.createElement("label")
+        this.sortFormLabel.htmlFor = "view";
+        this.sortFormLabel.innerText = "Sort by: "
+        this.sortFormSelect = document.createElement("select")
+        this.sortFormSelect.id = "view";
+        this.sortFormSelect.name = "view";
+
+        this.selectDueDateEarliestOption = document.createElement("option")
+        this.selectDueDateEarliestOption.value = "dueDateEarliestFirst"
+        this.selectDueDateEarliestOption.innerText = "Deadline Earliest"
+
+        this.selectDueDateLatestOption = document.createElement("option")
+        this.selectDueDateLatestOption.value = "dueDateOldestFirst"
+        this.selectDueDateLatestOption.innerText = "Deadline Latest"
+
+        this.sortFormSelect.appendChild(this.selectDueDateEarliestOption)
+        this.sortFormSelect.appendChild(this.selectDueDateLatestOption)
+
+        this.sortFormSelect.addEventListener("change", this.update)
+
+        this.sortForm.appendChild(this.sortFormLabel);
+        this.sortForm.appendChild(this.sortFormSelect);
+        this.sortDiv.appendChild(this.sortForm)
+        this.mainDiv.appendChild(this.sortDiv)
+    }
+
     _buildProjectCard(project){
         const projectDiv = document.createElement("div");
         projectDiv.classList.add("project");
@@ -5552,7 +5603,7 @@ class DisplayController{
         this.settingsLiTag.classList.remove("active");
         this.settingsLiTag.addEventListener("click", this.loadSettingsPage)
         this.tasksLiTag.removeEventListener("click", this.loadTasksPage)
-        this.tasksPage.buildProjectCards(this.mainDiv)
+        this.tasksPage.buildPage(this.mainDiv)
     }
 
     loadSettingsPage(){
@@ -6197,6 +6248,11 @@ class Projects extends Sorter{
 
         this._toDoList = [];
         this._toDosListener = "";
+        this._update();
+    }
+
+    updateSort(newSort){
+        this.listSort = newSort;
         this._update();
     }
 
