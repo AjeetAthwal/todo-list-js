@@ -5772,7 +5772,13 @@ class TasksPageLoader{
         const projectTitleH1Tag = document.createElement("h1");
         projectTitleH1Tag.innerText = project.title;
     
+        const projectTitleEditIconTag = document.createElement("img");
+        projectTitleEditIconTag.src = 'images/edit_icon.png';
+        projectTitleEditIconTag.alt = 'edit icon';
+        projectTitleEditIconTag.classList.add("edit-icon")
+
         projectTitleDiv.appendChild(projectTitleH1Tag);
+        projectTitleDiv.appendChild(projectTitleEditIconTag);
     
         const projectDetailsDiv = document.createElement("div");
         projectDetailsDiv.classList.add("project-details");

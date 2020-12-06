@@ -151,7 +151,7 @@ a {
 }
 
 #projects {
-    padding-top: 50px;
+    padding-top: 25px;
     width: 95%;
     display: grid;
     margin: auto;
@@ -172,6 +172,18 @@ a {
     height: 10%;
     width: 100%;
     border-bottom: solid 1px var(--other-color);
+    display: flex;
+    flex-direction: row;
+}
+
+.project-title>h1{
+    width: 90%;
+}
+
+.edit-icon{
+    height: 15px;
+    cursor: pointer;
+    margin: auto;
 }
 
 .project-details{
