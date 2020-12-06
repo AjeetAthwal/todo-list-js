@@ -86,6 +86,7 @@ header {
     padding-top: calc(var(--header-height) + var(--container-padding));
     width: 100%;
     display: flex;
+    flex-direction: column;
     padding-bottom: var(--container-padding);
     color: var(--second-bg-color);
 }
@@ -142,6 +143,7 @@ a {
 }
 
 #projects {
+    padding-top: 50px;
     width: 95%;
     display: grid;
     margin: auto;
@@ -212,4 +214,9 @@ h2{
 
 .expand > a:hover {
     text-decoration: underline;
+}
+
+.sort{
+    color: var(--main-text-color);
+    margin: auto;
 }

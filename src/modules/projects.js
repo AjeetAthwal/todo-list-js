@@ -412,6 +412,11 @@ class Projects extends Sorter{
         this._update();
     }
 
+    updateSort(newSort){
+        this.listSort = newSort;
+        this._update();
+    }
+
     _initFromScratch(){
         this._toDoIDCounter = 1;
         this._addMiscProject();
