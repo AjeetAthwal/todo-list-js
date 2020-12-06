@@ -5601,6 +5601,7 @@ class TasksPageLoader{
         this.myProjects = myProjects;
         this.mainDiv = ""
         this.update = this.update.bind(this)
+        this._expandProjectListener = this._expandProjectListener.bind(this);
     }
 
     buildProjectCards(){
@@ -5634,7 +5635,7 @@ class TasksPageLoader{
         this.sortForm = document.createElement("form")
         this.sortFormLabel = document.createElement("label")
         this.sortFormLabel.htmlFor = "view";
-        this.sortFormLabel.innerText = "Sort: "
+        this.sortFormLabel.innerText = "Project Sort:  "
         this.sortFormSelect = document.createElement("select")
         this.sortFormSelect.id = "view";
         this.sortFormSelect.name = "view";
@@ -5687,6 +5688,17 @@ class TasksPageLoader{
         projectDiv.dataset.projectId = project.id;
         this.projectsDiv.appendChild(projectDiv);
     }
+
+    _expandProject(id){
+        console.log(id)
+    }
+
+    _expandProjectListener(e){
+        let tag = e.target;
+        while (tag.dataset.projectId === undefined) tag = tag.parentNode;
+        const projectId = tag.dataset.projectId;
+        this._expandProject(projectId)
+    }
     
     _addProjectSubDivs(project, projectDiv){
     
@@ -5703,6 +5715,7 @@ class TasksPageLoader{
     
         const projectExpandATag = document.createElement("a");
         projectExpandATag.innerText = "Expand";
+        projectExpandATag.addEventListener("click", this._expandProjectListener)
     
         projectExpandDiv.appendChild(projectExpandATag);
     
@@ -5810,7 +5823,6 @@ class DisplayController{
     }
 
     loadTasksPage(){
-        console.log("1")
         this.myProjects.updateSettings()
         this.deleteContainer();
         this.tasksLiTag.classList.add("active");
@@ -5821,7 +5833,6 @@ class DisplayController{
     }
 
     loadSettingsPage(){
-        console.log("2")
         this.deleteContainer();
         this.settingsLiTag.classList.add("active");
         this.tasksLiTag.classList.remove("active");
