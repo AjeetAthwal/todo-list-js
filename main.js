@@ -5600,8 +5600,9 @@ class TasksPageLoader{
     constructor(myProjects){
         this.myProjects = myProjects;
         this.mainDiv = ""
-        this.update = this.update.bind(this)
+        this._updateSort = this._updateSort.bind(this)
         this._expandProjectListener = this._expandProjectListener.bind(this);
+        this._createProjectEditForm = this._createProjectEditForm.bind(this);
     }
 
     buildProjectCards(){
@@ -5611,12 +5612,16 @@ class TasksPageLoader{
         this.myProjects.getList().forEach(project => this._buildProjectCard(project))
         this.mainDiv.appendChild(this.projectsDiv)
     }
-    
-    update(e){
-        if (e.target.id === "Project-view") this.myProjects.updateSort(e.target.value);
-        else if (e.target.id === "Task-view") this.myProjects.updateEachProjectSort(e.target.value)
+
+    _update(){
         this.deleteProjectsContainer();
         this.buildProjectCards();
+    }
+    
+    _updateSort(e){
+        if (e.target.id === "Project-view") this.myProjects.updateSort(e.target.value);
+        else if (e.target.id === "Task-view") this.myProjects.updateEachProjectSort(e.target.value)
+        this._update();
     }
 
     deleteProjectsContainer(){
@@ -5664,7 +5669,7 @@ class TasksPageLoader{
         this.sortFormSelect.appendChild(this.selectOldestCreatedOption)
         this.sortFormSelect.appendChild(this.selectNewestCreatedOption)
 
-        this.sortFormSelect.addEventListener("change", this.update)
+        this.sortFormSelect.addEventListener("change", this._updateSort)
     }
 
     _buildSortForm(view){
@@ -5708,8 +5713,10 @@ class TasksPageLoader{
     }
     
     _addProjectSubDivs(project, projectDiv){
-    
-        this._addProjectDetails(project, projectDiv);
+        const form = document.createElement("form");
+        form.classList.add("project-form-edit")
+        projectDiv.appendChild(form)
+        this._addProjectDetails(project, form);
     
         const projectTodosDiv = document.createElement("div");
         projectTodosDiv.classList.add("todos");
@@ -5765,6 +5772,41 @@ class TasksPageLoader{
         todosDiv.appendChild(todoDiv)
     }
     
+    _createProjectEditForm(e){
+        const form = e.target.parentNode.parentNode;
+        const projectTitleDiv = form.firstChild
+        const projectDetailsDiv = projectTitleDiv.nextSibling;
+        console.log(form)
+        console.log(projectTitleDiv)
+        console.log(projectDetailsDiv)
+        projectTitleDiv.removeChild(projectTitleDiv.lastChild)
+        projectTitleDiv.removeChild(projectTitleDiv.lastChild)
+        const titleInput = document.createElement("input")
+        titleInput.htmlFor = "title";
+        titleInput.id = "title";
+        titleInput.name = "title";
+        titleInput.type = "text";
+        projectTitleDiv.appendChild(titleInput)
+
+        const dueDateDiv = projectDetailsDiv.querySelector(".dueDate")
+        dueDateDiv.removeChild(dueDateDiv.lastChild);
+        const dueDateInput = document.createElement("input")
+        dueDateInput.htmlFor = "dueDate";
+        dueDateInput.id = "dueDate";
+        dueDateInput.name = "dueDate";
+        dueDateInput.type = "date";
+        dueDateDiv.appendChild(dueDateInput)
+
+        const priorityDiv = projectDetailsDiv.querySelector(".priority")
+        priorityDiv.removeChild(priorityDiv.lastChild);
+        const priorityInput = document.createElement("input")
+        priorityInput.htmlFor = "priority";
+        priorityInput.id = "priority";
+        priorityInput.name = "priority";
+        priorityInput.type = "number";
+        priorityDiv.appendChild(priorityInput)
+    }
+
     _addProjectDetails(project, projectDiv){
         const projectTitleDiv = document.createElement("div");
         projectTitleDiv.classList.add("project-title");
@@ -5776,6 +5818,7 @@ class TasksPageLoader{
         projectTitleEditIconTag.src = 'images/edit_icon.png';
         projectTitleEditIconTag.alt = 'edit icon';
         projectTitleEditIconTag.classList.add("edit-icon")
+        projectTitleEditIconTag.addEventListener("click", this._createProjectEditForm)
 
         projectTitleDiv.appendChild(projectTitleH1Tag);
         projectTitleDiv.appendChild(projectTitleEditIconTag);
