@@ -42,6 +42,14 @@ h2 {
     font-size: 1.2em;
 }
 
+h3 {
+    font-size: 1em;
+}
+
+h4 {
+    font-size: 0.8em;
+}
+
 body{
     background-color: var(--main-bg-color);
     font-family: 'Open Sans', sans-serif;
@@ -197,6 +205,8 @@ h2{
 .todos{
     height: 70%;
     width: 100%;
+    display: flex;
+    flex-direction: column;
 }
 
 .expand{
@@ -225,4 +235,27 @@ h2{
 select{
     font-size: 0.9em;
     outline-style: none;
+}
+
+.todo{
+    display: flex;
+    flex-direction: row;
+}
+
+.todo-header{
+    padding-top: 10px;
+    padding-bottom: 10px;
+}
+
+.todo>h3{
+    margin: auto;
+    width: 50%;
+    text-align: center;
+}
+
+.todo>h4{
+    margin: auto;
+    width: 50%;
+    text-align: center;
+    padding-bottom: 5px;
 }
