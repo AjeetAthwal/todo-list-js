@@ -235,11 +235,11 @@ class Project extends Sorter{
         if (project === "") this._initFromScratch(id, title, description, priority, dueDate);
         else this._initFromStorage(project);
 
-
+        this.settings = settings;
     }
 
-    updateSettings(settings){
-        this.listSort = settings.projectViewToDoSortPref;
+    updateSettings(){
+        this.listSort = this.settings.projectViewToDoSortPref;
         this._sortList();
     }
 
@@ -427,11 +427,11 @@ class Projects extends Sorter{
         this._toDoIDCounter = myProjects.toDoIDCounter;          
     }
 
-    updateSettings(settings){
-        this.view = settings.view
-        this.listSort = settings.projectViewProjectSortPref;
-        if (this._toDosListener !== "" && this._toDosListener !== undefined) this._toDosListener.updateSettings(settings);
-        this.getList().forEach(project => project.updateSettings(settings))
+    updateSettings(){
+        this.view = this.settings.view
+        this.listSort = this.settings.projectViewProjectSortPref;
+        if (this._toDosListener !== "" && this._toDosListener !== undefined) this._toDosListener.updateSettings();
+        this.getList().forEach(project => project.updateSettings())
         this._sortList()
     }
 
@@ -526,11 +526,12 @@ class ToDos extends Sorter{
         super(settings.toDoViewSortPref);
         this._list = projects.getToDoList();
         this.projects = projects;
+        this.settings = settings;
         projects._toDosListener = this;
     }
 
-    updateSettings(settings){
-        this.listSort = settings.toDoViewSortPref;
+    updateSettings(){
+        this.listSort = this.settings.toDoViewSortPref;
         this._sortList();
     }
 

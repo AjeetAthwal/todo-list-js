@@ -209,6 +209,7 @@ class DisplayController{
 
     loadTasksPage(){
         console.log("1")
+        this.myProjects.updateSettings()
         this.deleteContainer();
         this.tasksLiTag.classList.add("active");
         this.settingsLiTag.classList.remove("active");
