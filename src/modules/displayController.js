@@ -198,11 +198,13 @@ class TasksPageLoader{
         const formElements = e.target.elements
         for (let index = 0; index < formElements.length; index++){
             if (formElements[index].id === "title") newTitle = formElements[index].value;
-            if (formElements[index].id === "dueDate") newDueDate = new Date(formElements[index].value);
+            if (formElements[index].id === "dueDate") newDueDate = formElements[index].value === "" ? "" : new Date(formElements[index].value);
             if (formElements[index].id === "priority") newPriority = parseInt(formElements[index].value);
         }
 
-        this.myProjects.updateProjectInfo(projectId, newTitle, "", newPriority, newDueDate);
+        console.log(newDueDate)
+
+        this.myProjects.updateProjectInfo(projectId, newTitle, "BLANK", newPriority, newDueDate);
         this._update();
     }
 
@@ -222,6 +224,7 @@ class TasksPageLoader{
         titleInput.name = "title";
         titleInput.type = "text";
         titleInput.value = project.title;
+        titleInput.required = true
         projectTitleDiv.appendChild(titleInput)
 
         const formBtns = document.createElement("div")
@@ -245,7 +248,7 @@ class TasksPageLoader{
         formBtns.appendChild(formYesBtn);
         formBtns.appendChild(formNoBtn);
         projectTitleDiv.appendChild(formBtns)
-
+        
         const dueDateDiv = projectDetailsDiv.querySelector(".dueDate")
         dueDateDiv.removeChild(dueDateDiv.lastChild);
         const dueDateInput = document.createElement("input")
@@ -254,6 +257,7 @@ class TasksPageLoader{
         dueDateInput.name = "dueDate";
         dueDateInput.type = "date";
         dueDateInput.value = project.dueDate === "" ? "" : parse(project.dueDate,'P',new Date()).toISOString().substring(0, 10);
+        dueDateInput.min = project.minDueDate.toISOString().substring(0, 10);
         dueDateDiv.appendChild(dueDateInput)
         
         const priorityDiv = projectDetailsDiv.querySelector(".priority")
@@ -264,6 +268,10 @@ class TasksPageLoader{
         priorityInput.name = "priority";
         priorityInput.type = "number";
         priorityInput.value = project.priority;
+        priorityInput.required = true
+
+        priorityInput.min = project.minPriority
+        priorityInput.max = project.maxPriority
         priorityDiv.appendChild(priorityInput)
     }
 
