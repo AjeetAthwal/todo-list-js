@@ -9,6 +9,7 @@ class TasksPageLoader{
         this._createProjectEditForm = this._createProjectEditForm.bind(this);
         this._closeProjectEditForm = this._closeProjectEditForm.bind(this); 
         this._submitProjectEditForm = this._submitProjectEditForm.bind(this); 
+        this._createAddProjectForm = this._createAddProjectForm.bind(this);
     }
 
     buildProjectCards(){
@@ -104,16 +105,21 @@ class TasksPageLoader{
         projectDiv.classList.add("project");
         projectDiv.classList.add("add-new-card");
         
+        const form = document.createElement("form")
+
         const imgDiv = document.createElement("div")
-        imgDiv.classList.add("plus-icon")
+        imgDiv.id = "plus-icon"
 
         const img = document.createElement("img");
         img.src = "images/plus_icon.png"
         img.alt = "plus icon"
-        img.classList.add("plus-icon-img")
+        img.id = "plus-icon-img"
 
         imgDiv.appendChild(img)
-        projectDiv.appendChild(imgDiv)
+        imgDiv.addEventListener("click", this._createAddProjectForm)
+
+        form.appendChild(imgDiv)
+        projectDiv.appendChild(form)
 
         this.projectsDiv.appendChild(projectDiv);
     }
@@ -230,7 +236,17 @@ class TasksPageLoader{
         this._update();
     }
 
+    _createAddProjectForm(e){
+        console.log(e);
+        console.log(e.target);
+        console.log(e.target.id);
+        console.log(e.target.parentNode);
+        console.log(e.target.parentNode.parentNode);
+    }
+
     _createProjectEditForm(e){
+        console.log(e.target.id === "plus-icon-img")
+        console.log(e.target.id)
         const projectId = this._getProjectId(e.target);
         const project = this.myProjects._getProject(projectId)
         const form = e.target.parentNode.parentNode;
