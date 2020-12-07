@@ -5587,7 +5587,7 @@ const defaultSettingsEntry = {
 /*! export DisplayController [provided] [no usage info] [missing usage info prevents renaming] */
 /*! export TasksPageLoader [provided] [no usage info] [missing usage info prevents renaming] */
 /*! other exports [not provided] [no usage info] */
-/*! runtime requirements: __webpack_require__.r, __webpack_exports__, __webpack_require__.d, __webpack_require__.* */
+/*! runtime requirements: __webpack_require__, __webpack_require__.r, __webpack_exports__, __webpack_require__.d, __webpack_require__.* */
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 __webpack_require__.r(__webpack_exports__);
@@ -5595,6 +5595,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "TasksPageLoader": () => /* binding */ TasksPageLoader,
 /* harmony export */   "DisplayController": () => /* binding */ DisplayController
 /* harmony export */ });
+/* harmony import */ var date_fns_parse__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! date-fns/parse */ "./node_modules/date-fns/esm/parse/index.js");
+
 
 class TasksPageLoader{
     constructor(myProjects){
@@ -5705,10 +5707,13 @@ class TasksPageLoader{
         console.log(id)
     }
 
-    _expandProjectListener(e){
-        let tag = e.target;
+    _getProjectId(tag){
         while (tag.dataset.projectId === undefined) tag = tag.parentNode;
-        const projectId = tag.dataset.projectId;
+        return parseInt(tag.dataset.projectId);
+    }
+
+    _expandProjectListener(e){
+        const projectId = this._getProjectId(e.target)
         this._expandProject(projectId)
     }
     
@@ -5773,6 +5778,8 @@ class TasksPageLoader{
     }
     
     _createProjectEditForm(e){
+        const projectId = this._getProjectId(e.target);
+        const project = this.myProjects._getProject(projectId)
         const form = e.target.parentNode.parentNode;
         const projectTitleDiv = form.firstChild
         const projectDetailsDiv = projectTitleDiv.nextSibling;
@@ -5786,6 +5793,7 @@ class TasksPageLoader{
         titleInput.id = "title";
         titleInput.name = "title";
         titleInput.type = "text";
+        titleInput.value = project.title;
         projectTitleDiv.appendChild(titleInput)
 
         const dueDateDiv = projectDetailsDiv.querySelector(".dueDate")
@@ -5795,6 +5803,11 @@ class TasksPageLoader{
         dueDateInput.id = "dueDate";
         dueDateInput.name = "dueDate";
         dueDateInput.type = "date";
+        dueDateInput.value = (0,date_fns_parse__WEBPACK_IMPORTED_MODULE_0__.default)(project.dueDate,'P',new Date()).toISOString().substring(0, 10);
+        console.log(project.dueDate)
+        console.log((0,date_fns_parse__WEBPACK_IMPORTED_MODULE_0__.default)(project.dueDate,'P',new Date()).toISOString().substring(0, 10))
+        console.log("2")
+        console.log((0,date_fns_parse__WEBPACK_IMPORTED_MODULE_0__.default)(project.dueDate,'P','YYYY-MM-DD'))
         dueDateDiv.appendChild(dueDateInput)
 
         const priorityDiv = projectDetailsDiv.querySelector(".priority")
@@ -5804,6 +5817,7 @@ class TasksPageLoader{
         priorityInput.id = "priority";
         priorityInput.name = "priority";
         priorityInput.type = "number";
+        priorityInput.value = project.priority;
         priorityDiv.appendChild(priorityInput)
     }
 
