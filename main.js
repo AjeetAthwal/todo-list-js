@@ -5605,6 +5605,8 @@ class TasksPageLoader{
         this._updateSort = this._updateSort.bind(this)
         this._expandProjectListener = this._expandProjectListener.bind(this);
         this._createProjectEditForm = this._createProjectEditForm.bind(this);
+        this._closeProjectEditForm = this._closeProjectEditForm.bind(this); 
+        this._submitProjectEditForm = this._submitProjectEditForm.bind(this); 
     }
 
     buildProjectCards(){
@@ -5776,11 +5778,37 @@ class TasksPageLoader{
         todoDiv.dataset.projectId = todo.projectId;
         todosDiv.appendChild(todoDiv)
     }
+
+    _closeProjectEditForm(e){
+        e.preventDefault();
+        this._update() 
+    }
     
+    _submitProjectEditForm(e){
+        e.preventDefault();
+
+        const projectId = this._getProjectId(e.target);
+
+        let newTitle = ""
+        let newDueDate = ""
+        let newPriority = ""
+
+        const formElements = e.target.elements
+        for (let index = 0; index < formElements.length; index++){
+            if (formElements[index].id === "title") newTitle = formElements[index].value;
+            if (formElements[index].id === "dueDate") newDueDate = new Date(formElements[index].value);
+            if (formElements[index].id === "priority") newPriority = parseInt(formElements[index].value);
+        }
+
+        this.myProjects.updateProjectInfo(projectId, newTitle, "", newPriority, newDueDate);
+        this._update();
+    }
+
     _createProjectEditForm(e){
         const projectId = this._getProjectId(e.target);
         const project = this.myProjects._getProject(projectId)
         const form = e.target.parentNode.parentNode;
+        form.addEventListener("submit", this._submitProjectEditForm)
         const projectTitleDiv = form.firstChild
         const projectDetailsDiv = projectTitleDiv.nextSibling;
 
@@ -5798,6 +5826,7 @@ class TasksPageLoader{
         formBtns.classList.add("project-edit-form-btns")
         const formYesBtn = document.createElement("input")
         const formNoBtn = document.createElement("button")
+        formNoBtn.addEventListener("click", this._closeProjectEditForm)
 
         formYesBtn.htmlFor = "yes-btn"
         formYesBtn.id = "yes-btn"
@@ -6241,6 +6270,13 @@ class Project extends Sorter{
         this._sortList();
     }
 
+    updateProjectInfo(title, description, priority, dueDate){
+        if (title !== "") this.title = title;
+        if (description !== "") this.description = description;
+        if (priority !== "") this.priority = priority;
+        if (dueDate !== "") this.dueDate = dueDate;
+    }
+
     _initFromScratch(id, title, description, priority, dueDate){
         this.id = id;
         this.title = title;
@@ -6417,6 +6453,12 @@ class Projects extends Sorter{
 
     updateEachProjectSort(newSort){
         this._list.forEach(project => project.updateSort(newSort));
+        this._update();
+    }
+
+    updateProjectInfo(projectId, title, description, priority, dueDate){
+        const project = this._getProject(projectId)
+        project.updateProjectInfo(title, description, priority, dueDate)
         this._update();
     }
 
