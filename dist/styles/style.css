@@ -11,6 +11,7 @@
     --yes-color:rgb(44, 119, 37);
     --no-color:rgb(201, 15, 15);
     --small-btn-size: 25px;
+    --plus-size: 300px;
 }
 
 @media only screen and (max-width: 450px){
@@ -19,6 +20,7 @@
         --container-padding: 50px;
         --grid-gap: 50px;
         --small-btn-size: 20px;
+        --plus-size: 200px;
     }
     body{
         font-size: 0.85em;
@@ -31,6 +33,7 @@
         --container-padding: 25px;
         --grid-gap: 25px;
         --small-btn-size: 15px;
+        --plus-size: 150px;
     }
     body{
         font-size: 0.75em;
@@ -171,6 +174,21 @@ a {
     background-color: var(--other-text-color);
     display: flex;
     flex-direction: column;
+}
+
+.add-new-card{
+    background-color: var(--other-color);
+}
+
+.plus-icon{
+    margin: auto;
+    display: flex;
+    cursor: pointer;
+}
+
+.plus-icon-img{
+    margin: auto;
+    width: var(--plus-size);
 }
 
 .project-title{

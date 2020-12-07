@@ -15,9 +15,11 @@ class TasksPageLoader{
 
         this.projectsDiv = document.createElement("div");
         this.projectsDiv.id = "projects"
+        this._buildAddNewCard();
         this.myProjects.getList().forEach(project => this._buildProjectCard(project))
         this.mainDiv.appendChild(this.projectsDiv)
     }
+
 
     _update(){
         this.deleteProjectsContainer();
@@ -96,6 +98,26 @@ class TasksPageLoader{
         this.sortDiv.appendChild(this.sortForm)
         this.mainDiv.appendChild(this.sortDiv)
     }
+
+    _buildAddNewCard(){
+        const projectDiv = document.createElement("div");
+        projectDiv.classList.add("project");
+        projectDiv.classList.add("add-new-card");
+        
+        const imgDiv = document.createElement("div")
+        imgDiv.classList.add("plus-icon")
+
+        const img = document.createElement("img");
+        img.src = "images/plus_icon.png"
+        img.alt = "plus icon"
+        img.classList.add("plus-icon-img")
+
+        imgDiv.appendChild(img)
+        projectDiv.appendChild(imgDiv)
+
+        this.projectsDiv.appendChild(projectDiv);
+    }
+
 
     _buildProjectCard(project){
         const projectDiv = document.createElement("div");
