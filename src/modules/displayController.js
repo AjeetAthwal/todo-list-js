@@ -1,4 +1,5 @@
-
+import parse from 'date-fns/parse'
+import parseISO from 'date-fns/parse'
 class TasksPageLoader{
     constructor(myProjects){
         this.myProjects = myProjects;
@@ -108,10 +109,13 @@ class TasksPageLoader{
         console.log(id)
     }
 
-    _expandProjectListener(e){
-        let tag = e.target;
+    _getProjectId(tag){
         while (tag.dataset.projectId === undefined) tag = tag.parentNode;
-        const projectId = tag.dataset.projectId;
+        return parseInt(tag.dataset.projectId);
+    }
+
+    _expandProjectListener(e){
+        const projectId = this._getProjectId(e.target)
         this._expandProject(projectId)
     }
     
@@ -176,6 +180,8 @@ class TasksPageLoader{
     }
     
     _createProjectEditForm(e){
+        const projectId = this._getProjectId(e.target);
+        const project = this.myProjects._getProject(projectId)
         const form = e.target.parentNode.parentNode;
         const projectTitleDiv = form.firstChild
         const projectDetailsDiv = projectTitleDiv.nextSibling;
@@ -189,6 +195,7 @@ class TasksPageLoader{
         titleInput.id = "title";
         titleInput.name = "title";
         titleInput.type = "text";
+        titleInput.value = project.title;
         projectTitleDiv.appendChild(titleInput)
 
         const dueDateDiv = projectDetailsDiv.querySelector(".dueDate")
@@ -198,6 +205,11 @@ class TasksPageLoader{
         dueDateInput.id = "dueDate";
         dueDateInput.name = "dueDate";
         dueDateInput.type = "date";
+        dueDateInput.value = parse(project.dueDate,'P',new Date()).toISOString().substring(0, 10);
+        console.log(project.dueDate)
+        console.log(parse(project.dueDate,'P',new Date()).toISOString().substring(0, 10))
+        console.log("2")
+        console.log(parse(project.dueDate,'P','YYYY-MM-DD'))
         dueDateDiv.appendChild(dueDateInput)
 
         const priorityDiv = projectDetailsDiv.querySelector(".priority")
@@ -207,6 +219,7 @@ class TasksPageLoader{
         priorityInput.id = "priority";
         priorityInput.name = "priority";
         priorityInput.type = "number";
+        priorityInput.value = project.priority;
         priorityDiv.appendChild(priorityInput)
     }
 
