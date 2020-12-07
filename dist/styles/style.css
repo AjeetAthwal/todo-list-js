@@ -8,6 +8,9 @@
     --header-height: 100px;
     --container-padding: 50px;
     --grid-gap: 100px;
+    --yes-color:rgb(44, 119, 37);
+    --no-color:rgb(201, 15, 15);
+    --small-btn-size: 25px;
 }
 
 @media only screen and (max-width: 450px){
@@ -15,6 +18,7 @@
         --card-size: 300px;
         --container-padding: 50px;
         --grid-gap: 50px;
+        --small-btn-size: 20px;
     }
     body{
         font-size: 0.85em;
@@ -26,6 +30,7 @@
         --card-size: 250px;
         --container-padding: 25px;
         --grid-gap: 25px;
+        --small-btn-size: 15px;
     }
     body{
         font-size: 0.75em;
@@ -297,4 +302,35 @@ select{
     height: 20%;
     display: flex;
     flex-direction: column;
+}
+
+.small-btn{
+    color: white;
+    outline: none;
+    border-radius: 3px;
+    cursor: pointer;
+    border: none;
+    height: var(--small-btn-size);
+    width: var(--small-btn-size);
+    font-size: 0.8em;
+}
+
+.yes-btn{
+    background-color: var(--yes-color);
+}
+
+.no-btn{
+    background-color: var(--no-color);
+}
+
+.project-edit-form-btns{
+    height: 100%;
+    width: 15%;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+}
+
+.project-edit-form-btns>.small-btn{
+    margin: auto;
 }

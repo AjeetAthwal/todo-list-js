@@ -5783,9 +5783,7 @@ class TasksPageLoader{
         const form = e.target.parentNode.parentNode;
         const projectTitleDiv = form.firstChild
         const projectDetailsDiv = projectTitleDiv.nextSibling;
-        console.log(form)
-        console.log(projectTitleDiv)
-        console.log(projectDetailsDiv)
+
         projectTitleDiv.removeChild(projectTitleDiv.lastChild)
         projectTitleDiv.removeChild(projectTitleDiv.lastChild)
         const titleInput = document.createElement("input")
@@ -5796,6 +5794,27 @@ class TasksPageLoader{
         titleInput.value = project.title;
         projectTitleDiv.appendChild(titleInput)
 
+        const formBtns = document.createElement("div")
+        formBtns.classList.add("project-edit-form-btns")
+        const formYesBtn = document.createElement("input")
+        const formNoBtn = document.createElement("button")
+
+        formYesBtn.htmlFor = "yes-btn"
+        formYesBtn.id = "yes-btn"
+        formYesBtn.name = "yes-btn"
+        formYesBtn.classList.add("yes-btn")
+        formYesBtn.classList.add("small-btn")
+        formYesBtn.type = "submit"
+        formYesBtn.value = "✓"
+
+        formNoBtn.classList.add("no-btn")
+        formNoBtn.classList.add("small-btn")
+        formNoBtn.innerText = "x"
+
+        formBtns.appendChild(formYesBtn);
+        formBtns.appendChild(formNoBtn);
+        projectTitleDiv.appendChild(formBtns)
+
         const dueDateDiv = projectDetailsDiv.querySelector(".dueDate")
         dueDateDiv.removeChild(dueDateDiv.lastChild);
         const dueDateInput = document.createElement("input")
@@ -5803,8 +5822,8 @@ class TasksPageLoader{
         dueDateInput.id = "dueDate";
         dueDateInput.name = "dueDate";
         dueDateInput.type = "date";
-        dueDateDiv.appendChild(dueDateInput)
         dueDateInput.value = project.dueDate === "" ? "" : (0,date_fns_parse__WEBPACK_IMPORTED_MODULE_0__.default)(project.dueDate,'P',new Date()).toISOString().substring(0, 10);
+        dueDateDiv.appendChild(dueDateInput)
         
         const priorityDiv = projectDetailsDiv.querySelector(".priority")
         priorityDiv.removeChild(priorityDiv.lastChild);
