@@ -243,6 +243,13 @@ class Project extends Sorter{
         this._sortList();
     }
 
+    updateProjectInfo(title, description, priority, dueDate){
+        if (title !== "") this.title = title;
+        if (description !== "") this.description = description;
+        if (priority !== "") this.priority = priority;
+        if (dueDate !== "") this.dueDate = dueDate;
+    }
+
     _initFromScratch(id, title, description, priority, dueDate){
         this.id = id;
         this.title = title;
@@ -419,6 +426,12 @@ class Projects extends Sorter{
 
     updateEachProjectSort(newSort){
         this._list.forEach(project => project.updateSort(newSort));
+        this._update();
+    }
+
+    updateProjectInfo(projectId, title, description, priority, dueDate){
+        const project = this._getProject(projectId)
+        project.updateProjectInfo(title, description, priority, dueDate)
         this._update();
     }
 
