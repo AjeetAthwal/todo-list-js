@@ -180,13 +180,13 @@ a {
     background-color: var(--other-color);
 }
 
-.plus-icon{
+#plus-icon{
     margin: auto;
     display: flex;
     cursor: pointer;
 }
 
-.plus-icon-img{
+#plus-icon-img{
     margin: auto;
     width: var(--plus-size);
 }
