@@ -5803,13 +5803,9 @@ class TasksPageLoader{
         dueDateInput.id = "dueDate";
         dueDateInput.name = "dueDate";
         dueDateInput.type = "date";
-        dueDateInput.value = (0,date_fns_parse__WEBPACK_IMPORTED_MODULE_0__.default)(project.dueDate,'P',new Date()).toISOString().substring(0, 10);
-        console.log(project.dueDate)
-        console.log((0,date_fns_parse__WEBPACK_IMPORTED_MODULE_0__.default)(project.dueDate,'P',new Date()).toISOString().substring(0, 10))
-        console.log("2")
-        console.log((0,date_fns_parse__WEBPACK_IMPORTED_MODULE_0__.default)(project.dueDate,'P','YYYY-MM-DD'))
         dueDateDiv.appendChild(dueDateInput)
-
+        dueDateInput.value = project.dueDate === "" ? "" : (0,date_fns_parse__WEBPACK_IMPORTED_MODULE_0__.default)(project.dueDate,'P',new Date()).toISOString().substring(0, 10);
+        
         const priorityDiv = projectDetailsDiv.querySelector(".priority")
         priorityDiv.removeChild(priorityDiv.lastChild);
         const priorityInput = document.createElement("input")
