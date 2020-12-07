@@ -5796,11 +5796,13 @@ class TasksPageLoader{
         const formElements = e.target.elements
         for (let index = 0; index < formElements.length; index++){
             if (formElements[index].id === "title") newTitle = formElements[index].value;
-            if (formElements[index].id === "dueDate") newDueDate = new Date(formElements[index].value);
+            if (formElements[index].id === "dueDate") newDueDate = formElements[index].value === "" ? "" : new Date(formElements[index].value);
             if (formElements[index].id === "priority") newPriority = parseInt(formElements[index].value);
         }
 
-        this.myProjects.updateProjectInfo(projectId, newTitle, "", newPriority, newDueDate);
+        console.log(newDueDate)
+
+        this.myProjects.updateProjectInfo(projectId, newTitle, "BLANK", newPriority, newDueDate);
         this._update();
     }
 
@@ -5820,6 +5822,7 @@ class TasksPageLoader{
         titleInput.name = "title";
         titleInput.type = "text";
         titleInput.value = project.title;
+        titleInput.required = true
         projectTitleDiv.appendChild(titleInput)
 
         const formBtns = document.createElement("div")
@@ -5843,7 +5846,7 @@ class TasksPageLoader{
         formBtns.appendChild(formYesBtn);
         formBtns.appendChild(formNoBtn);
         projectTitleDiv.appendChild(formBtns)
-
+        
         const dueDateDiv = projectDetailsDiv.querySelector(".dueDate")
         dueDateDiv.removeChild(dueDateDiv.lastChild);
         const dueDateInput = document.createElement("input")
@@ -5852,6 +5855,7 @@ class TasksPageLoader{
         dueDateInput.name = "dueDate";
         dueDateInput.type = "date";
         dueDateInput.value = project.dueDate === "" ? "" : (0,date_fns_parse__WEBPACK_IMPORTED_MODULE_0__.default)(project.dueDate,'P',new Date()).toISOString().substring(0, 10);
+        dueDateInput.min = project.minDueDate.toISOString().substring(0, 10);
         dueDateDiv.appendChild(dueDateInput)
         
         const priorityDiv = projectDetailsDiv.querySelector(".priority")
@@ -5862,6 +5866,10 @@ class TasksPageLoader{
         priorityInput.name = "priority";
         priorityInput.type = "number";
         priorityInput.value = project.priority;
+        priorityInput.required = true
+
+        priorityInput.min = project.minPriority
+        priorityInput.max = project.maxPriority
         priorityDiv.appendChild(priorityInput)
     }
 
@@ -6258,6 +6266,7 @@ class Project extends Sorter{
 
         this.maxPriority = 10;  // dummy number see setter
         this.minPriority = 1;   // dummy number see setter
+        this.minDueDate = ""
 
         if (project === "") this._initFromScratch(id, title, description, priority, dueDate);
         else this._initFromStorage(project);
@@ -6271,10 +6280,10 @@ class Project extends Sorter{
     }
 
     updateProjectInfo(title, description, priority, dueDate){
-        if (title !== "") this.title = title;
-        if (description !== "") this.description = description;
-        if (priority !== "") this.priority = priority;
-        if (dueDate !== "") this.dueDate = dueDate;
+        this.title = title;
+        if (description !== "BLANK") this.description = description;
+        this.priority = priority;
+        this.dueDate = dueDate;
     }
 
     _initFromScratch(id, title, description, priority, dueDate){
@@ -6329,8 +6338,24 @@ class Project extends Sorter{
         this._minPriority = 1;
     }
 
+    get maxPriority(){
+        return this._maxPriority;
+    }
+
+    get minPriority(){
+        return this._minPriority;
+    }
+
     _isValidDate(date) {
         return date && Object.prototype.toString.call(date) === "[object Date]" && !isNaN(date);
+    }
+
+    set minDueDate(date){
+        this._minDueDate = new Date(2020, 0, 1);
+    }
+
+    get minDueDate(){
+        return this._minDueDate;
     }
 
     set dueDate(dateTime){
@@ -6339,7 +6364,7 @@ class Project extends Sorter{
             return;
         }
         if (!this._isValidDate(dateTime)) throw new Error("Please Enter a valid date");
-        if (dateTime < new Date(2020, 0, 1)) throw new Error("Please enter a date from 2020 onwards")
+        if (dateTime < this.minDueDate) throw new Error("Please enter a date from 2020 onwards")
         this._dueDate = dateTime;
     }
 
