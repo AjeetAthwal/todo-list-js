@@ -5822,8 +5822,6 @@ class TasksPageLoader{
             if (formElements[index].id === "priority") newPriority = parseInt(formElements[index].value);
         }
 
-        console.log(newDueDate)
-
         this.myProjects.updateProjectInfo(projectId, newTitle, "BLANK", newPriority, newDueDate);
         this._update();
     }
@@ -5878,8 +5876,6 @@ class TasksPageLoader{
     }
 
     _createProjectEditForm(e){
-        console.log(e.target.id === "plus-icon-img");
-        console.log(e.target.id);
         const projectId = this._getProjectId(e.target);
         const project = this.myProjects._getProject(projectId);
         const form = e.target.parentNode.parentNode;
@@ -5906,8 +5902,6 @@ class TasksPageLoader{
     }
 
     _createProjectDelete(e){
-        console.log(e.target.id === "plus-icon-img");
-        console.log(e.target.id);
         const projectId = this._getProjectId(e.target);
         this.myProjects.removeProject(projectId);
         this._update();
