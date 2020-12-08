@@ -213,9 +213,12 @@ class TasksPageLoader{
 
     _submitProjectEditForm(e){
         e.preventDefault();
-
-        const projectId = this._getProjectId(e.target);
-
+        let projectId = ""
+        try {
+            projectId = this._getProjectId(e.target);
+        } catch (e){
+        }
+        console.log(projectId)
         let newTitle = ""
         let newDueDate = ""
         let newPriority = ""
@@ -227,32 +230,37 @@ class TasksPageLoader{
             if (formElements[index].id === "priority") newPriority = parseInt(formElements[index].value);
         }
 
-        this.myProjects.updateProjectInfo(projectId, newTitle, "BLANK", newPriority, newDueDate);
+        if (projectId !== "") this.myProjects.updateProjectInfo(projectId, newTitle, "BLANK", newPriority, newDueDate);
+        else this.myProjects.addProject(newTitle, "", newPriority, newDueDate);
         this._update();
     }
 
     _createAddProjectForm(e){
-        console.log(e);
-        console.log(e.target);
-        console.log(e.target.id);
-        console.log(e.target.parentNode);
-        console.log(e.target.parentNode.parentNode);
+        const project = ""
+        const form = e.target.parentNode.parentNode;
+        form.removeChild(form.firstChild)
+        form.addEventListener("submit", this._submitProjectEditForm);
+        this._addProjectDetails(project, form)
+        this._createProjectForm(form, project)
     }
 
     _addEditFormInput(parentDiv, project, key, dataType, required){
         const input = document.createElement("input")
+        const randomProject = this.myProjects.getList()[0];
         input.htmlFor = key;
         input.id = key;
         input.name = key;
         input.type = dataType;
-        if (key === "dueDate") input.value = project[key] === "" ? "" : parse(project[key],'P',new Date()).toISOString().substring(0, 10);
-        else input.value = project[key];
-        if (key === "dueDate") input.min = project.minDueDate.toISOString().substring(0, 10);
-        else if (key === "priority"){
-            input.min = project.minPriority
-            input.max = project.maxPriority
+        if (project !== ""){
+            if (key === "dueDate") input.value = project[key] === "" ? "" : parse(project[key],'P',new Date()).toISOString().substring(0, 10);
+            else input.value = project[key];
         }
-        input.required = required
+        if (key === "dueDate") input.min = randomProject.minDueDate.toISOString().substring(0, 10);
+        else if (key === "priority"){
+            input.min = randomProject.minPriority
+            input.max = randomProject.maxPriority
+        }
+        if (key !== "dueDate") input.required = required
         parentDiv.appendChild(input)
     }
 
@@ -280,35 +288,40 @@ class TasksPageLoader{
         parentDiv.appendChild(formBtns)
     }
 
-    _createProjectEditForm(e){
-        const projectId = this._getProjectId(e.target);
-        const project = this.myProjects._getProject(projectId);
-        const form = e.target.parentNode.parentNode;
-        form.addEventListener("submit", this._submitProjectEditForm);
+    _createProjectForm(form, project){
         const projectTitleDiv = form.firstChild;
         const projectDetailsDiv = projectTitleDiv.nextSibling;
 
         projectTitleDiv.removeChild(projectTitleDiv.lastChild);
         projectTitleDiv.removeChild(projectTitleDiv.lastChild);
 
-        this._addEditFormInput(projectTitleDiv, project, "title", "text", true);
-
-        this._addYesNoBtns(projectTitleDiv);
-        
         const dueDateDiv = projectDetailsDiv.querySelector(".dueDate");
         dueDateDiv.removeChild(dueDateDiv.lastChild);
 
-        this._addEditFormInput(dueDateDiv, project, "dueDate", "date", false);
-        
         const priorityDiv = projectDetailsDiv.querySelector(".priority");
         priorityDiv.removeChild(priorityDiv.lastChild);
 
+        this._addEditFormInput(projectTitleDiv, project, "title", "text", true);
+        this._addYesNoBtns(projectTitleDiv);
+        this._addEditFormInput(dueDateDiv, project, "dueDate", "date", false);
         this._addEditFormInput(priorityDiv, project, "priority", "number", true);
     }
 
-    _createProjectDelete(e){
+    _createProjectEditForm(e){
         const projectId = this._getProjectId(e.target);
-        this.myProjects.removeProject(projectId);
+        const project = this.myProjects._getProject(projectId);
+        const form = e.target.parentNode.parentNode;
+        form.addEventListener("submit", this._submitProjectEditForm);
+        this._createProjectForm(form, project)
+    }
+
+    _createProjectDelete(e){
+        try {
+            const projectId = this._getProjectId(e.target);
+            this.myProjects.removeProject(projectId);
+        } catch (e){
+        }
+        
         this._update();
     }
 
@@ -326,7 +339,7 @@ class TasksPageLoader{
 
     _addProjectTitleH1Tag(project, projectTitleDiv){
         const projectTitleH1Tag = document.createElement("h1");
-        projectTitleH1Tag.innerText = project.title;
+        if (project !== "") projectTitleH1Tag.innerText = project.title;
 
         projectTitleDiv.appendChild(projectTitleH1Tag);
     }
@@ -351,7 +364,7 @@ class TasksPageLoader{
         projectPriorityH2TitleTag.innerText = innerText;
     
         const projectPriorityH2EntryTag = document.createElement("h2");
-        projectPriorityH2EntryTag.innerText = project[attr];
+        if (project !== "") projectPriorityH2EntryTag.innerText = project[attr];
     
         projectPriorityDiv.appendChild(projectPriorityH2TitleTag)
         projectPriorityDiv.appendChild(projectPriorityH2EntryTag)

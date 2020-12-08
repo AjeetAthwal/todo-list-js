@@ -118,7 +118,7 @@ const defaultProjectsEntry = {
         "_toDoIDCounter": 2
       }
     ],
-    "toDoIDCounter": 1
+    "toDoIDCounter": 3
   }
 
 const defaultSettingsEntry = {
