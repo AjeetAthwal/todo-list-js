@@ -5631,7 +5631,8 @@ class TasksPageLoader{
         this._update();
     }
 
-    deleteProjectsContainer(projectsDiv){
+    deleteProjectsContainer(){
+        const projectsDiv = this.mainDiv.querySelector("#projects");
         this.mainDiv.removeChild(projectsDiv);
     }
 
@@ -5729,20 +5730,18 @@ class TasksPageLoader{
         const projectId = this._getProjectId(e.target)
         this._expandProject(projectId)
     }
-    
-    _addProjectSubDivs(project, projectDiv){
-        const form = document.createElement("form");
-        form.classList.add("project-form-edit")
 
-        projectDiv.appendChild(form)
-        this._addProjectDetails(project, form);
-    
+    _addToDosDiv(project, projectDiv){
         const projectTodosDiv = document.createElement("div");
         projectTodosDiv.classList.add("todos");
     
         this._addToDoDivHeader(projectTodosDiv)
         project.getList().forEach(todo => this._addToDoDiv(todo, projectTodosDiv))
+
+        projectDiv.appendChild(projectTodosDiv);
+    }
     
+    _addExpandDiv(projectDiv){
         const projectExpandDiv = document.createElement("div");
         projectExpandDiv.classList.add("expand");
     
@@ -5752,39 +5751,49 @@ class TasksPageLoader{
     
         projectExpandDiv.appendChild(projectExpandATag);
     
-        projectDiv.appendChild(projectTodosDiv);
         projectDiv.appendChild(projectExpandDiv);
     }
+
+    _addProjectSubDivs(project, projectDiv){
+        const form = document.createElement("form");
+        form.classList.add("project-form-edit")
+
+        projectDiv.appendChild(form)
+
+        this._addProjectDetails(project, form);
+        this._addToDosDiv(project, projectDiv);
+        this._addExpandDiv(projectDiv);
+    }
     
+    _addH3Tag(todoDiv, key){
+        const tag = document.createElement("h3");
+        tag.innerText = key;
+        todoDiv.appendChild(tag);
+    }
+
     _addToDoDivHeader(todosDiv){
         const todoDiv = document.createElement("div");
         todoDiv.classList.add("todo");
         todoDiv.classList.add("todo-header");
     
-        const projectToDoH3TitleTag = document.createElement("h3");
-        projectToDoH3TitleTag.innerText = "Title";
-    
-        const projectToDoH3DueDateTag = document.createElement("h3");
-        projectToDoH3DueDateTag.innerText = "Deadline";
-    
-        todoDiv.appendChild(projectToDoH3TitleTag);
-        todoDiv.appendChild(projectToDoH3DueDateTag);
+        this._addH3Tag(todoDiv, "Title")
+        this._addH3Tag(todoDiv, "Deadline")
 
         todosDiv.appendChild(todoDiv)
+    }
+
+    _addH4Tag(todo, todoDiv, key){
+        const h4Tag = document.createElement("h4");
+        h4Tag.innerText = todo[key];
+        todoDiv.appendChild(h4Tag);
     }
 
     _addToDoDiv(todo, todosDiv){
         const todoDiv = document.createElement("div");
         todoDiv.classList.add("todo");
     
-        const projectToDoH4TitleTag = document.createElement("h4");
-        projectToDoH4TitleTag.innerText = todo.title;
-
-        const projectToDoH4DueDateTag = document.createElement("h4");
-        projectToDoH4DueDateTag.innerText = todo.dueDate;
-    
-        todoDiv.appendChild(projectToDoH4TitleTag);
-        todoDiv.appendChild(projectToDoH4DueDateTag);
+        this._addH4Tag(todo, todoDiv, "title")
+        this._addH4Tag(todo, todoDiv, "dueDate")
     
         todoDiv.dataset.todoId = todo.id;
         todoDiv.dataset.projectId = todo.projectId;
