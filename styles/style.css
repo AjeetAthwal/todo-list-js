@@ -200,7 +200,7 @@ a {
 }
 
 .project-title>h1{
-    width: 90%;
+    width: 80%;
 }
 
 .project-title>input{
@@ -209,7 +209,7 @@ a {
     margin: auto;
 }
 
-.edit-icon{
+.icon{
     height: 15px;
     cursor: pointer;
     margin: auto;
