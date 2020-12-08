@@ -5853,6 +5853,9 @@ class TasksPageLoader{
     }
 
     _addYesNoBtns(parentDiv){
+        const formBtns = document.createElement("div")
+        formBtns.classList.add("project-edit-form-btns")
+
         const formYesBtn = document.createElement("input")
         const formNoBtn = document.createElement("button")
 
@@ -5888,9 +5891,6 @@ class TasksPageLoader{
         projectTitleDiv.removeChild(projectTitleDiv.lastChild)
 
         this._addEditFormInput(projectTitleDiv, project, "title", "text", true)
-
-        const formBtns = document.createElement("div")
-        formBtns.classList.add("project-edit-form-btns")
 
         this._addYesNoBtns(projectTitleDiv)
         
