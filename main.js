@@ -5835,32 +5835,26 @@ class TasksPageLoader{
         console.log(e.target.parentNode.parentNode);
     }
 
-    _createProjectEditForm(e){
-        console.log(e.target.id === "plus-icon-img")
-        console.log(e.target.id)
-        const projectId = this._getProjectId(e.target);
-        const project = this.myProjects._getProject(projectId)
-        const form = e.target.parentNode.parentNode;
-        form.addEventListener("submit", this._submitProjectEditForm)
-        const projectTitleDiv = form.firstChild
-        const projectDetailsDiv = projectTitleDiv.nextSibling;
+    _addEditFormInput(parentDiv, project, key, dataType, required){
+        const input = document.createElement("input")
+        input.htmlFor = key;
+        input.id = key;
+        input.name = key;
+        input.type = dataType;
+        if (key === "dueDate") input.value = project[key] === "" ? "" : (0,date_fns_parse__WEBPACK_IMPORTED_MODULE_0__.default)(project[key],'P',new Date()).toISOString().substring(0, 10);
+        else input.value = project[key];
+        if (key === "dueDate") input.min = project.minDueDate.toISOString().substring(0, 10);
+        else if (key === "priority"){
+            input.min = project.minPriority
+            input.max = project.maxPriority
+        }
+        input.required = required
+        parentDiv.appendChild(input)
+    }
 
-        projectTitleDiv.removeChild(projectTitleDiv.lastChild)
-        projectTitleDiv.removeChild(projectTitleDiv.lastChild)
-        const titleInput = document.createElement("input")
-        titleInput.htmlFor = "title";
-        titleInput.id = "title";
-        titleInput.name = "title";
-        titleInput.type = "text";
-        titleInput.value = project.title;
-        titleInput.required = true
-        projectTitleDiv.appendChild(titleInput)
-
-        const formBtns = document.createElement("div")
-        formBtns.classList.add("project-edit-form-btns")
+    _addYesNoBtns(parentDiv){
         const formYesBtn = document.createElement("input")
         const formNoBtn = document.createElement("button")
-        formNoBtn.addEventListener("click", this._closeProjectEditForm)
 
         formYesBtn.htmlFor = "yes-btn"
         formYesBtn.id = "yes-btn"
@@ -5873,35 +5867,42 @@ class TasksPageLoader{
         formNoBtn.classList.add("no-btn")
         formNoBtn.classList.add("small-btn")
         formNoBtn.innerText = "x"
+        formNoBtn.addEventListener("click", this._closeProjectEditForm)
 
         formBtns.appendChild(formYesBtn);
         formBtns.appendChild(formNoBtn);
-        projectTitleDiv.appendChild(formBtns)
+        parentDiv.appendChild(formBtns)
+    }
+
+    _createProjectEditForm(e){
+        console.log(e.target.id === "plus-icon-img")
+        console.log(e.target.id)
+        const projectId = this._getProjectId(e.target);
+        const project = this.myProjects._getProject(projectId)
+        const form = e.target.parentNode.parentNode;
+        form.addEventListener("submit", this._submitProjectEditForm)
+        const projectTitleDiv = form.firstChild
+        const projectDetailsDiv = projectTitleDiv.nextSibling;
+
+        projectTitleDiv.removeChild(projectTitleDiv.lastChild)
+        projectTitleDiv.removeChild(projectTitleDiv.lastChild)
+
+        this._addEditFormInput(projectTitleDiv, project, "title", "text", true)
+
+        const formBtns = document.createElement("div")
+        formBtns.classList.add("project-edit-form-btns")
+
+        this._addYesNoBtns(projectTitleDiv)
         
         const dueDateDiv = projectDetailsDiv.querySelector(".dueDate")
         dueDateDiv.removeChild(dueDateDiv.lastChild);
-        const dueDateInput = document.createElement("input")
-        dueDateInput.htmlFor = "dueDate";
-        dueDateInput.id = "dueDate";
-        dueDateInput.name = "dueDate";
-        dueDateInput.type = "date";
-        dueDateInput.value = project.dueDate === "" ? "" : (0,date_fns_parse__WEBPACK_IMPORTED_MODULE_0__.default)(project.dueDate,'P',new Date()).toISOString().substring(0, 10);
-        dueDateInput.min = project.minDueDate.toISOString().substring(0, 10);
-        dueDateDiv.appendChild(dueDateInput)
+
+        this._addEditFormInput(dueDateDiv, project, "dueDate", "date", false)
         
         const priorityDiv = projectDetailsDiv.querySelector(".priority")
         priorityDiv.removeChild(priorityDiv.lastChild);
-        const priorityInput = document.createElement("input")
-        priorityInput.htmlFor = "priority";
-        priorityInput.id = "priority";
-        priorityInput.name = "priority";
-        priorityInput.type = "number";
-        priorityInput.value = project.priority;
-        priorityInput.required = true
 
-        priorityInput.min = project.minPriority
-        priorityInput.max = project.maxPriority
-        priorityDiv.appendChild(priorityInput)
+        this._addEditFormInput(priorityDiv, project, "priority", "number", true)
     }
 
     _addEditIcon(projectTitleDiv){
