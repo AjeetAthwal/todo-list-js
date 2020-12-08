@@ -14,11 +14,11 @@ class TasksPageLoader{
 
     buildProjectCards(){
 
-        this.projectsDiv = document.createElement("div");
-        this.projectsDiv.id = "projects"
-        this._buildAddNewCard();
-        this.myProjects.getList().forEach(project => this._buildProjectCard(project))
-        this.mainDiv.appendChild(this.projectsDiv)
+        const projectsDiv = document.createElement("div");
+        projectsDiv.id = "projects"
+        this._buildAddNewCard(projectsDiv);
+        this.myProjects.getList().forEach(project => this._buildProjectCard(project, projectsDiv))
+        this.mainDiv.appendChild(projectsDiv)
     }
 
 
@@ -33,8 +33,8 @@ class TasksPageLoader{
         this._update();
     }
 
-    deleteProjectsContainer(){
-        this.mainDiv.removeChild(this.projectsDiv);
+    deleteProjectsContainer(projectsDiv){
+        this.mainDiv.removeChild(projectsDiv);
     }
 
     buildPage(mainDiv){
@@ -45,62 +45,45 @@ class TasksPageLoader{
         this.buildProjectCards();
     }
 
-    _createDropdown(){
+    _createDropdownOption(sortFormSelect, value, text){
+        const optionTag = document.createElement("option")
+        optionTag.value = value
+        optionTag.innerText = text
+        sortFormSelect.appendChild(optionTag)
+    }
 
-        this.selectDueDateEarliestOption = document.createElement("option")
-        this.selectDueDateEarliestOption.value = "dueDateEarliestFirst"
-        this.selectDueDateEarliestOption.innerText = "Most Recent Deadline"
+    _createDropdown(sortFormSelect){
+        const optionValues = ["dueDateEarliestFirst", "dueDateOldestFirst", "highestPriorityFirst", 
+        "lowestPriorityFirst", "oldestFirst", "newestFirst", "Highest Priority"]
+        const optionText = ["Most Recent Deadline", "Farthest Deadline", "Highest Priority",
+        "Lowest Priority", "Oldest Created", "Most Recent Created"]
 
-        this.selectDueDateLatestOption = document.createElement("option")
-        this.selectDueDateLatestOption.value = "dueDateOldestFirst"
-        this.selectDueDateLatestOption.innerText = "Farthest Deadline"
+        for (let index = 0; index < optionValues.length; index++)
+            this._createDropdownOption(sortFormSelect, optionValues[index], optionText[index]);
 
-        this.selectHighestPriorityFirstOption = document.createElement("option")
-        this.selectHighestPriorityFirstOption.value = "highestPriorityFirst"
-        this.selectHighestPriorityFirstOption.innerText = "Highest Priority"
-
-        this.selectLowestPriorityFirstOption = document.createElement("option")
-        this.selectLowestPriorityFirstOption.value = "lowestPriorityFirst"
-        this.selectLowestPriorityFirstOption.innerText = "Lowest Priority"
-
-        this.selectOldestCreatedOption = document.createElement("option")
-        this.selectOldestCreatedOption.value = "oldestFirst"
-        this.selectOldestCreatedOption.innerText = "Oldest Created"
-
-        this.selectNewestCreatedOption = document.createElement("option")
-        this.selectNewestCreatedOption.value = "newestFirst"
-        this.selectNewestCreatedOption.innerText = "Most Recent Created"
-
-        this.sortFormSelect.appendChild(this.selectDueDateEarliestOption)
-        this.sortFormSelect.appendChild(this.selectDueDateLatestOption)
-        this.sortFormSelect.appendChild(this.selectHighestPriorityFirstOption)
-        this.sortFormSelect.appendChild(this.selectLowestPriorityFirstOption)
-        this.sortFormSelect.appendChild(this.selectOldestCreatedOption)
-        this.sortFormSelect.appendChild(this.selectNewestCreatedOption)
-
-        this.sortFormSelect.addEventListener("change", this._updateSort)
+        sortFormSelect.addEventListener("change", this._updateSort)
     }
 
     _buildSortForm(view){
-        this.sortDiv = document.createElement("div")
-        this.sortDiv.classList = "sort"
-        this.sortForm = document.createElement("form")
-        this.sortFormLabel = document.createElement("label")
-        this.sortFormLabel.htmlFor = view + "-view";
-        this.sortFormLabel.innerText = view + " Sort:  "
-        this.sortFormSelect = document.createElement("select")
-        this.sortFormSelect.id = view + "-view";
-        this.sortFormSelect.name = view + "-view";
+        const sortDiv = document.createElement("div")
+        sortDiv.classList = "sort"
+        const sortForm = document.createElement("form")
+        const sortFormLabel = document.createElement("label")
+        sortFormLabel.htmlFor = view + "-view";
+        sortFormLabel.innerText = view + " Sort:  "
+        const sortFormSelect = document.createElement("select")
+        sortFormSelect.id = view + "-view";
+        sortFormSelect.name = view + "-view";
 
-        this._createDropdown()
+        this._createDropdown(sortFormSelect)
 
-        this.sortForm.appendChild(this.sortFormLabel);
-        this.sortForm.appendChild(this.sortFormSelect);
-        this.sortDiv.appendChild(this.sortForm)
-        this.mainDiv.appendChild(this.sortDiv)
+        sortForm.appendChild(sortFormLabel);
+        sortForm.appendChild(sortFormSelect);
+        sortDiv.appendChild(sortForm)
+        this.mainDiv.appendChild(sortDiv)
     }
 
-    _buildAddNewCard(){
+    _buildAddNewCard(projectsDiv){
         const projectDiv = document.createElement("div");
         projectDiv.classList.add("project");
         projectDiv.classList.add("add-new-card");
@@ -121,18 +104,18 @@ class TasksPageLoader{
         form.appendChild(imgDiv)
         projectDiv.appendChild(form)
 
-        this.projectsDiv.appendChild(projectDiv);
+        projectsDiv.appendChild(projectDiv);
     }
 
 
-    _buildProjectCard(project){
+    _buildProjectCard(project, projectsDiv){
         const projectDiv = document.createElement("div");
         projectDiv.classList.add("project");
         
         this._addProjectSubDivs(project, projectDiv);
     
         projectDiv.dataset.projectId = project.id;
-        this.projectsDiv.appendChild(projectDiv);
+        projectsDiv.appendChild(projectDiv);
     }
 
     _expandProject(id){
@@ -152,6 +135,7 @@ class TasksPageLoader{
     _addProjectSubDivs(project, projectDiv){
         const form = document.createElement("form");
         form.classList.add("project-form-edit")
+
         projectDiv.appendChild(form)
         this._addProjectDetails(project, form);
     
@@ -313,56 +297,63 @@ class TasksPageLoader{
         priorityDiv.appendChild(priorityInput)
     }
 
-    _addProjectDetails(project, projectDiv){
-        const projectTitleDiv = document.createElement("div");
-        projectTitleDiv.classList.add("project-title");
-    
-        const projectTitleH1Tag = document.createElement("h1");
-        projectTitleH1Tag.innerText = project.title;
-    
+    _addEditIcon(projectTitleDiv){
         const projectTitleEditIconTag = document.createElement("img");
         projectTitleEditIconTag.src = 'images/edit_icon.png';
         projectTitleEditIconTag.alt = 'edit icon';
         projectTitleEditIconTag.classList.add("edit-icon")
         projectTitleEditIconTag.addEventListener("click", this._createProjectEditForm)
 
-        projectTitleDiv.appendChild(projectTitleH1Tag);
         projectTitleDiv.appendChild(projectTitleEditIconTag);
+    }
+
+    _addProjectTitleH1Tag(project, projectTitleDiv){
+        const projectTitleH1Tag = document.createElement("h1");
+        projectTitleH1Tag.innerText = project.title;
+
+        projectTitleDiv.appendChild(projectTitleH1Tag);
+    }
+
+    _addProjectTitleDiv(project, projectDiv){
+        const projectTitleDiv = document.createElement("div");
+        projectTitleDiv.classList.add("project-title");
     
-        const projectDetailsDiv = document.createElement("div");
-        projectDetailsDiv.classList.add("project-details");
-    
-        const projectDueDateDiv = document.createElement("div");
-        projectDueDateDiv.classList.add("project-details-sub");
-        projectDueDateDiv.classList.add("dueDate");
+        this._addProjectTitleH1Tag(project, projectTitleDiv)
+        this._addEditIcon(projectTitleDiv);
     
         projectDiv.appendChild(projectTitleDiv);
-        projectDiv.appendChild(projectDetailsDiv);
-    
-        const projectDueDateH2TitleTag = document.createElement("h2");
-        projectDueDateH2TitleTag.innerText = "Deadline";
-    
-        const projectDueDateH2EntryTag = document.createElement("h2");
-        projectDueDateH2EntryTag.innerText = project.dueDate;
-    
-        projectDueDateDiv.appendChild(projectDueDateH2TitleTag)
-        projectDueDateDiv.appendChild(projectDueDateH2EntryTag)
-    
+    }
+
+    _addProjectDetailsSubDiv(project, projectDetailsDiv, innerText, attr){
         const projectPriorityDiv = document.createElement("div");
         projectPriorityDiv.classList.add("project-details-sub");
-        projectPriorityDiv.classList.add("priority");
+        projectPriorityDiv.classList.add(attr);
     
         const projectPriorityH2TitleTag = document.createElement("h2");
-        projectPriorityH2TitleTag.innerText = "Priority";
+        projectPriorityH2TitleTag.innerText = innerText;
     
         const projectPriorityH2EntryTag = document.createElement("h2");
-        projectPriorityH2EntryTag.innerText = project.priority;
+        projectPriorityH2EntryTag.innerText = project[attr];
     
         projectPriorityDiv.appendChild(projectPriorityH2TitleTag)
         projectPriorityDiv.appendChild(projectPriorityH2EntryTag)
     
-        projectDetailsDiv.appendChild(projectDueDateDiv);
         projectDetailsDiv.appendChild(projectPriorityDiv);
+    }
+
+    _addProjectDetailsDiv(project, projectDiv){
+        const projectDetailsDiv = document.createElement("div");
+        projectDetailsDiv.classList.add("project-details");
+
+        this._addProjectDetailsSubDiv(project, projectDetailsDiv, "Deadline", "dueDate")
+        this._addProjectDetailsSubDiv(project, projectDetailsDiv, "Priority", "priority")
+    
+        projectDiv.appendChild(projectDetailsDiv);
+    }
+
+    _addProjectDetails(project, projectDiv){
+        this._addProjectTitleDiv(project, projectDiv)
+        this._addProjectDetailsDiv(project, projectDiv)
     } 
 }
 
