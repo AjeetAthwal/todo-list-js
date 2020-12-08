@@ -176,10 +176,6 @@ a {
     flex-direction: column;
 }
 
-.add-new-card{
-    background-color: var(--other-color);
-}
-
 #plus-icon{
     margin: auto;
     display: flex;

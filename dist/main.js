@@ -5837,6 +5837,8 @@ class TasksPageLoader{
         const project = ""
         const form = e.target.parentNode.parentNode;
         form.removeChild(form.firstChild)
+        form.classList.remove("project-form-new")
+        form.classList.add("project-form-edit")
         form.addEventListener("submit", this._submitProjectEditForm);
         this._addProjectDetails(project, form)
         this._createProjectForm(form, project)
