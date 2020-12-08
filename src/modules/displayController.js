@@ -7,6 +7,7 @@ class TasksPageLoader{
         this._updateSort = this._updateSort.bind(this)
         this._expandProjectListener = this._expandProjectListener.bind(this);
         this._createProjectEditForm = this._createProjectEditForm.bind(this);
+        this._createProjectDelete = this._createProjectDelete.bind(this);
         this._closeProjectEditForm = this._closeProjectEditForm.bind(this); 
         this._submitProjectEditForm = this._submitProjectEditForm.bind(this); 
         this._createAddProjectForm = this._createAddProjectForm.bind(this);
@@ -206,7 +207,7 @@ class TasksPageLoader{
         e.preventDefault();
         this._update() 
     }
-    
+
     _submitProjectEditForm(e){
         e.preventDefault();
 
@@ -279,41 +280,51 @@ class TasksPageLoader{
     }
 
     _createProjectEditForm(e){
-        console.log(e.target.id === "plus-icon-img")
-        console.log(e.target.id)
+        console.log(e.target.id === "plus-icon-img");
+        console.log(e.target.id);
         const projectId = this._getProjectId(e.target);
-        const project = this.myProjects._getProject(projectId)
+        const project = this.myProjects._getProject(projectId);
         const form = e.target.parentNode.parentNode;
-        form.addEventListener("submit", this._submitProjectEditForm)
-        const projectTitleDiv = form.firstChild
+        form.addEventListener("submit", this._submitProjectEditForm);
+        const projectTitleDiv = form.firstChild;
         const projectDetailsDiv = projectTitleDiv.nextSibling;
 
-        projectTitleDiv.removeChild(projectTitleDiv.lastChild)
-        projectTitleDiv.removeChild(projectTitleDiv.lastChild)
+        projectTitleDiv.removeChild(projectTitleDiv.lastChild);
+        projectTitleDiv.removeChild(projectTitleDiv.lastChild);
 
-        this._addEditFormInput(projectTitleDiv, project, "title", "text", true)
+        this._addEditFormInput(projectTitleDiv, project, "title", "text", true);
 
-        this._addYesNoBtns(projectTitleDiv)
+        this._addYesNoBtns(projectTitleDiv);
         
-        const dueDateDiv = projectDetailsDiv.querySelector(".dueDate")
+        const dueDateDiv = projectDetailsDiv.querySelector(".dueDate");
         dueDateDiv.removeChild(dueDateDiv.lastChild);
 
-        this._addEditFormInput(dueDateDiv, project, "dueDate", "date", false)
+        this._addEditFormInput(dueDateDiv, project, "dueDate", "date", false);
         
-        const priorityDiv = projectDetailsDiv.querySelector(".priority")
+        const priorityDiv = projectDetailsDiv.querySelector(".priority");
         priorityDiv.removeChild(priorityDiv.lastChild);
 
-        this._addEditFormInput(priorityDiv, project, "priority", "number", true)
+        this._addEditFormInput(priorityDiv, project, "priority", "number", true);
     }
 
-    _addEditIcon(projectTitleDiv){
-        const projectTitleEditIconTag = document.createElement("img");
-        projectTitleEditIconTag.src = 'images/edit_icon.png';
-        projectTitleEditIconTag.alt = 'edit icon';
-        projectTitleEditIconTag.classList.add("edit-icon")
-        projectTitleEditIconTag.addEventListener("click", this._createProjectEditForm)
+    _createProjectDelete(e){
+        console.log(e.target.id === "plus-icon-img");
+        console.log(e.target.id);
+        const projectId = this._getProjectId(e.target);
+        this.myProjects.removeProject(projectId);
+        this._update();
+    }
 
-        projectTitleDiv.appendChild(projectTitleEditIconTag);
+    _addIcon(projectTitleDiv, view){
+        const tag = document.createElement("img");
+        tag.src = 'images/' + view + '_icon.png';
+        tag.alt = view + ' icon';
+        tag.classList.add("icon")
+
+        if (view === "edit") tag.addEventListener("click", this._createProjectEditForm)
+        if (view === "delete") tag.addEventListener("click", this._createProjectDelete)
+
+        projectTitleDiv.appendChild(tag);
     }
 
     _addProjectTitleH1Tag(project, projectTitleDiv){
@@ -327,8 +338,9 @@ class TasksPageLoader{
         const projectTitleDiv = document.createElement("div");
         projectTitleDiv.classList.add("project-title");
     
+        this._addIcon(projectTitleDiv, "delete");
         this._addProjectTitleH1Tag(project, projectTitleDiv)
-        this._addEditIcon(projectTitleDiv);
+        this._addIcon(projectTitleDiv, "edit");
     
         projectDiv.appendChild(projectTitleDiv);
     }
