@@ -91,6 +91,8 @@ class TasksPageLoader{
         projectDiv.classList.add("add-new-card");
         
         const form = document.createElement("form")
+        form.classList.add("project-form")
+        form.classList.add("project-form-new")
 
         const imgDiv = document.createElement("div")
         imgDiv.id = "plus-icon"
@@ -159,6 +161,7 @@ class TasksPageLoader{
 
     _addProjectSubDivs(project, projectDiv){
         const form = document.createElement("form");
+        form.classList.add("project-form")
         form.classList.add("project-form-edit")
 
         projectDiv.appendChild(form)
