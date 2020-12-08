@@ -315,11 +315,18 @@ select{
     padding-bottom: 5px;
 }
 
-.project-form-edit{
+.project-form{
     width: 100%;
-    height: 20%;
     display: flex;
     flex-direction: column;
+}
+
+.project-form-edit{
+    height: 20%;
+}
+
+.project-form-new{
+    height: 100%;
 }
 
 .small-btn{
