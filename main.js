@@ -5860,7 +5860,6 @@ class TasksPageLoader{
         const formNoBtn = document.createElement("button")
 
         formYesBtn.htmlFor = "yes-btn"
-        formYesBtn.id = "yes-btn"
         formYesBtn.name = "yes-btn"
         formYesBtn.classList.add("yes-btn")
         formYesBtn.classList.add("small-btn")
