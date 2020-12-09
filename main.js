@@ -5414,8 +5414,12 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
-const mySettingsStorage = new _modules_storage__WEBPACK_IMPORTED_MODULE_2__.SettingsStorage(false, true, _modules_defaultEntry__WEBPACK_IMPORTED_MODULE_3__.defaultSettingsEntry);
-const myProjectsStorage = new _modules_storage__WEBPACK_IMPORTED_MODULE_2__.ProjectsStorage(false, true, _modules_defaultEntry__WEBPACK_IMPORTED_MODULE_3__.defaultProjectsEntry);
+const serverStorageExists = false;
+const localStorageExists = true;
+
+const mySettingsStorage = new _modules_storage__WEBPACK_IMPORTED_MODULE_2__.SettingsStorage(serverStorageExists, localStorageExists, _modules_defaultEntry__WEBPACK_IMPORTED_MODULE_3__.defaultSettingsEntry);
+const myProjectsStorage = new _modules_storage__WEBPACK_IMPORTED_MODULE_2__.ProjectsStorage(serverStorageExists, localStorageExists, _modules_defaultEntry__WEBPACK_IMPORTED_MODULE_3__.defaultProjectsEntry);
+
 const mySettings = new _modules_settings__WEBPACK_IMPORTED_MODULE_1__.default(mySettingsStorage, "", "", "", "");
 const myProjects = new _modules_projects__WEBPACK_IMPORTED_MODULE_0__.Projects(myProjectsStorage, mySettings);
 const myToDos = new _modules_projects__WEBPACK_IMPORTED_MODULE_0__.ToDos(mySettings, myProjects)
@@ -5427,8 +5431,11 @@ console.log(myToDos.getList());
 const newCardLoader = new _modules_displayController__WEBPACK_IMPORTED_MODULE_4__.NewCardLoader(myProjects)
 const projectCardsLoader = new _modules_displayController__WEBPACK_IMPORTED_MODULE_4__.ProjectCardsLoader(myProjects)
 const cardsLoader = new _modules_displayController__WEBPACK_IMPORTED_MODULE_4__.CardsLoader(myProjects, newCardLoader, projectCardsLoader)
+
 const sortFormLoader = new _modules_displayController__WEBPACK_IMPORTED_MODULE_4__.SortFormLoader(myProjects)
+
 const tasksPageLoader = new _modules_displayController__WEBPACK_IMPORTED_MODULE_4__.TasksPageLoader(myProjects, sortFormLoader, cardsLoader)
+
 const displayController = new _modules_displayController__WEBPACK_IMPORTED_MODULE_4__.DisplayController(tasksPageLoader)
 
 /***/ }),
