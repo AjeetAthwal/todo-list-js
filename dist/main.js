@@ -5424,8 +5424,9 @@ console.log(myProjects);
 console.log(myProjects.getList());
 console.log(myToDos.getList());
 
+const cardsLoader = new _modules_displayController__WEBPACK_IMPORTED_MODULE_4__.CardsLoader(myProjects)
 const sortFormLoader = new _modules_displayController__WEBPACK_IMPORTED_MODULE_4__.SortFormLoader(myProjects)
-const tasksPageLoader = new _modules_displayController__WEBPACK_IMPORTED_MODULE_4__.TasksPageLoader(myProjects, sortFormLoader)
+const tasksPageLoader = new _modules_displayController__WEBPACK_IMPORTED_MODULE_4__.TasksPageLoader(myProjects, sortFormLoader, cardsLoader)
 const displayController = new _modules_displayController__WEBPACK_IMPORTED_MODULE_4__.DisplayController(tasksPageLoader)
 
 /***/ }),
@@ -5585,6 +5586,7 @@ const defaultSettingsEntry = {
   !*** ./src/modules/displayController.js ***!
   \******************************************/
 /*! namespace exports */
+/*! export CardsLoader [provided] [no usage info] [missing usage info prevents renaming] */
 /*! export DisplayController [provided] [no usage info] [missing usage info prevents renaming] */
 /*! export SortFormLoader [provided] [no usage info] [missing usage info prevents renaming] */
 /*! export TasksPageLoader [provided] [no usage info] [missing usage info prevents renaming] */
@@ -5594,6 +5596,7 @@ const defaultSettingsEntry = {
 
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "CardsLoader": () => /* binding */ CardsLoader,
 /* harmony export */   "SortFormLoader": () => /* binding */ SortFormLoader,
 /* harmony export */   "TasksPageLoader": () => /* binding */ TasksPageLoader,
 /* harmony export */   "DisplayController": () => /* binding */ DisplayController
@@ -5663,12 +5666,13 @@ class SortFormLoader{
         this._buildSortForm("Task");
     }
 }
-class TasksPageLoader{
-    constructor(myProjects, sortFormLoader){
-        sortFormLoader.tasksPageLoader = this;
-        this.sortFormLoader = sortFormLoader;
+
+class CardsLoader{
+    constructor(myProjects){
         this.myProjects = myProjects;
         this.mainDiv = ""
+
+        this.tasksPageLoader = ""
 
         this._expandProjectListener = this._expandProjectListener.bind(this);
         this._createProjectEditForm = this._createProjectEditForm.bind(this);
@@ -5678,33 +5682,18 @@ class TasksPageLoader{
         this._createAddProjectForm = this._createAddProjectForm.bind(this);
     }
 
-    buildProjectCards(){
+    _update(){
+        this.tasksPageLoader._update()
+    }
+
+    buildCards(mainDiv){
+        this.mainDiv = mainDiv
 
         const projectsDiv = document.createElement("div");
         projectsDiv.id = "projects"
         this._buildAddNewCard(projectsDiv);
         this.myProjects.getList().forEach(project => this._buildProjectCard(project, projectsDiv))
         this.mainDiv.appendChild(projectsDiv)
-    }
-
-
-    _update(){
-        this.deleteProjectsContainer();
-        this.buildProjectCards();
-    }
-    
-
-
-    deleteProjectsContainer(){
-        const projectsDiv = this.mainDiv.querySelector("#projects");
-        this.mainDiv.removeChild(projectsDiv);
-    }
-
-    buildPage(mainDiv){
-        this.mainDiv = mainDiv
-
-        this.sortFormLoader.buildSortForms(this.mainDiv)
-        this.buildProjectCards();
     }
 
     _buildAddNewCard(projectsDiv){
@@ -5733,104 +5722,15 @@ class TasksPageLoader{
         projectsDiv.appendChild(projectDiv);
     }
 
-
-    _buildProjectCard(project, projectsDiv){
-        const projectDiv = document.createElement("div");
-        projectDiv.classList.add("project");
-        
-        this._addProjectSubDivs(project, projectDiv);
-    
-        projectDiv.dataset.projectId = project.id;
-        projectsDiv.appendChild(projectDiv);
-    }
-
-    _expandProject(id){
-        console.log(id)
-    }
-
-    _getProjectId(tag){
-        while (tag.dataset.projectId === undefined) tag = tag.parentNode;
-        return parseInt(tag.dataset.projectId);
-    }
-
-    _expandProjectListener(e){
-        const projectId = this._getProjectId(e.target)
-        this._expandProject(projectId)
-    }
-
-    _addToDosDiv(project, projectDiv){
-        const projectTodosDiv = document.createElement("div");
-        projectTodosDiv.classList.add("todos");
-    
-        this._addToDoDivHeader(projectTodosDiv)
-        project.getList().forEach(todo => this._addToDoDiv(todo, projectTodosDiv))
-
-        projectDiv.appendChild(projectTodosDiv);
-    }
-    
-    _addExpandDiv(projectDiv){
-        const projectExpandDiv = document.createElement("div");
-        projectExpandDiv.classList.add("expand");
-    
-        const projectExpandATag = document.createElement("a");
-        projectExpandATag.innerText = "Expand";
-        projectExpandATag.addEventListener("click", this._expandProjectListener)
-    
-        projectExpandDiv.appendChild(projectExpandATag);
-    
-        projectDiv.appendChild(projectExpandDiv);
-    }
-
-    _addProjectSubDivs(project, projectDiv){
-        const form = document.createElement("form");
-        form.classList.add("project-form")
+    _createAddProjectForm(e){
+        const project = ""
+        const form = e.target.parentNode.parentNode;
+        form.removeChild(form.firstChild)
+        form.classList.remove("project-form-new")
         form.classList.add("project-form-edit")
-
-        projectDiv.appendChild(form)
-
-        this._addProjectDetails(project, form);
-        this._addToDosDiv(project, projectDiv);
-        this._addExpandDiv(projectDiv);
-    }
-    
-    _addH3Tag(todoDiv, key){
-        const tag = document.createElement("h3");
-        tag.innerText = key;
-        todoDiv.appendChild(tag);
-    }
-
-    _addToDoDivHeader(todosDiv){
-        const todoDiv = document.createElement("div");
-        todoDiv.classList.add("todo");
-        todoDiv.classList.add("todo-header");
-    
-        this._addH3Tag(todoDiv, "Title")
-        this._addH3Tag(todoDiv, "Deadline")
-
-        todosDiv.appendChild(todoDiv)
-    }
-
-    _addH4Tag(todo, todoDiv, key){
-        const h4Tag = document.createElement("h4");
-        h4Tag.innerText = todo[key];
-        todoDiv.appendChild(h4Tag);
-    }
-
-    _addToDoDiv(todo, todosDiv){
-        const todoDiv = document.createElement("div");
-        todoDiv.classList.add("todo");
-    
-        this._addH4Tag(todo, todoDiv, "title")
-        this._addH4Tag(todo, todoDiv, "dueDate")
-    
-        todoDiv.dataset.todoId = todo.id;
-        todoDiv.dataset.projectId = todo.projectId;
-        todosDiv.appendChild(todoDiv)
-    }
-
-    _closeProjectEditForm(e){
-        e.preventDefault();
-        this._update() 
+        form.addEventListener("submit", this._submitProjectEditForm);
+        this._addProjectDetails(project, form)
+        this._createProjectForm(form, project)
     }
 
     _submitProjectEditForm(e){
@@ -5857,15 +5757,112 @@ class TasksPageLoader{
         this._update();
     }
 
-    _createAddProjectForm(e){
-        const project = ""
+
+    _getProjectId(tag){
+        while (tag.dataset.projectId === undefined) tag = tag.parentNode;
+        return parseInt(tag.dataset.projectId);
+    }
+
+
+    _addProjectDetails(project, projectDiv){
+        this._addProjectTitleDiv(project, projectDiv)
+        this._addProjectDetailsDiv(project, projectDiv)
+    } 
+
+    _addProjectTitleDiv(project, projectDiv){
+        const projectTitleDiv = document.createElement("div");
+        projectTitleDiv.classList.add("project-title");
+    
+        this._addIcon(projectTitleDiv, "delete");
+        this._addProjectTitleH1Tag(project, projectTitleDiv)
+        this._addIcon(projectTitleDiv, "edit");
+    
+        projectDiv.appendChild(projectTitleDiv);
+    }
+
+    _addIcon(projectTitleDiv, view){
+        const tag = document.createElement("img");
+        tag.src = 'images/' + view + '_icon.png';
+        tag.alt = view + ' icon';
+        tag.classList.add("icon")
+
+        if (view === "edit") tag.addEventListener("click", this._createProjectEditForm)
+        if (view === "delete") tag.addEventListener("click", this._createProjectDelete)
+
+        projectTitleDiv.appendChild(tag);
+    }
+
+    _createProjectEditForm(e){
+        const projectId = this._getProjectId(e.target);
+        const project = this.myProjects._getProject(projectId);
         const form = e.target.parentNode.parentNode;
-        form.removeChild(form.firstChild)
-        form.classList.remove("project-form-new")
-        form.classList.add("project-form-edit")
         form.addEventListener("submit", this._submitProjectEditForm);
-        this._addProjectDetails(project, form)
         this._createProjectForm(form, project)
+    }
+
+    _createProjectDelete(e){
+        try {
+            const projectId = this._getProjectId(e.target);
+            this.myProjects.removeProject(projectId);
+        } catch (e){
+        }
+        
+        this._update();
+    }
+
+    _addProjectTitleH1Tag(project, projectTitleDiv){
+        const projectTitleH1Tag = document.createElement("h1");
+        if (project !== "") projectTitleH1Tag.innerText = project.title;
+
+        projectTitleDiv.appendChild(projectTitleH1Tag);
+    }
+
+
+    _addProjectDetailsDiv(project, projectDiv){
+        const projectDetailsDiv = document.createElement("div");
+        projectDetailsDiv.classList.add("project-details");
+
+        this._addProjectDetailsSubDiv(project, projectDetailsDiv, "Deadline", "dueDate")
+        this._addProjectDetailsSubDiv(project, projectDetailsDiv, "Priority", "priority")
+    
+        projectDiv.appendChild(projectDetailsDiv);
+    }
+
+    _addProjectDetailsSubDiv(project, projectDetailsDiv, innerText, attr){
+        const projectPriorityDiv = document.createElement("div");
+        projectPriorityDiv.classList.add("project-details-sub");
+        projectPriorityDiv.classList.add(attr);
+    
+        const projectPriorityH2TitleTag = document.createElement("h2");
+        projectPriorityH2TitleTag.innerText = innerText;
+    
+        const projectPriorityH2EntryTag = document.createElement("h2");
+        if (project !== "") projectPriorityH2EntryTag.innerText = project[attr];
+    
+        projectPriorityDiv.appendChild(projectPriorityH2TitleTag)
+        projectPriorityDiv.appendChild(projectPriorityH2EntryTag)
+    
+        projectDetailsDiv.appendChild(projectPriorityDiv);
+    }
+
+
+    _createProjectForm(form, project){
+        const projectTitleDiv = form.firstChild;
+        const projectDetailsDiv = projectTitleDiv.nextSibling;
+
+        projectTitleDiv.removeChild(projectTitleDiv.lastChild);
+        projectTitleDiv.removeChild(projectTitleDiv.lastChild);
+
+        const dueDateDiv = projectDetailsDiv.querySelector(".dueDate");
+        dueDateDiv.removeChild(dueDateDiv.lastChild);
+
+        const priorityDiv = projectDetailsDiv.querySelector(".priority");
+        priorityDiv.removeChild(priorityDiv.lastChild);
+
+        this._addEditFormInput(projectTitleDiv, project, "title", "text", true);
+        this._addYesNoBtns(projectTitleDiv);
+        this._addEditFormInput(dueDateDiv, project, "dueDate", "date", false);
+        this._addEditFormInput(priorityDiv, project, "priority", "number", true);
     }
 
     _addEditFormInput(parentDiv, project, key, dataType, required){
@@ -5912,104 +5909,128 @@ class TasksPageLoader{
         parentDiv.appendChild(formBtns)
     }
 
-    _createProjectForm(form, project){
-        const projectTitleDiv = form.firstChild;
-        const projectDetailsDiv = projectTitleDiv.nextSibling;
-
-        projectTitleDiv.removeChild(projectTitleDiv.lastChild);
-        projectTitleDiv.removeChild(projectTitleDiv.lastChild);
-
-        const dueDateDiv = projectDetailsDiv.querySelector(".dueDate");
-        dueDateDiv.removeChild(dueDateDiv.lastChild);
-
-        const priorityDiv = projectDetailsDiv.querySelector(".priority");
-        priorityDiv.removeChild(priorityDiv.lastChild);
-
-        this._addEditFormInput(projectTitleDiv, project, "title", "text", true);
-        this._addYesNoBtns(projectTitleDiv);
-        this._addEditFormInput(dueDateDiv, project, "dueDate", "date", false);
-        this._addEditFormInput(priorityDiv, project, "priority", "number", true);
+    _closeProjectEditForm(e){
+        e.preventDefault();
+        this._update() 
     }
 
-    _createProjectEditForm(e){
-        const projectId = this._getProjectId(e.target);
-        const project = this.myProjects._getProject(projectId);
-        const form = e.target.parentNode.parentNode;
-        form.addEventListener("submit", this._submitProjectEditForm);
-        this._createProjectForm(form, project)
-    }
-
-    _createProjectDelete(e){
-        try {
-            const projectId = this._getProjectId(e.target);
-            this.myProjects.removeProject(projectId);
-        } catch (e){
-        }
+    _buildProjectCard(project, projectsDiv){
+        const projectDiv = document.createElement("div");
+        projectDiv.classList.add("project");
         
-        this._update();
+        this._addProjectSubDivs(project, projectDiv);
+    
+        projectDiv.dataset.projectId = project.id;
+        projectsDiv.appendChild(projectDiv);
     }
 
-    _addIcon(projectTitleDiv, view){
-        const tag = document.createElement("img");
-        tag.src = 'images/' + view + '_icon.png';
-        tag.alt = view + ' icon';
-        tag.classList.add("icon")
+    _addProjectSubDivs(project, projectDiv){
+        const form = document.createElement("form");
+        form.classList.add("project-form")
+        form.classList.add("project-form-edit")
 
-        if (view === "edit") tag.addEventListener("click", this._createProjectEditForm)
-        if (view === "delete") tag.addEventListener("click", this._createProjectDelete)
+        projectDiv.appendChild(form)
 
-        projectTitleDiv.appendChild(tag);
+        this._addProjectDetails(project, form);
+        this._addToDosDiv(project, projectDiv);
+        this._addExpandDiv(projectDiv);
     }
 
-    _addProjectTitleH1Tag(project, projectTitleDiv){
-        const projectTitleH1Tag = document.createElement("h1");
-        if (project !== "") projectTitleH1Tag.innerText = project.title;
+    _addToDosDiv(project, projectDiv){
+        const projectTodosDiv = document.createElement("div");
+        projectTodosDiv.classList.add("todos");
+    
+        this._addToDoDivHeader(projectTodosDiv)
+        project.getList().forEach(todo => this._addToDoDiv(todo, projectTodosDiv))
 
-        projectTitleDiv.appendChild(projectTitleH1Tag);
+        projectDiv.appendChild(projectTodosDiv);
     }
 
-    _addProjectTitleDiv(project, projectDiv){
-        const projectTitleDiv = document.createElement("div");
-        projectTitleDiv.classList.add("project-title");
+    _addToDoDivHeader(todosDiv){
+        const todoDiv = document.createElement("div");
+        todoDiv.classList.add("todo");
+        todoDiv.classList.add("todo-header");
     
-        this._addIcon(projectTitleDiv, "delete");
-        this._addProjectTitleH1Tag(project, projectTitleDiv)
-        this._addIcon(projectTitleDiv, "edit");
-    
-        projectDiv.appendChild(projectTitleDiv);
+        this._addH3Tag(todoDiv, "Title")
+        this._addH3Tag(todoDiv, "Deadline")
+
+        todosDiv.appendChild(todoDiv)
     }
 
-    _addProjectDetailsSubDiv(project, projectDetailsDiv, innerText, attr){
-        const projectPriorityDiv = document.createElement("div");
-        projectPriorityDiv.classList.add("project-details-sub");
-        projectPriorityDiv.classList.add(attr);
-    
-        const projectPriorityH2TitleTag = document.createElement("h2");
-        projectPriorityH2TitleTag.innerText = innerText;
-    
-        const projectPriorityH2EntryTag = document.createElement("h2");
-        if (project !== "") projectPriorityH2EntryTag.innerText = project[attr];
-    
-        projectPriorityDiv.appendChild(projectPriorityH2TitleTag)
-        projectPriorityDiv.appendChild(projectPriorityH2EntryTag)
-    
-        projectDetailsDiv.appendChild(projectPriorityDiv);
+    _addH3Tag(todoDiv, key){
+        const tag = document.createElement("h3");
+        tag.innerText = key;
+        todoDiv.appendChild(tag);
     }
 
-    _addProjectDetailsDiv(project, projectDiv){
-        const projectDetailsDiv = document.createElement("div");
-        projectDetailsDiv.classList.add("project-details");
-
-        this._addProjectDetailsSubDiv(project, projectDetailsDiv, "Deadline", "dueDate")
-        this._addProjectDetailsSubDiv(project, projectDetailsDiv, "Priority", "priority")
+    _addToDoDiv(todo, todosDiv){
+        const todoDiv = document.createElement("div");
+        todoDiv.classList.add("todo");
     
-        projectDiv.appendChild(projectDetailsDiv);
+        this._addH4Tag(todo, todoDiv, "title")
+        this._addH4Tag(todo, todoDiv, "dueDate")
+    
+        todoDiv.dataset.todoId = todo.id;
+        todoDiv.dataset.projectId = todo.projectId;
+        todosDiv.appendChild(todoDiv)
     }
 
-    _addProjectDetails(project, projectDiv){
-        this._addProjectTitleDiv(project, projectDiv)
-        this._addProjectDetailsDiv(project, projectDiv)
-    } 
+    _addH4Tag(todo, todoDiv, key){
+        const h4Tag = document.createElement("h4");
+        h4Tag.innerText = todo[key];
+        todoDiv.appendChild(h4Tag);
+    }
+
+    _addExpandDiv(projectDiv){
+        const projectExpandDiv = document.createElement("div");
+        projectExpandDiv.classList.add("expand");
+    
+        const projectExpandATag = document.createElement("a");
+        projectExpandATag.innerText = "Expand";
+        projectExpandATag.addEventListener("click", this._expandProjectListener)
+    
+        projectExpandDiv.appendChild(projectExpandATag);
+    
+        projectDiv.appendChild(projectExpandDiv);
+    }
+
+    _expandProjectListener(e){
+        const projectId = this._getProjectId(e.target)
+        this._expandProject(projectId)
+    }
+
+    _expandProject(id){
+        console.log(id)
+    }
+}
+class TasksPageLoader{
+    constructor(myProjects, sortFormLoader, cardsLoader){
+        cardsLoader.tasksPageLoader = this;
+        this.cardsLoader = cardsLoader;
+
+        sortFormLoader.tasksPageLoader = this;
+        this.sortFormLoader = sortFormLoader;
+
+        this.myProjects = myProjects;
+        this.mainDiv = ""
+    }
+
+    _update(){
+        this.deleteProjectsContainer();
+        this.cardsLoader.buildCards(this.mainDiv);
+    }
+    
+    deleteProjectsContainer(){
+        const projectsDiv = this.mainDiv.querySelector("#projects");
+        this.mainDiv.removeChild(projectsDiv);
+    }
+
+    buildPage(mainDiv){
+        this.mainDiv = mainDiv
+
+        this.sortFormLoader.buildSortForms(this.mainDiv)
+        this.cardsLoader.buildCards(this.mainDiv);
+    }
 }
 
 class DisplayController{
