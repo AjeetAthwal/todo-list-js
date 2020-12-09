@@ -102,12 +102,10 @@ class AddProjectMethods{
         this._update();
     }
 
-
     _getProjectId(tag){
         while (tag.dataset.projectId === undefined) tag = tag.parentNode;
         return parseInt(tag.dataset.projectId);
     }
-
 
     _addProjectDetails(project, projectDiv){
         this._addProjectTitleDiv(project, projectDiv)
@@ -304,36 +302,17 @@ class NewCardLoader extends AddProjectMethods{
     }
 }
 
-class ProjectCardsLoader extends AddProjectMethods{
-    constructor(myProjects){
-        super(myProjects)
+class ProjectCardTasksLoader{
+    constructor(myProjects) {
+        this.myProjects = myProjects;
 
-        this._expandProjectListener = this._expandProjectListener.bind(this);
+        this.projectCardsLoader = "";
+    }
+    _update(){
+        this.projectCardsLoader._update()
     }
 
-    buildProjectCard(project, projectsDiv){
-        const projectDiv = document.createElement("div");
-        projectDiv.classList.add("project");
-        
-        this._addProjectSubDivs(project, projectDiv);
-    
-        projectDiv.dataset.projectId = project.id;
-        projectsDiv.appendChild(projectDiv);
-    }
-
-    _addProjectSubDivs(project, projectDiv){
-        const form = document.createElement("form");
-        form.classList.add("project-form")
-        form.classList.add("project-form-edit")
-
-        projectDiv.appendChild(form)
-
-        this._addProjectDetails(project, form);
-        this._addToDosDiv(project, projectDiv);
-        this._addExpandDiv(projectDiv);
-    }
-
-    _addToDosDiv(project, projectDiv){
+    addToDosDiv(project, projectDiv){
         const projectTodosDiv = document.createElement("div");
         projectTodosDiv.classList.add("todos");
     
@@ -377,8 +356,22 @@ class ProjectCardsLoader extends AddProjectMethods{
         h4Tag.innerText = todo[key];
         todoDiv.appendChild(h4Tag);
     }
+}
 
-    _addExpandDiv(projectDiv){
+class ProjectCardExpandLoader{
+    constructor(myProjects){
+        this.myProjects = myProjects;
+
+        this.projectCardsLoader = "";
+
+        this._expandProjectListener = this._expandProjectListener.bind(this);
+    }
+
+    _update(){
+        this.projectCardsLoader._update()
+    }
+
+    addExpandDiv(projectDiv){
         const projectExpandDiv = document.createElement("div");
         projectExpandDiv.classList.add("expand");
     
@@ -398,6 +391,45 @@ class ProjectCardsLoader extends AddProjectMethods{
 
     _expandProject(id){
         console.log(id)
+    }
+
+    _getProjectId(tag){
+        while (tag.dataset.projectId === undefined) tag = tag.parentNode;
+        return parseInt(tag.dataset.projectId);
+    }
+}
+
+class ProjectCardsLoader extends AddProjectMethods{
+    constructor(myProjects, projectCardTasksLoader, projectCardExpandLoader){
+        super(myProjects)
+
+        projectCardExpandLoader.projectCardsLoader = this;
+        this.projectCardExpandLoader = projectCardExpandLoader;
+
+        projectCardTasksLoader.projectCardsLoader = this;
+        this.projectCardTasksLoader = projectCardTasksLoader;
+    }
+
+    buildProjectCard(project, projectsDiv){
+        const projectDiv = document.createElement("div");
+        projectDiv.classList.add("project");
+        
+        this._addProjectSubDivs(project, projectDiv);
+    
+        projectDiv.dataset.projectId = project.id;
+        projectsDiv.appendChild(projectDiv);
+    }
+
+    _addProjectSubDivs(project, projectDiv){
+        const form = document.createElement("form");
+        form.classList.add("project-form")
+        form.classList.add("project-form-edit")
+
+        projectDiv.appendChild(form)
+
+        this._addProjectDetails(project, form);
+        this.projectCardTasksLoader.addToDosDiv(project, projectDiv);
+        this.projectCardExpandLoader.addExpandDiv(projectDiv);
     }
 }
 
@@ -543,4 +575,4 @@ class DisplayController{
     }
 }
 
-export {NewCardLoader, ProjectCardsLoader, CardsLoader, SortFormLoader, TasksPageLoader, DisplayController}
+export {NewCardLoader, ProjectCardTasksLoader, ProjectCardExpandLoader, ProjectCardsLoader, CardsLoader, SortFormLoader, TasksPageLoader, DisplayController}
