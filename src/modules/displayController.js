@@ -1,10 +1,74 @@
 import parse from 'date-fns/parse'
 import parseISO from 'date-fns/parse'
-class TasksPageLoader{
+
+class SortFormLoader{
     constructor(myProjects){
         this.myProjects = myProjects;
         this.mainDiv = ""
         this._updateSort = this._updateSort.bind(this)
+
+        this.tasksPageLoader = ""
+    }
+
+    _updateSort(e){
+        if (e.target.id === "Project-view") this.myProjects.updateSort(e.target.value);
+        else if (e.target.id === "Task-view") this.myProjects.updateEachProjectSort(e.target.value)
+        this.tasksPageLoader._update();
+    }
+
+    _createDropdown(sortFormSelect){
+        const optionValues = ["dueDateEarliestFirst", "dueDateOldestFirst", "highestPriorityFirst", 
+        "lowestPriorityFirst", "oldestFirst", "newestFirst"]
+        const optionText = ["Most Recent Deadline", "Farthest Deadline", "Highest Priority",
+        "Lowest Priority", "Oldest Created", "Most Recent Created"]
+
+        for (let index = 0; index < optionValues.length; index++)
+            this._createDropdownOption(sortFormSelect, optionValues[index], optionText[index]);
+
+        sortFormSelect.addEventListener("change", this._updateSort)
+    }
+
+
+    _createDropdownOption(sortFormSelect, value, text){
+        const optionTag = document.createElement("option")
+        optionTag.value = value
+        optionTag.innerText = text
+        sortFormSelect.appendChild(optionTag)
+    }
+
+    _buildSortForm(view){
+        const sortDiv = document.createElement("div")
+        sortDiv.classList = "sort"
+        const sortForm = document.createElement("form")
+        const sortFormLabel = document.createElement("label")
+        sortFormLabel.htmlFor = view + "-view";
+        sortFormLabel.innerText = view + " Sort:  "
+        const sortFormSelect = document.createElement("select")
+        sortFormSelect.id = view + "-view";
+        sortFormSelect.name = view + "-view";
+
+        this._createDropdown(sortFormSelect)
+
+        sortForm.appendChild(sortFormLabel);
+        sortForm.appendChild(sortFormSelect);
+        sortDiv.appendChild(sortForm)
+        this.mainDiv.appendChild(sortDiv)
+    }
+
+    buildSortForms(mainDiv){
+        this.mainDiv = mainDiv
+
+        this._buildSortForm("Project");
+        this._buildSortForm("Task");
+    }
+}
+class TasksPageLoader{
+    constructor(myProjects, sortFormLoader){
+        sortFormLoader.tasksPageLoader = this;
+        this.sortFormLoader = sortFormLoader;
+        this.myProjects = myProjects;
+        this.mainDiv = ""
+
         this._expandProjectListener = this._expandProjectListener.bind(this);
         this._createProjectEditForm = this._createProjectEditForm.bind(this);
         this._createProjectDelete = this._createProjectDelete.bind(this);
@@ -28,11 +92,7 @@ class TasksPageLoader{
         this.buildProjectCards();
     }
     
-    _updateSort(e){
-        if (e.target.id === "Project-view") this.myProjects.updateSort(e.target.value);
-        else if (e.target.id === "Task-view") this.myProjects.updateEachProjectSort(e.target.value)
-        this._update();
-    }
+
 
     deleteProjectsContainer(){
         const projectsDiv = this.mainDiv.querySelector("#projects");
@@ -42,47 +102,8 @@ class TasksPageLoader{
     buildPage(mainDiv){
         this.mainDiv = mainDiv
 
-        this._buildSortForm("Project");
-        this._buildSortForm("Task");
+        this.sortFormLoader.buildSortForms(this.mainDiv)
         this.buildProjectCards();
-    }
-
-    _createDropdownOption(sortFormSelect, value, text){
-        const optionTag = document.createElement("option")
-        optionTag.value = value
-        optionTag.innerText = text
-        sortFormSelect.appendChild(optionTag)
-    }
-
-    _createDropdown(sortFormSelect){
-        const optionValues = ["dueDateEarliestFirst", "dueDateOldestFirst", "highestPriorityFirst", 
-        "lowestPriorityFirst", "oldestFirst", "newestFirst", "Highest Priority"]
-        const optionText = ["Most Recent Deadline", "Farthest Deadline", "Highest Priority",
-        "Lowest Priority", "Oldest Created", "Most Recent Created"]
-
-        for (let index = 0; index < optionValues.length; index++)
-            this._createDropdownOption(sortFormSelect, optionValues[index], optionText[index]);
-
-        sortFormSelect.addEventListener("change", this._updateSort)
-    }
-
-    _buildSortForm(view){
-        const sortDiv = document.createElement("div")
-        sortDiv.classList = "sort"
-        const sortForm = document.createElement("form")
-        const sortFormLabel = document.createElement("label")
-        sortFormLabel.htmlFor = view + "-view";
-        sortFormLabel.innerText = view + " Sort:  "
-        const sortFormSelect = document.createElement("select")
-        sortFormSelect.id = view + "-view";
-        sortFormSelect.name = view + "-view";
-
-        this._createDropdown(sortFormSelect)
-
-        sortForm.appendChild(sortFormLabel);
-        sortForm.appendChild(sortFormSelect);
-        sortDiv.appendChild(sortForm)
-        this.mainDiv.appendChild(sortDiv)
     }
 
     _buildAddNewCard(projectsDiv){
@@ -474,4 +495,4 @@ class DisplayController{
     }
 }
 
-export {TasksPageLoader, DisplayController}
+export {SortFormLoader, TasksPageLoader, DisplayController}
