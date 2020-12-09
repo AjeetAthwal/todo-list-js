@@ -63,70 +63,19 @@ class SortFormLoader{
     }
 }
 
-class CardsLoader{
+class AddProjectMethods{
     constructor(myProjects){
         this.myProjects = myProjects;
-        this.mainDiv = ""
+        this.cardsLoader = ""
 
-        this.tasksPageLoader = ""
-
-        this._expandProjectListener = this._expandProjectListener.bind(this);
         this._createProjectEditForm = this._createProjectEditForm.bind(this);
         this._createProjectDelete = this._createProjectDelete.bind(this);
         this._closeProjectEditForm = this._closeProjectEditForm.bind(this); 
         this._submitProjectEditForm = this._submitProjectEditForm.bind(this); 
-        this._createAddProjectForm = this._createAddProjectForm.bind(this);
     }
 
     _update(){
-        this.tasksPageLoader._update()
-    }
-
-    buildCards(mainDiv){
-        this.mainDiv = mainDiv
-
-        const projectsDiv = document.createElement("div");
-        projectsDiv.id = "projects"
-        this._buildAddNewCard(projectsDiv);
-        this.myProjects.getList().forEach(project => this._buildProjectCard(project, projectsDiv))
-        this.mainDiv.appendChild(projectsDiv)
-    }
-
-    _buildAddNewCard(projectsDiv){
-        const projectDiv = document.createElement("div");
-        projectDiv.classList.add("project");
-        projectDiv.classList.add("add-new-card");
-        
-        const form = document.createElement("form")
-        form.classList.add("project-form")
-        form.classList.add("project-form-new")
-
-        const imgDiv = document.createElement("div")
-        imgDiv.id = "plus-icon"
-
-        const img = document.createElement("img");
-        img.src = "images/plus_icon.png"
-        img.alt = "plus icon"
-        img.id = "plus-icon-img"
-
-        imgDiv.appendChild(img)
-        imgDiv.addEventListener("click", this._createAddProjectForm)
-
-        form.appendChild(imgDiv)
-        projectDiv.appendChild(form)
-
-        projectsDiv.appendChild(projectDiv);
-    }
-
-    _createAddProjectForm(e){
-        const project = ""
-        const form = e.target.parentNode.parentNode;
-        form.removeChild(form.firstChild)
-        form.classList.remove("project-form-new")
-        form.classList.add("project-form-edit")
-        form.addEventListener("submit", this._submitProjectEditForm);
-        this._addProjectDetails(project, form)
-        this._createProjectForm(form, project)
+        this.cardsLoader._update()
     }
 
     _submitProjectEditForm(e){
@@ -309,8 +258,60 @@ class CardsLoader{
         e.preventDefault();
         this._update() 
     }
+}
+class NewCardLoader extends AddProjectMethods{
+    constructor(myProjects){
+        super(myProjects)
 
-    _buildProjectCard(project, projectsDiv){
+        this._createAddProjectForm = this._createAddProjectForm.bind(this);
+    }
+
+    buildAddNewCard(projectsDiv){
+        const projectDiv = document.createElement("div");
+        projectDiv.classList.add("project");
+        projectDiv.classList.add("add-new-card");
+        
+        const form = document.createElement("form")
+        form.classList.add("project-form")
+        form.classList.add("project-form-new")
+
+        const imgDiv = document.createElement("div")
+        imgDiv.id = "plus-icon"
+
+        const img = document.createElement("img");
+        img.src = "images/plus_icon.png"
+        img.alt = "plus icon"
+        img.id = "plus-icon-img"
+
+        imgDiv.appendChild(img)
+        imgDiv.addEventListener("click", this._createAddProjectForm)
+
+        form.appendChild(imgDiv)
+        projectDiv.appendChild(form)
+
+        projectsDiv.appendChild(projectDiv);
+    }
+
+    _createAddProjectForm(e){
+        const project = ""
+        const form = e.target.parentNode.parentNode;
+        form.removeChild(form.firstChild)
+        form.classList.remove("project-form-new")
+        form.classList.add("project-form-edit")
+        form.addEventListener("submit", this._submitProjectEditForm);
+        this._addProjectDetails(project, form)
+        this._createProjectForm(form, project)
+    }
+}
+
+class ProjectCardsLoader extends AddProjectMethods{
+    constructor(myProjects){
+        super(myProjects)
+
+        this._expandProjectListener = this._expandProjectListener.bind(this);
+    }
+
+    buildProjectCard(project, projectsDiv){
         const projectDiv = document.createElement("div");
         projectDiv.classList.add("project");
         
@@ -397,6 +398,35 @@ class CardsLoader{
 
     _expandProject(id){
         console.log(id)
+    }
+}
+
+class CardsLoader{
+    constructor(myProjects, newCardLoader, projectCardsLoader){
+        newCardLoader.cardsLoader = this;
+        this.newCardLoader = newCardLoader
+
+        projectCardsLoader.cardsLoader = this;
+        this.projectCardsLoader = projectCardsLoader
+
+        this.myProjects = myProjects;
+        this.mainDiv = ""
+
+        this.tasksPageLoader = ""
+    }
+
+    _update(){
+        this.tasksPageLoader._update()
+    }
+
+    buildCards(mainDiv){
+        this.mainDiv = mainDiv
+
+        const projectsDiv = document.createElement("div");
+        projectsDiv.id = "projects"
+        this.newCardLoader.buildAddNewCard(projectsDiv);
+        this.myProjects.getList().forEach(project => this.projectCardsLoader.buildProjectCard(project, projectsDiv))
+        this.mainDiv.appendChild(projectsDiv)
     }
 }
 class TasksPageLoader{
@@ -513,4 +543,4 @@ class DisplayController{
     }
 }
 
-export {CardsLoader, SortFormLoader, TasksPageLoader, DisplayController}
+export {NewCardLoader, ProjectCardsLoader, CardsLoader, SortFormLoader, TasksPageLoader, DisplayController}
