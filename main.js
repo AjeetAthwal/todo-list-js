@@ -5932,6 +5932,7 @@ class ProjectCardTasksLoader{
         this.myProjects = myProjects;
 
         this.projectCardsLoader = "";
+        this._toggleComplete = this._toggleComplete.bind(this)
     }
     _update(){
         this.projectCardsLoader._update()
@@ -5988,11 +5989,37 @@ class ProjectCardTasksLoader{
         todoDiv.appendChild(tag);
     }
 
+    _getProjectId(tag){
+        while (tag.dataset.projectId === undefined) tag = tag.parentNode;
+        return parseInt(tag.dataset.projectId);
+    }
+
+    _getTodoId(tag){
+        while (tag.dataset.projectId === undefined) tag = tag.parentNode;
+        return parseInt(tag.dataset.todoId);
+    }
+
+    _toggleComplete(e){
+        const checkboxTag = e.target;
+        const todoDiv = checkboxTag.parentNode.parentNode
+        const projectId = this._getProjectId(checkboxTag);
+        const todoId = this._getTodoId(checkboxTag);
+
+        this.myProjects.toggleCompleteStatus(projectId, todoId)
+
+        const key = "isComplete"
+        checkboxTag.checked = !checkboxTag.checked
+        if (todoDiv.dataset.checked === "off") todoDiv.dataset.checked = "on"
+        else todoDiv.dataset.checked = "off"
+        this._update();
+    }
+
     _addCheckedForm(todo, todoDiv, key){
         const tag = document.createElement("form");
         const inputTag  = document.createElement("input");
         inputTag.type = "checkbox"
         inputTag.checked = todo[key]
+        inputTag.addEventListener("click", this._toggleComplete)
         if (todo[key]) todoDiv.dataset.checked = "on"
         else todoDiv.dataset.checked = "off"
         tag.classList.add("todo-"+key.toLowerCase())
@@ -6708,6 +6735,11 @@ class Projects extends Sorter{
     _initFromStorage(myProjects){
         myProjects.list.forEach(project => this._addProjectFromStorage(project))
         this._toDoIDCounter = myProjects.toDoIDCounter;          
+    }
+
+    toggleCompleteStatus(projectId, todoId){
+        this._getProject(projectId)._getToDo(todoId).toggleCompleteStatus()
+        this._update();
     }
 
     updateSettings(){
