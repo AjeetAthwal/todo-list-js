@@ -467,6 +467,11 @@ class Projects extends Sorter{
         this._toDoIDCounter = myProjects.toDoIDCounter;          
     }
 
+    toggleCompleteStatus(projectId, todoId){
+        this._getProject(projectId)._getToDo(todoId).toggleCompleteStatus()
+        this._update();
+    }
+
     updateSettings(){
         this.view = this.settings.view
         this.listSort = this.settings.projectViewProjectSortPref;
