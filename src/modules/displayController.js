@@ -368,7 +368,8 @@ class ProjectCardTasksLoader{
         const inputTag  = document.createElement("input");
         inputTag.type = "checkbox"
         inputTag.checked = todo[key]
-        
+        if (todo[key]) todoDiv.dataset.checked = "on"
+        else todoDiv.dataset.checked = "off"
         tag.classList.add("todo-"+key.toLowerCase())
         tag.appendChild(inputTag);
         todoDiv.appendChild(tag);

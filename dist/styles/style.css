@@ -197,6 +197,9 @@ a {
 
 .project-title>h1{
     width: 80%;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .project-title>input{
@@ -293,6 +296,10 @@ select{
     flex-direction: row;
     width: 100%;
     justify-content: flex-start;
+}
+
+[data-checked="on"]{
+    text-decoration: line-through;
 }
 
 .todo-header{
