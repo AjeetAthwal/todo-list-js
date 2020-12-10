@@ -19,7 +19,7 @@ const defaultProjectsEntry = {
             "_minPriority": 1,
             "_id": 1,
             "_projectId": 1,
-            "_isComplete": false,
+            "_isComplete": true,
             "_title": "Create ToDo Class1",
             "_description": "Create ToDo Class description",
             "_priority": 5,

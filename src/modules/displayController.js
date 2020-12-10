@@ -329,32 +329,49 @@ class ProjectCardTasksLoader{
     
         this._addH3Tag(todoDiv, "Title")
         this._addH3Tag(todoDiv, "Deadline")
+        this._addH3Tag(todoDiv, "Priority")
+        this._addH3Tag(todoDiv, "isComplete")
 
         todosDiv.appendChild(todoDiv)
     }
 
     _addH3Tag(todoDiv, key){
         const tag = document.createElement("h3");
-        tag.innerText = key;
+        if (key !== "isComplete")tag.innerText = key;
+        tag.classList.add("todo-"+key.toLowerCase())
         todoDiv.appendChild(tag);
     }
 
     _addToDoDiv(todo, todosDiv){
-        const todoDiv = document.createElement("div");
-        todoDiv.classList.add("todo");
-    
-        this._addH4Tag(todo, todoDiv, "title")
-        this._addH4Tag(todo, todoDiv, "dueDate")
-    
-        todoDiv.dataset.todoId = todo.id;
-        todoDiv.dataset.projectId = todo.projectId;
-        todosDiv.appendChild(todoDiv)
+            const todoDiv = document.createElement("div");
+            todoDiv.classList.add("todo");
+        
+            this._addH4Tag(todo, todoDiv, "title")
+            this._addH4Tag(todo, todoDiv, "dueDate")
+            this._addH4Tag(todo, todoDiv, "priority")
+            this._addCheckedForm(todo, todoDiv, "isComplete")
+        
+            todoDiv.dataset.todoId = todo.id;
+            todoDiv.dataset.projectId = todo.projectId;
+            todosDiv.appendChild(todoDiv)        
     }
 
     _addH4Tag(todo, todoDiv, key){
-        const h4Tag = document.createElement("h4");
-        h4Tag.innerText = todo[key];
-        todoDiv.appendChild(h4Tag);
+        const tag = document.createElement("h4");
+        tag.innerText = todo[key];
+        tag.classList.add("todo-"+key.toLowerCase())
+        todoDiv.appendChild(tag);
+    }
+
+    _addCheckedForm(todo, todoDiv, key){
+        const tag = document.createElement("form");
+        const inputTag  = document.createElement("input");
+        inputTag.type = "checkbox"
+        inputTag.checked = todo[key]
+        
+        tag.classList.add("todo-"+key.toLowerCase())
+        tag.appendChild(inputTag);
+        todoDiv.appendChild(tag);
     }
 }
 

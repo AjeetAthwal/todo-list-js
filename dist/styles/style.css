@@ -291,6 +291,8 @@ select{
 .todo{
     display: flex;
     flex-direction: row;
+    width: 100%;
+    justify-content: flex-start;
 }
 
 .todo-header{
@@ -300,16 +302,38 @@ select{
 
 .todo>h3{
     margin: auto;
-    width: 50%;
     text-align: center;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
+
 
 .todo>h4{
     margin: auto;
-    width: 50%;
     text-align: center;
     padding-bottom: 5px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
+
+.todo-title{
+    width: 45%;
+}
+
+.todo-duedate{
+    width: 25%;
+}
+
+.todo-priority{
+    width: 20%;
+}
+
+.todo-iscomplete{
+    width: 10%;
+}
+
 
 .project-form{
     width: 100%;
