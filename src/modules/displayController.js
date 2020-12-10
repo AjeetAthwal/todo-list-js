@@ -382,7 +382,6 @@ class ProjectCardTasksLoader{
 
         this.myProjects.toggleCompleteStatus(projectId, todoId)
 
-        const key = "isComplete"
         checkboxTag.checked = !checkboxTag.checked
         if (todoDiv.dataset.checked === "off") todoDiv.dataset.checked = "on"
         else todoDiv.dataset.checked = "off"
