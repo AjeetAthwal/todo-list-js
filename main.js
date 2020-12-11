@@ -5431,7 +5431,8 @@ console.log(myToDos.getList());
 const newCardLoader = new _modules_displayController__WEBPACK_IMPORTED_MODULE_4__.NewCardLoader(myProjects)
 
 const projectCardExpandLoader = new _modules_displayController__WEBPACK_IMPORTED_MODULE_4__.ProjectCardExpandLoader(myProjects)
-const projectCardTasksLoader = new _modules_displayController__WEBPACK_IMPORTED_MODULE_4__.ProjectCardTasksLoader(myProjects)
+const projectCardTaskLoader = new _modules_displayController__WEBPACK_IMPORTED_MODULE_4__.ProjectCardTaskLoader(myProjects)
+const projectCardTasksLoader = new _modules_displayController__WEBPACK_IMPORTED_MODULE_4__.ProjectCardTasksLoader(myProjects, projectCardTaskLoader)
 const projectCardsLoader = new _modules_displayController__WEBPACK_IMPORTED_MODULE_4__.ProjectCardsLoader(myProjects, projectCardTasksLoader, projectCardExpandLoader)
 
 const cardsLoader = new _modules_displayController__WEBPACK_IMPORTED_MODULE_4__.CardsLoader(myProjects, newCardLoader, projectCardsLoader)
@@ -5603,6 +5604,7 @@ const defaultSettingsEntry = {
 /*! export DisplayController [provided] [no usage info] [missing usage info prevents renaming] */
 /*! export NewCardLoader [provided] [no usage info] [missing usage info prevents renaming] */
 /*! export ProjectCardExpandLoader [provided] [no usage info] [missing usage info prevents renaming] */
+/*! export ProjectCardTaskLoader [provided] [no usage info] [missing usage info prevents renaming] */
 /*! export ProjectCardTasksLoader [provided] [no usage info] [missing usage info prevents renaming] */
 /*! export ProjectCardsLoader [provided] [no usage info] [missing usage info prevents renaming] */
 /*! export SortFormLoader [provided] [no usage info] [missing usage info prevents renaming] */
@@ -5614,6 +5616,7 @@ const defaultSettingsEntry = {
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "NewCardLoader": () => /* binding */ NewCardLoader,
+/* harmony export */   "ProjectCardTaskLoader": () => /* binding */ ProjectCardTaskLoader,
 /* harmony export */   "ProjectCardTasksLoader": () => /* binding */ ProjectCardTasksLoader,
 /* harmony export */   "ProjectCardExpandLoader": () => /* binding */ ProjectCardExpandLoader,
 /* harmony export */   "ProjectCardsLoader": () => /* binding */ ProjectCardsLoader,
@@ -5926,67 +5929,14 @@ class NewCardLoader extends AddProjectMethods{
         this._createProjectForm(form, project)
     }
 }
-
-class ProjectCardTasksLoader{
-    constructor(myProjects) {
+class AddTaskMethods{
+    constructor(myProjects){
         this.myProjects = myProjects;
-
-        this.projectCardsLoader = "";
-        this._toggleComplete = this._toggleComplete.bind(this)
+        this.projectCardTasksLoader = ""
     }
+
     _update(){
-        this.projectCardsLoader._update()
-    }
-
-    addToDosDiv(project, projectDiv){
-        const projectTodosDiv = document.createElement("div");
-        projectTodosDiv.classList.add("todos");
-    
-        this._addToDoDivHeader(projectTodosDiv)
-        project.getList().forEach(todo => this._addToDoDiv(todo, projectTodosDiv))
-
-        projectDiv.appendChild(projectTodosDiv);
-    }
-
-    _addToDoDivHeader(todosDiv){
-        const todoDiv = document.createElement("div");
-        todoDiv.classList.add("todo");
-        todoDiv.classList.add("todo-header");
-    
-        this._addH3Tag(todoDiv, "Title")
-        this._addH3Tag(todoDiv, "Deadline")
-        this._addH3Tag(todoDiv, "Priority")
-        this._addH3Tag(todoDiv, "isComplete")
-
-        todosDiv.appendChild(todoDiv)
-    }
-
-    _addH3Tag(todoDiv, key){
-        const tag = document.createElement("h3");
-        if (key !== "isComplete")tag.innerText = key;
-        tag.classList.add("todo-"+key.toLowerCase())
-        todoDiv.appendChild(tag);
-    }
-
-    _addToDoDiv(todo, todosDiv){
-            const todoDiv = document.createElement("div");
-            todoDiv.classList.add("todo");
-        
-            this._addH4Tag(todo, todoDiv, "title")
-            this._addH4Tag(todo, todoDiv, "dueDate")
-            this._addH4Tag(todo, todoDiv, "priority")
-            this._addCheckedForm(todo, todoDiv, "isComplete")
-        
-            todoDiv.dataset.todoId = todo.id;
-            todoDiv.dataset.projectId = todo.projectId;
-            todosDiv.appendChild(todoDiv)        
-    }
-
-    _addH4Tag(todo, todoDiv, key){
-        const tag = document.createElement("h4");
-        tag.innerText = todo[key];
-        tag.classList.add("todo-"+key.toLowerCase())
-        todoDiv.appendChild(tag);
+        this.projectCardTasksLoader._update()
     }
 
     _getProjectId(tag){
@@ -5997,6 +5947,70 @@ class ProjectCardTasksLoader{
     _getTodoId(tag){
         while (tag.dataset.projectId === undefined) tag = tag.parentNode;
         return parseInt(tag.dataset.todoId);
+    }
+
+    _addIcon(projectTitleDiv, view){
+        const tag = document.createElement("img");
+        tag.src = 'images/' + view + '_icon.png';
+        tag.alt = view + ' icon';
+        tag.classList.add("icon")
+
+        if (view === "edit") tag.addEventListener("click", this._createProjectEditForm)
+        if (view === "delete") tag.addEventListener("click", this._createProjectDelete)
+
+        projectTitleDiv.appendChild(tag);
+    }
+
+    _addYesNoBtns(parentDiv){
+        const formBtns = document.createElement("div")
+        formBtns.classList.add("project-edit-form-btns")
+
+        const formYesBtn = document.createElement("input")
+        const formNoBtn = document.createElement("button")
+
+        formYesBtn.htmlFor = "yes-btn"
+        formYesBtn.name = "yes-btn"
+        formYesBtn.classList.add("yes-btn")
+        formYesBtn.classList.add("small-btn")
+        formYesBtn.type = "submit"
+        formYesBtn.value = "✓"
+
+        formNoBtn.classList.add("no-btn")
+        formNoBtn.classList.add("small-btn")
+        formNoBtn.innerText = "x"
+        formNoBtn.addEventListener("click", this._closeProjectEditForm)
+
+        formBtns.appendChild(formYesBtn);
+        formBtns.appendChild(formNoBtn);
+        parentDiv.appendChild(formBtns)
+    }
+
+    addToDoDiv(todo, todosDiv){
+        const todoDiv = document.createElement("div");
+        todoDiv.classList.add("todo");
+    
+        this._addH4Tag(todo, todoDiv, "title")
+        this._addH4Tag(todo, todoDiv, "dueDate")
+        this._addH4Tag(todo, todoDiv, "priority")
+        this._addCheckedForm(todo, todoDiv, "isComplete")
+    
+        todoDiv.dataset.todoId = todo.id;
+        todoDiv.dataset.projectId = todo.projectId;
+        todosDiv.appendChild(todoDiv)        
+}
+
+    _addH4Tag(todo, todoDiv, key){
+        const tag = document.createElement("h4");
+        tag.innerText = todo[key];
+        tag.classList.add("todo-"+key.toLowerCase())
+        todoDiv.appendChild(tag);
+    }
+}
+
+class ProjectCardTaskLoader extends AddTaskMethods{
+    constructor(myProjects){
+        super(myProjects)
+        this._toggleComplete = this._toggleComplete.bind(this)
     }
 
     _toggleComplete(e){
@@ -6026,6 +6040,52 @@ class ProjectCardTasksLoader{
         todoDiv.appendChild(tag);
     }
 }
+
+class ProjectCardTasksLoader{
+    constructor(myProjects, projectCardTaskLoader) {
+        this.myProjects = myProjects;
+        
+        projectCardTaskLoader.projectCardTasksLoader = this
+        this.projectCardTaskLoader = projectCardTaskLoader
+
+        this.projectCardsLoader = ""
+        
+    }
+    _update(){
+        this.projectCardsLoader._update()
+    }
+
+    addToDosDiv(project, projectDiv){
+        const projectTodosDiv = document.createElement("div");
+        projectTodosDiv.classList.add("todos");
+    
+        this._addToDoDivHeader(projectTodosDiv)
+        project.getList().forEach(todo => this.projectCardTaskLoader.addToDoDiv(todo, projectTodosDiv))
+
+        projectDiv.appendChild(projectTodosDiv);
+    }
+
+    _addToDoDivHeader(todosDiv){
+        const todoDiv = document.createElement("div");
+        todoDiv.classList.add("todo");
+        todoDiv.classList.add("todo-header");
+    
+        this._addH3Tag(todoDiv, "Title")
+        this._addH3Tag(todoDiv, "Deadline")
+        this._addH3Tag(todoDiv, "Priority")
+        this._addH3Tag(todoDiv, "isComplete")
+
+        todosDiv.appendChild(todoDiv)
+    }
+
+    _addH3Tag(todoDiv, key){
+        const tag = document.createElement("h3");
+        if (key !== "isComplete")tag.innerText = key;
+        tag.classList.add("todo-"+key.toLowerCase())
+        todoDiv.appendChild(tag);
+    }
+}
+
 
 class ProjectCardExpandLoader{
     constructor(myProjects){
