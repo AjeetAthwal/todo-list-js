@@ -339,20 +339,20 @@ select{
 }
 
 .todo-title{
-    width: 45%;
+    width: 40%;
 }
 
 .todo-duedate{
-    width: 25%;
+    width: 30%;
 }
 
 
 .todo-priority{
-    width: 20%;
+    width: 25%;
 }
 
 .todo-priority>input{
-    width: 35%;
+    width: 30%;
 }
 
 .todo-iscomplete{
@@ -364,6 +364,12 @@ select{
     width: 100%;
     display: flex;
     flex-direction: column;
+}
+
+.task-form-edit{
+    width: 90%;
+    display: flex;
+    flex-direction: row;
 }
 
 .form-edit{
