@@ -5691,22 +5691,127 @@ class SortFormLoader{
     }
 }
 
-class AddProjectMethods{
+class AddItemMethods{
     constructor(myProjects){
         this.myProjects = myProjects;
-        this.cardsLoader = ""
 
-        this._createProjectEditForm = this._createProjectEditForm.bind(this);
-        this._createProjectDelete = this._createProjectDelete.bind(this);
-        this._closeProjectEditForm = this._closeProjectEditForm.bind(this); 
-        this._submitProjectEditForm = this._submitProjectEditForm.bind(this); 
+        this._createEditForm = this._createEditForm.bind(this);
+        this._createDelete = this._createDelete.bind(this);
+        this._closeEditForm = this._closeEditForm.bind(this); 
+        this._submitEditForm = this._submitEditForm.bind(this); 
+    }
+
+    buildNewPlus(projectsDiv, size){
+        const projectDiv = document.createElement("div");
+        if (size === "large"){
+            projectDiv.classList.add("project");
+            projectDiv.classList.add("add-new-card");
+        }
+
+        const form = document.createElement("form")
+        form.classList.add("form")
+        form.classList.add("form-new")
+
+        const imgDiv = document.createElement("div")
+        imgDiv.id = "plus-icon-" + size
+
+        const img = document.createElement("img");
+        img.src = "images/plus_icon.png"
+        img.alt = "plus icon"
+        img.id = "plus-icon-img-" + size
+
+        imgDiv.appendChild(img)
+        imgDiv.addEventListener("click", this._createAddForm)
+
+        form.appendChild(imgDiv)
+        projectDiv.appendChild(form)
+
+        projectsDiv.appendChild(projectDiv);
+    }
+
+    _submitEditForm(e){
+        throw new Error("_submitEditForm function has not been created")
+    }
+
+    _getProjectId(tag){
+        while (tag.dataset.projectId === undefined) tag = tag.parentNode;
+        return parseInt(tag.dataset.projectId);
+    }
+
+    _getTodoId(tag){
+        while (tag.dataset.projectId === undefined) tag = tag.parentNode;
+        return parseInt(tag.dataset.todoId);
+    }
+
+    _addIcon(projectTitleDiv, view){
+        const tag = document.createElement("img");
+        tag.src = 'images/' + view + '_icon.png';
+        tag.alt = view + ' icon';
+        tag.classList.add("icon")
+
+        if (view === "edit") tag.addEventListener("click", this._createEditForm)
+        if (view === "delete") tag.addEventListener("click", this._createDelete)
+
+        projectTitleDiv.appendChild(tag);
+    }
+
+    _createEditForm(e){
+        throw new Error("_createEditForm function has not been created")
+    }
+
+    _createDelete(e){
+        throw new Error("_createDelete function has not been created")
+    }
+
+    _createForm(form, item){
+        throw new Error("_createForm function has not been created")
+    }
+
+    _addEditFormInput(parentDiv, item, key, dataType, required){
+        throw new Error("_addEditFormInput function has not been created")
+    }
+
+    _addYesNoBtns(parentDiv){
+        const formBtns = document.createElement("div")
+        formBtns.classList.add("edit-form-btns")
+
+        const formYesBtn = document.createElement("input")
+        const formNoBtn = document.createElement("button")
+
+        formYesBtn.htmlFor = "yes-btn"
+        formYesBtn.name = "yes-btn"
+        formYesBtn.classList.add("yes-btn")
+        formYesBtn.classList.add("small-btn")
+        formYesBtn.type = "submit"
+        formYesBtn.value = "✓"
+
+        formNoBtn.classList.add("no-btn")
+        formNoBtn.classList.add("small-btn")
+        formNoBtn.innerText = "x"
+        formNoBtn.addEventListener("click", this._closeEditForm)
+
+        formBtns.appendChild(formYesBtn);
+        formBtns.appendChild(formNoBtn);
+        parentDiv.appendChild(formBtns)
+    }
+
+    _closeEditForm(e){
+        e.preventDefault();
+        this._update() 
+    }
+}
+
+class AddProjectMethods extends AddItemMethods{
+    constructor(myProjects){
+        super(myProjects)
+        this.cardsLoader = ""
     }
 
     _update(){
         this.cardsLoader._update()
     }
 
-    _submitProjectEditForm(e){
+    _submitEditForm(e){
         e.preventDefault();
         let projectId = ""
         try {
@@ -5728,11 +5833,6 @@ class AddProjectMethods{
         if (projectId !== "") this.myProjects.updateProjectInfo(projectId, newTitle, "BLANK", newPriority, newDueDate);
         else this.myProjects.addProject(newTitle, "", newPriority, newDueDate);
         this._update();
-    }
-
-    _getProjectId(tag){
-        while (tag.dataset.projectId === undefined) tag = tag.parentNode;
-        return parseInt(tag.dataset.projectId);
     }
 
     _addProjectDetails(project, projectDiv){
@@ -5757,21 +5857,21 @@ class AddProjectMethods{
         tag.alt = view + ' icon';
         tag.classList.add("icon")
 
-        if (view === "edit") tag.addEventListener("click", this._createProjectEditForm)
-        if (view === "delete") tag.addEventListener("click", this._createProjectDelete)
+        if (view === "edit") tag.addEventListener("click", this._createEditForm)
+        if (view === "delete") tag.addEventListener("click", this._createDelete)
 
         projectTitleDiv.appendChild(tag);
     }
 
-    _createProjectEditForm(e){
+    _createEditForm(e){
         const projectId = this._getProjectId(e.target);
         const project = this.myProjects._getProject(projectId);
         const form = e.target.parentNode.parentNode;
-        form.addEventListener("submit", this._submitProjectEditForm);
-        this._createProjectForm(form, project)
+        form.addEventListener("submit", this._submitEditForm);
+        this._createForm(form, project)
     }
 
-    _createProjectDelete(e){
+    _createDelete(e){
         try {
             const projectId = this._getProjectId(e.target);
             this.myProjects.removeProject(projectId);
@@ -5817,7 +5917,7 @@ class AddProjectMethods{
     }
 
 
-    _createProjectForm(form, project){
+    _createForm(form, project){
         const projectTitleDiv = form.firstChild;
         const projectDetailsDiv = projectTitleDiv.nextSibling;
 
@@ -5855,136 +5955,35 @@ class AddProjectMethods{
         if (key !== "dueDate") input.required = required
         parentDiv.appendChild(input)
     }
-
-    _addYesNoBtns(parentDiv){
-        const formBtns = document.createElement("div")
-        formBtns.classList.add("project-edit-form-btns")
-
-        const formYesBtn = document.createElement("input")
-        const formNoBtn = document.createElement("button")
-
-        formYesBtn.htmlFor = "yes-btn"
-        formYesBtn.name = "yes-btn"
-        formYesBtn.classList.add("yes-btn")
-        formYesBtn.classList.add("small-btn")
-        formYesBtn.type = "submit"
-        formYesBtn.value = "✓"
-
-        formNoBtn.classList.add("no-btn")
-        formNoBtn.classList.add("small-btn")
-        formNoBtn.innerText = "x"
-        formNoBtn.addEventListener("click", this._closeProjectEditForm)
-
-        formBtns.appendChild(formYesBtn);
-        formBtns.appendChild(formNoBtn);
-        parentDiv.appendChild(formBtns)
-    }
-
-    _closeProjectEditForm(e){
-        e.preventDefault();
-        this._update() 
-    }
 }
 class NewCardLoader extends AddProjectMethods{
     constructor(myProjects){
         super(myProjects)
 
-        this._createAddProjectForm = this._createAddProjectForm.bind(this);
+        this._createAddForm = this._createAddForm.bind(this);
     }
 
-    buildAddNewCard(projectsDiv){
-        const projectDiv = document.createElement("div");
-        projectDiv.classList.add("project");
-        projectDiv.classList.add("add-new-card");
-        
-        const form = document.createElement("form")
-        form.classList.add("project-form")
-        form.classList.add("project-form-new")
-
-        const imgDiv = document.createElement("div")
-        imgDiv.id = "plus-icon"
-
-        const img = document.createElement("img");
-        img.src = "images/plus_icon.png"
-        img.alt = "plus icon"
-        img.id = "plus-icon-img"
-
-        imgDiv.appendChild(img)
-        imgDiv.addEventListener("click", this._createAddProjectForm)
-
-        form.appendChild(imgDiv)
-        projectDiv.appendChild(form)
-
-        projectsDiv.appendChild(projectDiv);
-    }
-
-    _createAddProjectForm(e){
+    _createAddForm(e){
         const project = ""
         const form = e.target.parentNode.parentNode;
         form.removeChild(form.firstChild)
-        form.classList.remove("project-form-new")
-        form.classList.add("project-form-edit")
-        form.addEventListener("submit", this._submitProjectEditForm);
+        form.classList.remove("form-new")
+        form.classList.add("form-edit")
+        form.addEventListener("submit", this._submitEditForm);
         this._addProjectDetails(project, form)
-        this._createProjectForm(form, project)
+        this._createForm(form, project)
     }
 }
-class AddTaskMethods{
+class AddTaskMethods extends AddItemMethods{
     constructor(myProjects){
-        this.myProjects = myProjects;
+        super(myProjects)
         this.projectCardTasksLoader = ""
     }
 
     _update(){
         this.projectCardTasksLoader._update()
     }
-
-    _getProjectId(tag){
-        while (tag.dataset.projectId === undefined) tag = tag.parentNode;
-        return parseInt(tag.dataset.projectId);
-    }
-
-    _getTodoId(tag){
-        while (tag.dataset.projectId === undefined) tag = tag.parentNode;
-        return parseInt(tag.dataset.todoId);
-    }
-
-    _addIcon(projectTitleDiv, view){
-        const tag = document.createElement("img");
-        tag.src = 'images/' + view + '_icon.png';
-        tag.alt = view + ' icon';
-        tag.classList.add("icon")
-
-        if (view === "edit") tag.addEventListener("click", this._createProjectEditForm)
-        if (view === "delete") tag.addEventListener("click", this._createProjectDelete)
-
-        projectTitleDiv.appendChild(tag);
-    }
-
-    _addYesNoBtns(parentDiv){
-        const formBtns = document.createElement("div")
-        formBtns.classList.add("project-edit-form-btns")
-
-        const formYesBtn = document.createElement("input")
-        const formNoBtn = document.createElement("button")
-
-        formYesBtn.htmlFor = "yes-btn"
-        formYesBtn.name = "yes-btn"
-        formYesBtn.classList.add("yes-btn")
-        formYesBtn.classList.add("small-btn")
-        formYesBtn.type = "submit"
-        formYesBtn.value = "✓"
-
-        formNoBtn.classList.add("no-btn")
-        formNoBtn.classList.add("small-btn")
-        formNoBtn.innerText = "x"
-        formNoBtn.addEventListener("click", this._closeProjectEditForm)
-
-        formBtns.appendChild(formYesBtn);
-        formBtns.appendChild(formNoBtn);
-        parentDiv.appendChild(formBtns)
-    }
-
+    
     addToDoDiv(todo, todosDiv){
         const todoDiv = document.createElement("div");
         todoDiv.classList.add("todo");
@@ -6185,7 +6184,7 @@ class CardsLoader{
 
         const projectsDiv = document.createElement("div");
         projectsDiv.id = "projects"
-        this.newCardLoader.buildAddNewCard(projectsDiv);
+        this.newCardLoader.buildNewPlus(projectsDiv, "large");
         this.myProjects.getList().forEach(project => this.projectCardsLoader.buildProjectCard(project, projectsDiv))
         this.mainDiv.appendChild(projectsDiv)
     }

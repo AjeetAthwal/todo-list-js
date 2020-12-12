@@ -176,13 +176,13 @@ a {
     flex-direction: column;
 }
 
-#plus-icon{
+#plus-icon-large{
     margin: auto;
     display: flex;
     cursor: pointer;
 }
 
-#plus-icon-img{
+#plus-icon-img-large{
     margin: auto;
     width: var(--plus-size);
 }
@@ -342,17 +342,17 @@ select{
 }
 
 
-.project-form{
+.form{
     width: 100%;
     display: flex;
     flex-direction: column;
 }
 
-.project-form-edit{
+.form-edit{
     height: 20%;
 }
 
-.project-form-new{
+.form-new{
     height: 100%;
 }
 
@@ -375,7 +375,7 @@ select{
     background-color: var(--no-color);
 }
 
-.project-edit-form-btns{
+.edit-form-btns{
     height: 100%;
     width: 15%;
     display: flex;
@@ -383,6 +383,6 @@ select{
     justify-content: space-around;
 }
 
-.project-edit-form-btns>.small-btn{
+.edit-form-btns>.small-btn{
     margin: auto;
 }
