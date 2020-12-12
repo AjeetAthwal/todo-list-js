@@ -429,7 +429,7 @@ class AddTaskMethods extends AddItemMethods{
         const projectId = this._getProjectId(e.target);
         const toDoId = this._getTodoId(e.target);
         const toDo = this.myProjects._getProject(projectId)._getToDo(toDoId);
-        const form = e.target.parentNode.parentNode;
+        const form = e.target.parentNode;
         form.addEventListener("submit", this._submitEditForm);
         this._createForm(form, toDo)
     }
@@ -437,16 +437,15 @@ class AddTaskMethods extends AddItemMethods{
 
     _submitEditForm(e){
         e.preventDefault();
-        console.log("hi")
         let projectId = ""
         let toDoId = ""
         try {
             projectId = this._getProjectId(e.target);
-            todoId = this._getTodoId(e.target)
+            toDoId = this._getTodoId(e.target)
         } catch (e){
         }
         console.log(projectId)
-        console.log(todoId)
+        console.log(toDoId)
         let newTitle = ""
         let newDueDate = ""
         let newPriority = ""
