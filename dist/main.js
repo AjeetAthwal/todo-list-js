@@ -5431,8 +5431,10 @@ console.log(myToDos.getList());
 const newCardLoader = new _modules_displayController__WEBPACK_IMPORTED_MODULE_4__.NewCardLoader(myProjects)
 
 const projectCardExpandLoader = new _modules_displayController__WEBPACK_IMPORTED_MODULE_4__.ProjectCardExpandLoader(myProjects)
+
+const newTaskLoader = new _modules_displayController__WEBPACK_IMPORTED_MODULE_4__.NewTaskLoader(myProjects)
 const projectCardTaskLoader = new _modules_displayController__WEBPACK_IMPORTED_MODULE_4__.ProjectCardTaskLoader(myProjects)
-const projectCardTasksLoader = new _modules_displayController__WEBPACK_IMPORTED_MODULE_4__.ProjectCardTasksLoader(myProjects, projectCardTaskLoader)
+const projectCardTasksLoader = new _modules_displayController__WEBPACK_IMPORTED_MODULE_4__.ProjectCardTasksLoader(myProjects, projectCardTaskLoader, newTaskLoader)
 const projectCardsLoader = new _modules_displayController__WEBPACK_IMPORTED_MODULE_4__.ProjectCardsLoader(myProjects, projectCardTasksLoader, projectCardExpandLoader)
 
 const cardsLoader = new _modules_displayController__WEBPACK_IMPORTED_MODULE_4__.CardsLoader(myProjects, newCardLoader, projectCardsLoader)
@@ -5603,6 +5605,7 @@ const defaultSettingsEntry = {
 /*! export CardsLoader [provided] [no usage info] [missing usage info prevents renaming] */
 /*! export DisplayController [provided] [no usage info] [missing usage info prevents renaming] */
 /*! export NewCardLoader [provided] [no usage info] [missing usage info prevents renaming] */
+/*! export NewTaskLoader [provided] [no usage info] [missing usage info prevents renaming] */
 /*! export ProjectCardExpandLoader [provided] [no usage info] [missing usage info prevents renaming] */
 /*! export ProjectCardTaskLoader [provided] [no usage info] [missing usage info prevents renaming] */
 /*! export ProjectCardTasksLoader [provided] [no usage info] [missing usage info prevents renaming] */
@@ -5616,6 +5619,7 @@ const defaultSettingsEntry = {
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "NewCardLoader": () => /* binding */ NewCardLoader,
+/* harmony export */   "NewTaskLoader": () => /* binding */ NewTaskLoader,
 /* harmony export */   "ProjectCardTaskLoader": () => /* binding */ ProjectCardTaskLoader,
 /* harmony export */   "ProjectCardTasksLoader": () => /* binding */ ProjectCardTasksLoader,
 /* harmony export */   "ProjectCardExpandLoader": () => /* binding */ ProjectCardExpandLoader,
@@ -5730,6 +5734,7 @@ class AddItemMethods{
     }
 
     _submitEditForm(e){
+        e.preventDefault()
         throw new Error("_submitEditForm function has not been created")
     }
 
@@ -5983,7 +5988,7 @@ class AddTaskMethods extends AddItemMethods{
     _update(){
         this.projectCardTasksLoader._update()
     }
-    
+
     addToDoDiv(todo, todosDiv){
         const todoDiv = document.createElement("div");
         todoDiv.classList.add("todo");
@@ -5991,18 +5996,76 @@ class AddTaskMethods extends AddItemMethods{
         this._addH4Tag(todo, todoDiv, "title")
         this._addH4Tag(todo, todoDiv, "dueDate")
         this._addH4Tag(todo, todoDiv, "priority")
-        this._addCheckedForm(todo, todoDiv, "isComplete")
+        if (todo !== "") this._addCheckedForm(todo, todoDiv, "isComplete");
+        else {
+            const tag = document.createElement("h4");
+            tag.classList.add("todo-iscomplete")
+            todoDiv.appendChild(tag)
+        }
     
-        todoDiv.dataset.todoId = todo.id;
-        todoDiv.dataset.projectId = todo.projectId;
+        if (todo !== ""){
+            todoDiv.dataset.todoId = todo.id;
+            todoDiv.dataset.projectId = todo.projectId;
+        }
         todosDiv.appendChild(todoDiv)        
 }
 
     _addH4Tag(todo, todoDiv, key){
-        const tag = document.createElement("h4");
-        tag.innerText = todo[key];
+        const tag = todo === "" ? document.createElement("input") : document.createElement("h4");
+
+        if (todo !== "") tag.innerText = todo[key];
         tag.classList.add("todo-"+key.toLowerCase())
         todoDiv.appendChild(tag);
+    }
+
+    _createForm(form, todo){
+        const titleDiv = form.firstChild.firstChild;
+        const dueDateDiv = titleDiv.nextSibling
+        const priorityDiv = dueDateDiv.nextSibling
+        const isCompleteDiv = priorityDiv.nextSibling;
+
+        this._addEditFormInput(titleDiv, todo, "title", "text", true);
+        this._addYesNoBtns(isCompleteDiv);
+        this._addEditFormInput(dueDateDiv, todo, "dueDate", "date", false);
+        this._addEditFormInput(priorityDiv, todo, "priority", "number", true);
+    }
+
+    _addEditFormInput(parentDiv, todo, key, dataType, required){
+        const randomProject = this.myProjects.getList()[0];
+        parentDiv.htmlFor = key;
+        parentDiv.id = key;
+        parentDiv.name = key;
+        parentDiv.type = dataType;
+        if (todo !== ""){
+            if (key === "dueDate") parentDiv.value = todo[key] === "" ? "" : (0,date_fns_parse__WEBPACK_IMPORTED_MODULE_0__.default)(todo[key],'P',new Date()).toISOString().substring(0, 10);
+            else parentDiv.value = todo[key];
+        }
+        if (key === "dueDate") parentDiv.min = randomProject.minDueDate.toISOString().substring(0, 10);
+        else if (key === "priority"){
+            parentDiv.min = randomProject.minPriority
+            parentDiv.max = randomProject.maxPriority
+        }
+        if (key !== "dueDate") parentDiv.required = required
+    }
+}
+
+class NewTaskLoader extends AddTaskMethods{
+    constructor(myProjects){
+        super(myProjects)
+
+        this._createAddForm = this._createAddForm.bind(this);
+    }
+
+    _createAddForm(e){
+        const todo = ""
+        const form = e.target.parentNode.parentNode;
+
+        form.removeChild(form.firstChild)
+        form.classList.remove("form-new")
+        form.classList.add("form-edit")
+        form.addEventListener("submit", this._submitEditForm);
+        this.addToDoDiv(todo, form)
+        this._createForm(form, todo)
     }
 }
 
@@ -6041,9 +6104,12 @@ class ProjectCardTaskLoader extends AddTaskMethods{
 }
 
 class ProjectCardTasksLoader{
-    constructor(myProjects, projectCardTaskLoader) {
+    constructor(myProjects, projectCardTaskLoader, newTaskLoader) {
         this.myProjects = myProjects;
         
+        newTaskLoader.projectCardTasksLoader = this
+        this.newTaskLoader = newTaskLoader
+
         projectCardTaskLoader.projectCardTasksLoader = this
         this.projectCardTaskLoader = projectCardTaskLoader
 
@@ -6060,6 +6126,8 @@ class ProjectCardTasksLoader{
     
         this._addToDoDivHeader(projectTodosDiv)
         project.getList().forEach(todo => this.projectCardTaskLoader.addToDoDiv(todo, projectTodosDiv))
+
+        this.newTaskLoader.buildNewPlus(projectTodosDiv, "small")
 
         projectDiv.appendChild(projectTodosDiv);
     }
