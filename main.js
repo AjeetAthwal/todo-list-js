@@ -5993,9 +5993,9 @@ class AddTaskMethods extends AddItemMethods{
         const todoDiv = document.createElement("div");
         todoDiv.classList.add("todo");
     
-        this._addH4Tag(todo, todoDiv, "title")
-        this._addH4Tag(todo, todoDiv, "dueDate")
-        this._addH4Tag(todo, todoDiv, "priority")
+        this._addTaskEntry(todo, todoDiv, "title")
+        this._addTaskEntry(todo, todoDiv, "dueDate")
+        this._addTaskEntry(todo, todoDiv, "priority")
         if (todo !== "") this._addCheckedForm(todo, todoDiv, "isComplete");
         else {
             const tag = document.createElement("h4");
@@ -6008,20 +6008,27 @@ class AddTaskMethods extends AddItemMethods{
             todoDiv.dataset.projectId = todo.projectId;
         }
         todosDiv.appendChild(todoDiv)        
-}
+    }
 
-    _addH4Tag(todo, todoDiv, key){
-        const tag = todo === "" ? document.createElement("input") : document.createElement("h4");
+    _addTaskEntry(todo, todoDiv, key){
+        const div = document.createElement("div");
+        div.classList.add("todo-"+key.toLowerCase())
 
+        const tag = document.createElement("h4");
         if (todo !== "") tag.innerText = todo[key];
-        tag.classList.add("todo-"+key.toLowerCase())
-        todoDiv.appendChild(tag);
+        
+        div.appendChild(tag);
+        todoDiv.appendChild(div);
     }
 
     _createForm(form, todo){
         const titleDiv = form.firstChild.firstChild;
+        titleDiv.removeChild(titleDiv.firstChild)
+        console.log(titleDiv)
         const dueDateDiv = titleDiv.nextSibling
+        dueDateDiv.removeChild(dueDateDiv.firstChild)
         const priorityDiv = dueDateDiv.nextSibling
+        priorityDiv.removeChild(priorityDiv.firstChild)
         const isCompleteDiv = priorityDiv.nextSibling;
 
         this._addEditFormInput(titleDiv, todo, "title", "text", true);
@@ -6030,22 +6037,24 @@ class AddTaskMethods extends AddItemMethods{
         this._addEditFormInput(priorityDiv, todo, "priority", "number", true);
     }
 
-    _addEditFormInput(parentDiv, todo, key, dataType, required){
+    _addEditFormInput(parentDiv, project, key, dataType, required){
+        const input = document.createElement("input")
         const randomProject = this.myProjects.getList()[0];
-        parentDiv.htmlFor = key;
-        parentDiv.id = key;
-        parentDiv.name = key;
-        parentDiv.type = dataType;
-        if (todo !== ""){
-            if (key === "dueDate") parentDiv.value = todo[key] === "" ? "" : (0,date_fns_parse__WEBPACK_IMPORTED_MODULE_0__.default)(todo[key],'P',new Date()).toISOString().substring(0, 10);
-            else parentDiv.value = todo[key];
+        input.htmlFor = key;
+        input.id = key;
+        input.name = key;
+        input.type = dataType;
+        if (project !== ""){
+            if (key === "dueDate") input.value = project[key] === "" ? "" : (0,date_fns_parse__WEBPACK_IMPORTED_MODULE_0__.default)(project[key],'P',new Date()).toISOString().substring(0, 10);
+            else input.value = project[key];
         }
-        if (key === "dueDate") parentDiv.min = randomProject.minDueDate.toISOString().substring(0, 10);
+        if (key === "dueDate") input.min = randomProject.minDueDate.toISOString().substring(0, 10);
         else if (key === "priority"){
-            parentDiv.min = randomProject.minPriority
-            parentDiv.max = randomProject.maxPriority
+            input.min = randomProject.minPriority
+            input.max = randomProject.maxPriority
         }
-        if (key !== "dueDate") parentDiv.required = required
+        if (key !== "dueDate") input.required = required
+        parentDiv.appendChild(input)
     }
 }
 
@@ -6137,19 +6146,23 @@ class ProjectCardTasksLoader{
         todoDiv.classList.add("todo");
         todoDiv.classList.add("todo-header");
     
-        this._addH3Tag(todoDiv, "Title")
-        this._addH3Tag(todoDiv, "Deadline")
-        this._addH3Tag(todoDiv, "Priority")
-        this._addH3Tag(todoDiv, "isComplete")
+        this._addHeaders(todoDiv, "Title")
+        this._addHeaders(todoDiv, "Deadline")
+        this._addHeaders(todoDiv, "Priority")
+        this._addHeaders(todoDiv, "isComplete")
 
         todosDiv.appendChild(todoDiv)
     }
 
-    _addH3Tag(todoDiv, key){
+    _addHeaders(todoDiv, key){
+        const div = document.createElement("div");
+
         const tag = document.createElement("h3");
         if (key !== "isComplete")tag.innerText = key;
-        tag.classList.add("todo-"+key.toLowerCase())
-        todoDiv.appendChild(tag);
+        div.classList.add("todo-"+key.toLowerCase())
+        div.appendChild(tag);
+
+        todoDiv.appendChild(div);
     }
 }
 
