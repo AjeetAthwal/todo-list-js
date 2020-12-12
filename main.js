@@ -5424,10 +5424,6 @@ const mySettings = new _modules_settings__WEBPACK_IMPORTED_MODULE_1__.default(my
 const myProjects = new _modules_projects__WEBPACK_IMPORTED_MODULE_0__.Projects(myProjectsStorage, mySettings);
 const myToDos = new _modules_projects__WEBPACK_IMPORTED_MODULE_0__.ToDos(mySettings, myProjects)
 
-console.log(myProjects);
-console.log(myProjects.getList());
-console.log(myToDos.getList());
-
 const newCardLoader = new _modules_displayController__WEBPACK_IMPORTED_MODULE_4__.NewCardLoader(myProjects)
 
 const projectCardExpandLoader = new _modules_displayController__WEBPACK_IMPORTED_MODULE_4__.ProjectCardExpandLoader(myProjects)
@@ -5463,128 +5459,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "defaultProjectsEntry": () => /* binding */ defaultProjectsEntry,
 /* harmony export */   "defaultSettingsEntry": () => /* binding */ defaultSettingsEntry
 /* harmony export */ });
-const defaultProjectsEntry = {
-    "list": [
-      {
-        "_list": [
-          {
-            "_maxPriority": 10,
-            "_minPriority": 1,
-            "_id": 4,
-            "_projectId": 1,
-            "_isComplete": false,
-            "_title": "Hi",
-            "_description": "",
-            "_priority": 10,
-            "_dueDate": "2020-12-04T17:07:59.294Z",
-            "_creationDatetime": "2020-12-04T17:07:59.294Z"
-          },
-          {
-            "_maxPriority": 10,
-            "_minPriority": 1,
-            "_id": 1,
-            "_projectId": 1,
-            "_isComplete": true,
-            "_title": "Create ToDo Class1",
-            "_description": "Create ToDo Class description",
-            "_priority": 5,
-            "_dueDate": "2020-12-06T00:00:00.000Z",
-            "_creationDatetime": "2020-12-04T17:07:59.292Z"
-          },
-          {
-            "_maxPriority": 10,
-            "_minPriority": 1,
-            "_id": 2,
-            "_projectId": 1,
-            "_isComplete": false,
-            "_title": "Create ToDo Class2",
-            "_description": "sss",
-            "_priority": 5,
-            "_dueDate": "2021-01-01T00:00:00.000Z",
-            "_creationDatetime": "2020-12-04T17:07:59.293Z"
-          },
-          {
-            "_maxPriority": 10,
-            "_minPriority": 1,
-            "_id": 3,
-            "_projectId": 1,
-            "_isComplete": false,
-            "_title": "Create ToDo Class3",
-            "_description": "",
-            "_priority": 1,
-            "_dueDate": "2021-12-02T00:00:00.000Z",
-            "_creationDatetime": "2020-12-04T17:07:59.293Z"
-          }
-        ],
-        "_listSort": "dueDateEarliestFirst",
-        "_maxPriority": 10,
-        "_minPriority": 1,
-        "_id": 1,
-        "_title": "My Project",
-        "_isComplete": false,
-        "_description": "lol",
-        "_priority": 4,
-        "_dueDate": "2020-12-06T00:00:00.000Z",
-        "_creationDatetime": "2020-12-04T17:07:59.292Z",
-        "_toDoIDCounter": 5
-      },
-      {
-        "_list": [
-          {
-            "_maxPriority": 10,
-            "_minPriority": 1,
-            "_id": 1,
-            "_projectId": 2,
-            "_isComplete": false,
-            "_title": "Hsadi",
-            "_description": "ss1",
-            "_priority": 2,
-            "_dueDate": "2021-12-02T00:00:00.000Z",
-            "_creationDatetime": "2020-12-04T17:07:59.296Z"
-          }
-        ],
-        "_listSort": "dueDateEarliestFirst",
-        "_maxPriority": 10,
-        "_minPriority": 1,
-        "_id": 2,
-        "_title": "My Project3",
-        "_isComplete": false,
-        "_description": "lasdol",
-        "_priority": 2,
-        "_dueDate": "2020-12-09T00:00:00.000Z",
-        "_creationDatetime": "2020-12-04T17:07:59.296Z",
-        "_toDoIDCounter": 2
-      },
-      {
-        "_list": [
-          {
-            "_maxPriority": 10,
-            "_minPriority": 1,
-            "_id": 1,
-            "_projectId": 0,
-            "_isComplete": false,
-            "_title": "Hsadi",
-            "_description": "ss",
-            "_priority": 2,
-            "_dueDate": "",
-            "_creationDatetime": "2020-12-04T17:07:59.297Z"
-          }
-        ],
-        "_listSort": "dueDateEarliestFirst",
-        "_maxPriority": 10,
-        "_minPriority": 1,
-        "_id": 0,
-        "_title": "Other",
-        "_isComplete": false,
-        "_description": "",
-        "_priority": 10,
-        "_dueDate": "",
-        "_creationDatetime": "2020-12-04T17:07:59.291Z",
-        "_toDoIDCounter": 2
-      }
-    ],
-    "toDoIDCounter": 3
-  }
+const defaultProjectsEntry = {"list":[{"_list":[{"_maxPriority":10,"_minPriority":1,"_id":1,"_projectId":4,"_isComplete":true,"_title":"Foundations Course","_description":"","_priority":1,"_dueDate":"","_creationDatetime":"2020-12-12T13:51:44.871Z"},{"_maxPriority":10,"_minPriority":1,"_id":2,"_projectId":4,"_isComplete":false,"_title":"JS Course","_description":"","_priority":1,"_dueDate":"","_creationDatetime":"2020-12-12T13:51:54.421Z"},{"_maxPriority":10,"_minPriority":1,"_id":5,"_projectId":4,"_isComplete":false,"_title":"HTML/CSS","_description":"","_priority":9,"_dueDate":"","_creationDatetime":"2020-12-12T13:52:47.566Z"},{"_maxPriority":10,"_minPriority":1,"_id":4,"_projectId":4,"_isComplete":false,"_title":"Node","_description":"","_priority":10,"_dueDate":"","_creationDatetime":"2020-12-12T13:52:19.756Z"}],"_listSort":"highestPriorityFirst","_maxPriority":10,"_minPriority":1,"_minDueDate":"2020-01-01T00:00:00.000Z","_id":4,"_title":"The Odin Project","_isComplete":false,"_description":"","_priority":1,"_dueDate":"","_creationDatetime":"2020-12-12T13:51:28.785Z","_toDoIDCounter":6,"settings":{"view":"project","toDoViewSortPref":"dueDateEarliestFirst","projectViewProjectSortPref":"dueDateEarliestFirst","projectViewToDoSortPref":"dueDateEarliestFirst"}},{"_list":[],"_listSort":"highestPriorityFirst","_maxPriority":10,"_minPriority":1,"_minDueDate":"2020-01-01T00:00:00.000Z","_id":0,"_title":"Other","_isComplete":false,"_description":"","_priority":10,"_dueDate":"","_creationDatetime":"2020-12-04T17:07:59.291Z","_toDoIDCounter":2,"settings":{"view":"project","toDoViewSortPref":"dueDateEarliestFirst","projectViewProjectSortPref":"dueDateEarliestFirst","projectViewToDoSortPref":"dueDateEarliestFirst"}}],"toDoIDCounter":5}
 
 const defaultSettingsEntry = {
     "view": "project",
@@ -5777,7 +5652,7 @@ class AddItemMethods{
 
     _addEditFormInput(parentDiv, project, key, dataType, required){
         const input = document.createElement("input")
-        const randomProject = this.myProjects.getList()[0];
+        const randomProject = this.myProjects._getProject(0);
         input.htmlFor = key;
         input.id = key;
         input.name = key;
@@ -6970,7 +6845,7 @@ class Projects extends Sorter{
     }
 
     getList(){
-        return this._list.filter(project => project.id !== 0 || project.getToDoNumber() !== 0);
+        return this._list;//.filter(project => project.id !== 0 || project.getToDoNumber() !== 0);
     }
 
     getToDoList(){
