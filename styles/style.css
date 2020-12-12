@@ -58,6 +58,9 @@ h3 {
 h4 {
     font-size: 0.8em;
     margin: auto;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 body{
@@ -275,6 +278,7 @@ h2{
     width: 100%;
     display: flex;
     flex-direction: column;
+    overflow: auto;
 }
 
 .expand{
@@ -309,7 +313,7 @@ select{
 .todo{
     display: flex;
     flex-direction: row;
-    width: 100%;
+    width: 99%;
     justify-content: flex-start;
 }
 
@@ -380,6 +384,10 @@ select{
 }
 
 .form-edit{
+    height: 20%;
+}
+
+.project-form-edit{
     height: 20%;
 }
 
