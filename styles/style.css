@@ -12,6 +12,7 @@
     --no-color:rgb(201, 15, 15);
     --small-btn-size: 25px;
     --plus-size: 300px;
+    --plus-size-small: 025px;
 }
 
 @media only screen and (max-width: 450px){
@@ -186,6 +187,19 @@ a {
     margin: auto;
     width: var(--plus-size);
 }
+
+
+#plus-icon-small{
+    margin: auto;
+    display: flex;
+    cursor: pointer;
+}
+
+#plus-icon-img-small{
+    margin: auto;
+    width: var(--plus-size-small);
+}
+
 
 .project-title{
     height: 50%;
@@ -377,7 +391,6 @@ select{
 
 .edit-form-btns{
     height: 100%;
-    width: 15%;
     display: flex;
     flex-direction: row;
     justify-content: space-around;
