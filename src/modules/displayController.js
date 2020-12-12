@@ -240,18 +240,6 @@ class AddProjectMethods extends AddItemMethods{
         projectDiv.appendChild(projectTitleDiv);
     }
 
-    _addIcon(projectTitleDiv, view){
-        const tag = document.createElement("img");
-        tag.src = 'images/' + view + '_icon.png';
-        tag.alt = view + ' icon';
-        tag.classList.add("icon")
-
-        if (view === "edit") tag.addEventListener("click", this._createEditForm)
-        if (view === "delete") tag.addEventListener("click", this._createDelete)
-
-        projectTitleDiv.appendChild(tag);
-    }
-
     _createEditForm(e){
         const projectId = this._getProjectId(e.target);
         const project = this.myProjects._getProject(projectId);
@@ -357,9 +345,15 @@ class AddTaskMethods extends AddItemMethods{
         const todoDiv = document.createElement("div");
         todoDiv.classList.add("todo");
     
-        this._addTaskEntry(todo, todoDiv, "title")
-        this._addTaskEntry(todo, todoDiv, "dueDate")
-        this._addTaskEntry(todo, todoDiv, "priority")
+        const form = document.createElement("form");
+        form.classList.add("task-form-edit")
+
+        this._addIcon(form, "delete")
+        this._addIcon(form, "edit")
+        this._addTaskEntry(todo, form, "title")
+        this._addTaskEntry(todo, form, "dueDate")
+        this._addTaskEntry(todo, form, "priority")
+        todoDiv.appendChild(form)
         if (todo !== "") this._addCheckedForm(todo, todoDiv, "isComplete");
         else {
             const tag = document.createElement("h4");
@@ -371,6 +365,7 @@ class AddTaskMethods extends AddItemMethods{
             todoDiv.dataset.todoId = todo.id;
             todoDiv.dataset.projectId = todo.projectId;
         }
+        
         todosDiv.appendChild(todoDiv)        
     }
 
@@ -386,9 +381,8 @@ class AddTaskMethods extends AddItemMethods{
     }
 
     _createForm(form, todo){
-        const titleDiv = form.firstChild.firstChild;
+        const titleDiv = form.querySelector(".todo-title");
         titleDiv.removeChild(titleDiv.firstChild)
-        console.log(titleDiv)
         const dueDateDiv = titleDiv.nextSibling
         dueDateDiv.removeChild(dueDateDiv.firstChild)
         const priorityDiv = dueDateDiv.nextSibling
