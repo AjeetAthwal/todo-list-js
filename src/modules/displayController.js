@@ -390,6 +390,9 @@ class AddTaskMethods extends AddItemMethods{
     }
 
     _createForm(form, todo){
+        form.classList.add("task-form")
+        form.classList.remove("task-form-edit")
+        
         const titleDiv = form.querySelector(".todo-title");
         titleDiv.removeChild(titleDiv.firstChild)
         const dueDateDiv = titleDiv.nextSibling
@@ -399,7 +402,11 @@ class AddTaskMethods extends AddItemMethods{
 
         const isCompleteDiv = document.createElement("div");
         isCompleteDiv.classList.add("todo-iscomplete")
-        priorityDiv.parentNode.parentNode.appendChild(isCompleteDiv);
+
+        const formParent = priorityDiv.parentNode.parentNode
+        while (formParent.childElementCount > 1) formParent.removeChild(formParent.lastChild)
+
+        form.appendChild(isCompleteDiv);
 
         this._addEditFormInput(titleDiv, todo, "title", "text", true);
         this._addYesNoBtns(isCompleteDiv);
@@ -416,6 +423,44 @@ class AddTaskMethods extends AddItemMethods{
         }
         
         this._update();
+    }
+
+    _createEditForm(e){
+        const projectId = this._getProjectId(e.target);
+        const toDoId = this._getTodoId(e.target);
+        const toDo = this.myProjects._getProject(projectId)._getToDo(toDoId);
+        const form = e.target.parentNode.parentNode;
+        form.addEventListener("submit", this._submitEditForm);
+        this._createForm(form, toDo)
+    }
+
+
+    _submitEditForm(e){
+        e.preventDefault();
+        console.log("hi")
+        let projectId = ""
+        let toDoId = ""
+        try {
+            projectId = this._getProjectId(e.target);
+            todoId = this._getTodoId(e.target)
+        } catch (e){
+        }
+        console.log(projectId)
+        console.log(todoId)
+        let newTitle = ""
+        let newDueDate = ""
+        let newPriority = ""
+
+        //const formElements = e.target.elements
+        //for (let index = 0; index < formElements.length; index++){
+         //   if (formElements[index].id === "title") newTitle = formElements[index].value;
+          //  if (formElements[index].id === "dueDate") newDueDate = formElements[index].value === "" ? "" : new Date(formElements[index].value);
+            //if (formElements[index].id === "priority") newPriority = parseInt(formElements[index].value);
+        //}
+
+        //if (projectId !== "") this.myProjects.updateProjectInfo(projectId, newTitle, "BLANK", newPriority, newDueDate);
+        //else this.myProjects.addProject(newTitle, "", newPriority, newDueDate);
+        //this._update();
     }
 }
 
