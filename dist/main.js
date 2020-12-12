@@ -6038,6 +6038,17 @@ class AddTaskMethods extends AddItemMethods{
         this._addEditFormInput(dueDateDiv, todo, "dueDate", "date", false);
         this._addEditFormInput(priorityDiv, todo, "priority", "number", true);
     }
+
+    _createDelete(e){
+        try {
+            const projectId = this._getProjectId(e.target);
+            const toDoId = this._getTodoId(e.target);
+            this.myProjects.removeToDoFromProject(projectId, toDoId);
+        } catch (e){
+        }
+        
+        this._update();
+    }
 }
 
 class NewTaskLoader extends AddTaskMethods{
