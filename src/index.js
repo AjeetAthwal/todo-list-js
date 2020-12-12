@@ -14,10 +14,6 @@ const mySettings = new Settings(mySettingsStorage, "", "", "", "");
 const myProjects = new Projects(myProjectsStorage, mySettings);
 const myToDos = new ToDos(mySettings, myProjects)
 
-console.log(myProjects);
-console.log(myProjects.getList());
-console.log(myToDos.getList());
-
 const newCardLoader = new NewCardLoader(myProjects)
 
 const projectCardExpandLoader = new ProjectCardExpandLoader(myProjects)

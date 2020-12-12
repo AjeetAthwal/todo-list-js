@@ -525,7 +525,7 @@ class Projects extends Sorter{
     }
 
     getList(){
-        return this._list.filter(project => project.id !== 0 || project.getToDoNumber() !== 0);
+        return this._list;//.filter(project => project.id !== 0 || project.getToDoNumber() !== 0);
     }
 
     getToDoList(){

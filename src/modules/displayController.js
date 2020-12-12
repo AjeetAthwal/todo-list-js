@@ -145,7 +145,7 @@ class AddItemMethods{
 
     _addEditFormInput(parentDiv, project, key, dataType, required){
         const input = document.createElement("input")
-        const randomProject = this.myProjects.getList()[0];
+        const randomProject = this.myProjects._getProject(0);
         input.htmlFor = key;
         input.id = key;
         input.name = key;
