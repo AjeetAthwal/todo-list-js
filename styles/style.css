@@ -373,6 +373,12 @@ select{
     flex-direction: row;
 }
 
+.task-form{
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+}
+
 .form-edit{
     height: 20%;
 }
