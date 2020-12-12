@@ -210,7 +210,6 @@ class AddProjectMethods extends AddItemMethods{
             projectId = this._getProjectId(e.target);
         } catch (e){
         }
-        console.log(projectId)
         let newTitle = ""
         let newDueDate = ""
         let newPriority = ""
@@ -444,22 +443,21 @@ class AddTaskMethods extends AddItemMethods{
             toDoId = this._getTodoId(e.target)
         } catch (e){
         }
-        console.log(projectId)
-        console.log(toDoId)
+
         let newTitle = ""
         let newDueDate = ""
         let newPriority = ""
 
-        //const formElements = e.target.elements
-        //for (let index = 0; index < formElements.length; index++){
-         //   if (formElements[index].id === "title") newTitle = formElements[index].value;
-          //  if (formElements[index].id === "dueDate") newDueDate = formElements[index].value === "" ? "" : new Date(formElements[index].value);
-            //if (formElements[index].id === "priority") newPriority = parseInt(formElements[index].value);
-        //}
+        const formElements = e.target.elements
+        for (let index = 0; index < formElements.length; index++){
+            if (formElements[index].id === "title") newTitle = formElements[index].value;
+            if (formElements[index].id === "dueDate") newDueDate = formElements[index].value === "" ? "" : new Date(formElements[index].value);
+            if (formElements[index].id === "priority") newPriority = parseInt(formElements[index].value);
+        }
 
-        //if (projectId !== "") this.myProjects.updateProjectInfo(projectId, newTitle, "BLANK", newPriority, newDueDate);
-        //else this.myProjects.addProject(newTitle, "", newPriority, newDueDate);
-        //this._update();
+        if (!Number.isNaN(toDoId)) this.myProjects.updateToDoInfo(projectId, toDoId, newTitle, "BLANK", newPriority, newDueDate);
+        else this.myProjects.addToDoToProject(projectId, newTitle, "", newPriority, newDueDate);
+        this._update();
     }
 }
 

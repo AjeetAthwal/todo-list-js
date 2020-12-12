@@ -111,6 +111,13 @@ class ToDo{
         this.creationDatetime = todo._creationDatetime;
     }
 
+    updateToDoInfo(title, description, priority, dueDate){
+        this.title = title;
+        if (description !== "BLANK") this.description = description;
+        this.priority = priority;
+        this.dueDate = dueDate;
+    }
+
     _isValidDate(date) {
         return date && Object.prototype.toString.call(date) === "[object Date]" && !isNaN(date);
     }
@@ -237,6 +244,11 @@ class Project extends Sorter{
         else this._initFromStorage(project);
 
         this.settings = settings;
+    }
+
+    updateToDoInfo(toDoId, title, description, priority, dueDate){
+        const todo = this._getToDo(toDoId)
+        todo.updateToDoInfo(title, description, priority, dueDate)
     }
 
     updateSettings(){
@@ -450,6 +462,12 @@ class Projects extends Sorter{
         const project = this._getProject(projectId)
         project.updateProjectInfo(title, description, priority, dueDate)
         this._update();
+    }
+
+    updateToDoInfo(projectId, toDoId, title, description, priority, dueDate){
+        const project = this._getProject(projectId)
+        project.updateToDoInfo(toDoId, title, description, priority, dueDate)
+        this._update()
     }
 
     updateSort(newSort){
