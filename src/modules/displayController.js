@@ -140,8 +140,24 @@ class AddItemMethods{
         throw new Error("_createForm function has not been created")
     }
 
-    _addEditFormInput(parentDiv, item, key, dataType, required){
-        throw new Error("_addEditFormInput function has not been created")
+    _addEditFormInput(parentDiv, project, key, dataType, required){
+        const input = document.createElement("input")
+        const randomProject = this.myProjects.getList()[0];
+        input.htmlFor = key;
+        input.id = key;
+        input.name = key;
+        input.type = dataType;
+        if (project !== ""){
+            if (key === "dueDate") input.value = project[key] === "" ? "" : parse(project[key],'P',new Date()).toISOString().substring(0, 10);
+            else input.value = project[key];
+        }
+        if (key === "dueDate") input.min = randomProject.minDueDate.toISOString().substring(0, 10);
+        else if (key === "priority"){
+            input.min = randomProject.minPriority
+            input.max = randomProject.maxPriority
+        }
+        if (key !== "dueDate") input.required = required
+        parentDiv.appendChild(input)
     }
 
     _addYesNoBtns(parentDiv){
@@ -308,26 +324,6 @@ class AddProjectMethods extends AddItemMethods{
         this._addEditFormInput(dueDateDiv, project, "dueDate", "date", false);
         this._addEditFormInput(priorityDiv, project, "priority", "number", true);
     }
-
-    _addEditFormInput(parentDiv, project, key, dataType, required){
-        const input = document.createElement("input")
-        const randomProject = this.myProjects.getList()[0];
-        input.htmlFor = key;
-        input.id = key;
-        input.name = key;
-        input.type = dataType;
-        if (project !== ""){
-            if (key === "dueDate") input.value = project[key] === "" ? "" : parse(project[key],'P',new Date()).toISOString().substring(0, 10);
-            else input.value = project[key];
-        }
-        if (key === "dueDate") input.min = randomProject.minDueDate.toISOString().substring(0, 10);
-        else if (key === "priority"){
-            input.min = randomProject.minPriority
-            input.max = randomProject.maxPriority
-        }
-        if (key !== "dueDate") input.required = required
-        parentDiv.appendChild(input)
-    }
 }
 class NewCardLoader extends AddProjectMethods{
     constructor(myProjects){
@@ -403,26 +399,6 @@ class AddTaskMethods extends AddItemMethods{
         this._addYesNoBtns(isCompleteDiv);
         this._addEditFormInput(dueDateDiv, todo, "dueDate", "date", false);
         this._addEditFormInput(priorityDiv, todo, "priority", "number", true);
-    }
-
-    _addEditFormInput(parentDiv, project, key, dataType, required){
-        const input = document.createElement("input")
-        const randomProject = this.myProjects.getList()[0];
-        input.htmlFor = key;
-        input.id = key;
-        input.name = key;
-        input.type = dataType;
-        if (project !== ""){
-            if (key === "dueDate") input.value = project[key] === "" ? "" : parse(project[key],'P',new Date()).toISOString().substring(0, 10);
-            else input.value = project[key];
-        }
-        if (key === "dueDate") input.min = randomProject.minDueDate.toISOString().substring(0, 10);
-        else if (key === "priority"){
-            input.min = randomProject.minPriority
-            input.max = randomProject.maxPriority
-        }
-        if (key !== "dueDate") input.required = required
-        parentDiv.appendChild(input)
     }
 }
 
