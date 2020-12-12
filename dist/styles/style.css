@@ -321,7 +321,7 @@ select{
     padding-bottom: 10px;
 }
 
-.todo>h3{
+.todo>div{
     margin: auto;
     text-align: center;
     white-space: nowrap;
@@ -329,14 +329,13 @@ select{
     text-overflow: ellipsis;
 }
 
+.todo input {
+    width: 95%;
+    font-size: 0.8em;
+}
 
-.todo>h4{
-    margin: auto;
-    text-align: center;
+.todo-header>div{
     padding-bottom: 5px;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
 }
 
 .todo-title{
@@ -347,8 +346,13 @@ select{
     width: 25%;
 }
 
+
 .todo-priority{
     width: 20%;
+}
+
+.todo-priority>input{
+    width: 35%;
 }
 
 .todo-iscomplete{
