@@ -57,6 +57,7 @@ h3 {
 
 h4 {
     font-size: 0.8em;
+    margin: auto;
 }
 
 body{
@@ -330,7 +331,7 @@ select{
 }
 
 .todo input {
-    width: 95%;
+    width: 90%;
     font-size: 0.8em;
 }
 
@@ -408,4 +409,8 @@ select{
 
 .edit-form-btns>.small-btn{
     margin: auto;
+}
+
+img.icon {
+    padding-right: 5px;
 }

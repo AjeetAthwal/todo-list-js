@@ -5710,6 +5710,9 @@ class AddItemMethods{
         if (size === "large"){
             projectDiv.classList.add("project");
             projectDiv.classList.add("add-new-card");
+        } else if (size === "small"){
+            projectDiv.classList.add("todo");
+            projectDiv.classList.add("add-new-task");
         }
 
         const form = document.createElement("form")
@@ -5973,6 +5976,15 @@ class AddTaskMethods extends AddItemMethods{
         this.projectCardTasksLoader._update()
     }
 
+    addToDoFormEntries(todo, form){
+        this._addIcon(form, "delete")
+        this._addIcon(form, "edit")
+        this._addTaskEntry(todo, form, "title")
+        this._addTaskEntry(todo, form, "dueDate")
+        this._addTaskEntry(todo, form, "priority")
+        
+    }
+
     addToDoDiv(todo, todosDiv){
         const todoDiv = document.createElement("div");
         todoDiv.classList.add("todo");
@@ -5980,12 +5992,9 @@ class AddTaskMethods extends AddItemMethods{
         const form = document.createElement("form");
         form.classList.add("task-form-edit")
 
-        this._addIcon(form, "delete")
-        this._addIcon(form, "edit")
-        this._addTaskEntry(todo, form, "title")
-        this._addTaskEntry(todo, form, "dueDate")
-        this._addTaskEntry(todo, form, "priority")
+        this.addToDoFormEntries(todo, form)
         todoDiv.appendChild(form)
+
         if (todo !== "") this._addCheckedForm(todo, todoDiv, "isComplete");
         else {
             const tag = document.createElement("h4");
@@ -6019,7 +6028,10 @@ class AddTaskMethods extends AddItemMethods{
         dueDateDiv.removeChild(dueDateDiv.firstChild)
         const priorityDiv = dueDateDiv.nextSibling
         priorityDiv.removeChild(priorityDiv.firstChild)
-        const isCompleteDiv = priorityDiv.nextSibling;
+
+        const isCompleteDiv = document.createElement("div");
+        isCompleteDiv.classList.add("todo-iscomplete")
+        priorityDiv.parentNode.parentNode.appendChild(isCompleteDiv);
 
         this._addEditFormInput(titleDiv, todo, "title", "text", true);
         this._addYesNoBtns(isCompleteDiv);
@@ -6041,9 +6053,10 @@ class NewTaskLoader extends AddTaskMethods{
 
         form.removeChild(form.firstChild)
         form.classList.remove("form-new")
-        form.classList.add("form-edit")
+        form.classList.remove("form")
+        form.classList.add("task-form-edit")
         form.addEventListener("submit", this._submitEditForm);
-        this.addToDoDiv(todo, form)
+        this.addToDoFormEntries(todo, form)
         this._createForm(form, todo)
     }
 }
